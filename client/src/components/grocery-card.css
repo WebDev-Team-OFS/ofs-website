@@ -8,6 +8,9 @@
 }
 
 .grocery-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
     height: 350px;
     border: 1px black solid;
     border-radius: 15px;
@@ -20,6 +23,10 @@
     object-fit: scale-down;
     height: 50%;
     border-radius: 10px;
+}
+
+.grocery-card div {
+    height: 40%;
 }
 
 .grocery-card .content {
