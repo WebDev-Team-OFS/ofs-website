@@ -77,6 +77,12 @@ h1 {
     font-weight: 500;
 }
 
-.container {
-    padding: 0 30px;
+.featured-items {
+    padding: 0 100px;
+    margin-bottom: 50px;
+}
+
+.featured-items > div {
+    display: flex;
+    gap: 20px;
 }

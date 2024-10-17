@@ -1,0 +1,64 @@
+* {
+    margin: none;
+    padding: none;
+}
+
+.grocery-card * {
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+.grocery-card {
+    height: 350px;
+    border: 1px black solid;
+    border-radius: 15px;
+    width: 250px;
+    padding: 10px;
+}
+
+.grocery-card img {
+    width: 100%;
+    object-fit: scale-down;
+    height: 50%;
+    border-radius: 10px;
+}
+
+.grocery-card .content {
+    display:block;
+    height: 30%;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: none;
+    color: rgb(133, 0, 0);
+
+}
+
+.title {
+    margin: 0;
+    font-size: 1.1rem;
+    margin-top: -10px;
+    font-weight: bold;
+    margin-bottom: -5px;
+    
+}
+
+.weight {
+    font-size: 0.9rem;
+}
+
+.grocery-card button {
+    display: block;
+    background-color: #052E16;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    height: 40px;
+    margin-top: 5px;
+}
