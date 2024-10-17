@@ -5,7 +5,7 @@ function GroceryCard({imageURL, price, title, weight}) {
         <>
             <div className="grocery-card">
                 <img src={imageURL} alt="" />
-                <div class="content">
+                <div>
                     <p className="price">${price}</p>
                     <p className="title">{title}</p>
                     <p className="weight">{weight} lbs</p>

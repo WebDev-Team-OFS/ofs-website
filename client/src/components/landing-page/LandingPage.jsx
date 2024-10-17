@@ -8,7 +8,7 @@ function LandingPage() {
         <main>
             <NavigationBar />
             <img className="background-image" src="./src/img/landing-page-background.jpg" alt="" />
-            <div class="featured-items">
+            <div className="featured-items">
                 <h1>Featured Items</h1>
                 <div>
                     <GroceryCard price="8.99" title="Kirkland Large Farm Eggs, 12 count" weight="1.25" imageURL="./src/img/food/eggs.png" />
