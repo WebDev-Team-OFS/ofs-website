@@ -96,6 +96,11 @@ test_orders = [
 cursor.executemany("INSERT INTO orders (user_id, amount, cost, order_date, product_id) VALUES (%s, %s, %s, %s, %s)", test_orders)
 mydb.commit()
 
+#These scripts will be need to be updated by the backend team 
+#is there are extra commands we need a extra file to call upon this so make another file for just user calls
+#This will be to create the data base only
+
+
 # Retrieve and display user data
 cursor.execute("SELECT * FROM user_info")
 for user in cursor.fetchall():
