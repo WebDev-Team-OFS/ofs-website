@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import LandingPage from './components/landing-page/LandingPage'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from "react-router-dom";
+
 
 function App() {
   const [count, setCount] = useState(0)

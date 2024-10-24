@@ -12,7 +12,7 @@ function LandingPage() {
             <FeaturedItems />
             <div className="row">
                 <img src="./src/img/food-variety.jpg" alt="" />
-                <h1>We offer a <span className="bold">variety of food</span> variety of food that you can <span className="bold">buy</span> in just a few clicks.</h1>
+                <h1>We offer a <span className="bold">variety of food</span> that you can <span className="bold">buy</span> in just a few clicks.</h1>
             </div>
             <Categories />
             <div className="row">

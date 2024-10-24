@@ -180,7 +180,6 @@ h1 {
     object-position: center;
     margin: 0;
     padding: 0;
-
 }
 
 .categories-container {
@@ -192,11 +191,12 @@ h1 {
     position: relative;
 }
 
+
 .categories .image-container p {
     display: inline;
     position: absolute;
     font-size: 2vw;
-    font-family: "Roboto";
+    font-family: "pt serif";
     padding-left: 10px;
     left: 0;
     right: 0;
