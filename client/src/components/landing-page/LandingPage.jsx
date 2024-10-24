@@ -1,6 +1,7 @@
 import NavigationBar from "./NavigationBar"
 import './landing-page.css'
-import GroceryCard from "../GroceryCard"
+import FeaturedItems from "./FeaturedItems"
+import Categories from "./Categories"
 
 
 function LandingPage() {
@@ -8,18 +9,20 @@ function LandingPage() {
         <main>
             <NavigationBar />
             <img className="background-image" src="./src/img/landing-page-background.jpg" alt="" />
-            <div className="featured-items">
-                <h1>Featured Items</h1>
-                <div>
-                    <GroceryCard price="8.99" title="Kirkland Large Farm Eggs, 12 count" weight="1.25" imageURL="./src/img/food/eggs.png" />
-                    <GroceryCard price = "13.99" title="Loaf of Nature's Whole Weat Bread" weight="1.25" imageURL="./src/img/food/bread.jpg" />
-                    <GroceryCard price = "11.99" title = "Daidy Free Plain Yogurt" weight="2.00" imageURL="./src/img/food/yogurt.png" />
-                    <GroceryCard price ="5.99" title="Lunchly Fiesta Nachoes With Prime" weight="2.50" imageURL="./src/img/food/lunchly.png" />
-                    <GroceryCard price ="2.99" title ="Signature Select Baby-Cut Carrots" weight="0.50" imageURL="./src/img/food/baby-carrots.png" />
-                    <GroceryCard price ="7.99" title="Pavesi Gocciole Chocolate Chip Cookies" weight="1.00" imageURL="./src/img/food/cookies.png" />
-                </div>
+            <FeaturedItems />
+            <div className="row">
+                <img src="./src/img/food-variety.jpg" alt="" />
+                <h1>We offer a <span className="bold">variety of food</span> that you can <span className="bold">buy</span> in just a few clicks.</h1>
             </div>
-            
+            <Categories />
+            <div className="row">
+                <h1>All your <span className="bold">groceries</span> from one place. We deliver <span className="bold">fast</span> and <span className="bold">efficiently</span>.</h1>
+                <img className="delivery-image" src="./src/img/delivery.jpg" alt="" />
+            </div>
+            <footer>
+                <p>&#xA9; 2024 Online Food Store</p>
+                <p><em>*This is a not a real website</em></p>
+            </footer>
         </main>
     )
 }

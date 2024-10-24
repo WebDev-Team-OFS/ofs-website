@@ -14,8 +14,8 @@ Install MySQL Workbench too if it doesn't come with the default installation.
     e.g:
     > cd Desktop
  3. Clone the repo and go into it
-    > git clone https://github.com/CMPE131-Team-3/ofs-website.git<br/>
-    > cd react-flask-template <br/>
+    > git clone https://github.com/WebDev-Team-OFS/ofs-website.git<br/>
+    > cd ofs-website <br/>
     > code . <br/>
     
     *This should open the project in VSCode
