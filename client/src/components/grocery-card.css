@@ -10,7 +10,7 @@
 .grocery-card {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     height: 350px;
     border: 1px black solid;
     border-radius: 15px;
