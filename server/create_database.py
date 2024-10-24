@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS user_info (
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     email VARCHAR(100),
+    is_admin BOOLEAN DEFAULT 0,  # This column indicates if a user is an admin (1 for admin, 0 for non-admin)
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 """)
@@ -69,12 +70,13 @@ CREATE TABLE IF NOT EXISTS image (
 
 # Insert test data into user_info
 test_users = [
-    ("john123", "pass123", "John", "Doe", "john@example.com"),
-    ("bobbyL", "loxd", "Bobby", "Lee", "bobby@example.com"),
-    ("bjorkM", "vespertine", "Bjork", "Magnusson", "bjork@example.com")
+    ("john123", "pass123", "John", "Doe", "john@example.com",0),
+    ("bobbyL", "loxd", "Bobby", "Lee", "bobby@example.com",0),
+    ("bjorkM", "vespertine", "Bjork", "Magnusson", "bjork@example.com",0),
+    ("adminUser", "adminpass", "Admin", "User", "admin@example.com", 1)
 ]
 
-cursor.executemany("INSERT INTO user_info (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)", test_users)
+cursor.executemany("INSERT INTO user_info (username, password, first_name, last_name, email, is_admin) VALUES (%s, %s, %s, %s, %s, %s)", test_users)
 mydb.commit()
 
 # Insert test data into product
