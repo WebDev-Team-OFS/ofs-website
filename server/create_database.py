@@ -1,12 +1,11 @@
 import mysql.connector
 
 
-
 #update password to whatever you set your msql password to
 mydb = mysql.connector.connect(
     host = "localhost",
     user = "root",
-    password = "w@t3r1900",#change if you set password   
+    password = "adminpass",#change if you set password   
     auth_plugin = 'mysql_native_password'
 )
 
