@@ -6,11 +6,12 @@ import mysql.connector
 mydb = mysql.connector.connect(
     host = "localhost",
     user = "root",
-    password = "password",#change if you set password   
+    password = "w@t3r1900",#change if you set password   
     auth_plugin = 'mysql_native_password'
 )
 
 cursor = mydb.cursor()
+
 
 # Create and use the 'ofs_database' database
 cursor.execute("CREATE DATABASE IF NOT EXISTS ofs_database")
@@ -30,6 +31,20 @@ CREATE TABLE IF NOT EXISTS user_info (
 )
 """)
 
+# Create product table
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS product (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    brand VARCHAR(100),
+    stock INT,
+    price DECIMAL(10, 2),
+    weight DECIMAL(5, 2),
+    featured BOOLEAN,
+    description TEXT
+)
+""")
+
 # Create orders table
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS orders (
@@ -44,19 +59,7 @@ CREATE TABLE IF NOT EXISTS orders (
 )
 """)
 
-# Create product table
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS product (
-    product_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    brand VARCHAR(100),
-    stock INT,
-    price DECIMAL(10, 2),
-    weight DECIMAL(5, 2),
-    featured BOOLEAN,
-    description TEXT
-)
-""")
+
 
 # Create image table
 cursor.execute("""
