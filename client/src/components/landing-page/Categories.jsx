@@ -38,7 +38,6 @@ function Categories() {
     <>
         <div className="categories-container">
             <h1>Search by Category</h1>
-           
                 <div className="categories">
                     <div className="image-container">
                         <img src="./src/img/categories/meats-category.jpg" alt="" />
@@ -61,7 +60,6 @@ function Categories() {
                         <p>Snacks</p>
                     </div>
                 </div>
-                
         </div>
     </>
    )
