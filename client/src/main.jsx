@@ -4,6 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import LandingPage from './components/landing-page/LandingPage'
 import ProductPage from './components/landing-page/ProductPage'
+import CheckoutPage from './components/landing-page/CheckoutPage.jsx'
 
 import {
   createBrowserRouter,
@@ -13,17 +14,21 @@ import {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage/>
+    element: <LandingPage />
   },
   {
     path: "/product",
     element: <ProductPage />
+  },
+  {
+    path: "/checkout",
+    element: <CheckoutPage />
   }
 ])
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router = {router}/>
+    <RouterProvider router={router} />
   </StrictMode>,
 )
