@@ -1,4 +1,5 @@
 import SearchBar from './SearchBar'
+import './navigation-bar.css'
 
 function NavigationBar() {
     return (
