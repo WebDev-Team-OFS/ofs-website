@@ -23,6 +23,7 @@ function App() {
             <Route path ="/product" element = {<ProductPage />} />
             <Route path ="/checkout" element = {<CheckoutPage />} />
             <Route path ="/search" element = {<SearchPage />} />
+            {/* <Route path ="/search?q=*" element = {<SearchPage />} /> */}
           </Route>
         </Routes>
       </Router>

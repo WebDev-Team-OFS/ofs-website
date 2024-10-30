@@ -1,6 +1,7 @@
 import React from 'react'
 import NavigationBar from './NavigationBar/NavigationBar'
 import { Outlet } from 'react-router-dom'
+import './main-layout.css'
 
 const MainLayout = () => {
   return (
