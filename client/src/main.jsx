@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import LandingPage from './components/landing-page/LandingPage'
 import ProductPage from './components/landing-page/ProductPage'
-import CheckoutPage from './components/landing-page/CheckoutPage.jsx'
+import CheckoutPage from './components/CheckoutPage.jsx'
 
 import {
   createBrowserRouter,

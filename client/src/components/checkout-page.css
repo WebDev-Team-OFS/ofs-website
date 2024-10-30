@@ -32,13 +32,13 @@
     margin-bottom: 30px;
   }
   
-  label {
+  .checkout-container label {
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
   }
   
-  input {
+  .checkout-container input {
     padding: 10px;
     width: 100%;
     margin-bottom: 20px;
@@ -47,7 +47,7 @@
   }
   
   /* Button for submitting the order */
-  button {
+  .checkout-container button {
     background-color: #052E16;
     color: white;
     padding: 10px 20px;
@@ -56,7 +56,7 @@
     cursor: pointer;
   }
   
-  button:hover {
+  .checkout-container button:hover {
     background-color: #041E11;
   }
   
