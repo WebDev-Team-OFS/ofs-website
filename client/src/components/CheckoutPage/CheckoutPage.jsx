@@ -1,7 +1,7 @@
-import NavigationBar from './landing-page/NavigationBar';
+import NavigationBar from '../NavigationBar/NavigationBar';
 import React, { useState } from 'react';
 import './checkout-page.css'; // Link to your CSS file for styling
-import './landing-page/landing-page.css'
+// import './landing-page/landing-page.css'
 
 function CheckoutPage() {
   const [cartItems, setCartItems] = useState([

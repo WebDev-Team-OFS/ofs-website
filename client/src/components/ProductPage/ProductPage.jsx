@@ -1,13 +1,11 @@
-import NavigationBar from "./NavigationBar"
-import './landing-page.css'
+
 import './product-page.css'
 
 
 
 function ProductPage({imageURL, price, title, weight, description}) {
     return (
-        <main>
-            <NavigationBar />
+        <>
             <div className="product-page-container">
                 <div className="product-image-container">
                     <img src="./src/img/food/cookies.png" alt="" />
@@ -26,7 +24,7 @@ function ProductPage({imageURL, price, title, weight, description}) {
                     <button>ADD TO CART</button>
                 </div>
             </div>
-        </main>
+        </>
     )
 }
 

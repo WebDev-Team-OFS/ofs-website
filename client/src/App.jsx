@@ -1,31 +1,29 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios';
-import LandingPage from './components/landing-page/LandingPage'
+import LandingPage from './components/LandingPage/LandingPage'
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Link
 } from "react-router-dom";
+import ProductPage from './components/ProductPage/ProductPage';
+import CheckoutPage from './components/CheckoutPage/CheckoutPage';
+import MainLayout from './components/MainLayout';
 
 
 function App() {
-  const [count, setCount] = useState(0)
-  const[array, setArray] = useState([]);
-
-  const fetchAPI = async () => {
-    const response = await axios.get("http://127.0.0.1:8080/api/users");
-    console.log(response.data.users);
-    setArray(response.data.users);
-  }
-
-  useEffect(() => {
-    fetchAPI()
-  }, [])
-
   return (
     <>
-      <LandingPage />
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route path ="/" element = {<LandingPage />} />
+            <Route path ="/product" element = {<ProductPage />} />
+            <Route path ="/checkout" element = {<CheckoutPage />} />
+          </Route>
+        </Routes>
+      </Router>
     </>
   )
 }

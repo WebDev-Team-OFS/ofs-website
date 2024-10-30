@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import GroceryCard from "../GroceryCard"
+import GroceryCard from "../GroceryCard/GroceryCard"
 
 
 function FeaturedItems() {
     const customScroll = () => {
-        console.log("hello");
         const featuredItems = document.querySelector(".featured-items");
         const leftArrow = document.querySelector(".leftArrow");
         const rightArrow = document.querySelector(".rightArrow");
