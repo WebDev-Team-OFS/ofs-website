@@ -13,15 +13,15 @@ export const SearchPage = () => {
     const [groceries, setGroceries] = useState([]);
 
     const fetchData = async () => {
+        console.log("fetch data");
         const response = await axios.get(`http://127.0.0.1:8080/api/search?query=${query}`);
         console.log(response.data.products);
+        console.log("fetch data");
         setGroceries(response.data.products);
     }
     
     useEffect(() => {
-        if (query) {
-            fetchData();
-        }
+        fetchData();
     }, [query])
 
   return (
