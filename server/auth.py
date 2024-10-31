@@ -23,7 +23,7 @@ def login():
         cursor = db_connection.cursor(dictionary=True)
 
         # Query to check for user with provided email and password
-        cursor.execute("SELECT user_id, username, first_name, last_name, email, is_admin FROM user_info WHERE email = %s AND password = %s", (email, password))
+        cursor.execute("SELECT user_id, username, first_name, last_name, email, is_admin FROM user_info WHERE email = %s", (email))
         user = cursor.fetchone()
 
         # Close connection
