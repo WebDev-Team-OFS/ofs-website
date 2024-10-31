@@ -14,17 +14,6 @@ app.register_blueprint(search_bp)
 def health_check():
     return {"status": "API is working!"}, 200
 
-@app.route("/api/users", methods=['GET'])
-def users():
-    return jsonify(
-        {
-            "users": [
-                'bhuv',
-                'johnny',
-                'bobby'
-            ]
-        }
-    )
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
