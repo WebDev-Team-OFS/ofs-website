@@ -4,26 +4,26 @@ from db_module import get_db_connection
 #create cart for user 
 
 
-#add product to cart
+# #add product to cart
 
 
-def add_to_cart(user_id, product_id, quantity):
-    cursor.execute("""
-        SELECT * FROM cart WHERE user_id = %s AND product_id = %s
-    """, (user_id, product_id))
+# def add_to_cart(user_id, product_id, quantity):
+#     cursor.execute("""
+#         SELECT * FROM cart WHERE user_id = %s AND product_id = %s
+#     """, (user_id, product_id))
     
-    cart_item = cursor.fetchone()
+#     cart_item = cursor.fetchone()
     
-    if cart_item:
-        cursor.execute("""
-            UPDATE cart SET quantity = quantity + %s WHERE user_id = %s AND product_id = %s
-        """, (quantity, user_id, product_id))
-    else:
-        cursor.execute("""
-            INSERT INTO cart (user_id, product_id, quantity) VALUES (%s, %s, %s)
-        """, (user_id, product_id, quantity))
+#     if cart_item:
+#         cursor.execute("""
+#             UPDATE cart SET quantity = quantity + %s WHERE user_id = %s AND product_id = %s
+#         """, (quantity, user_id, product_id))
+#     else:
+#         cursor.execute("""
+#             INSERT INTO cart (user_id, product_id, quantity) VALUES (%s, %s, %s)
+#         """, (user_id, product_id, quantity))
     
-    mydb.commit()
+#     mydb.commit()
 
 #view cart
 def view_cart(user_id):
