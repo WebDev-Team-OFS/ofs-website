@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 function Categories() {
     const customScroll = () => {
-        console.log("hello");
         const featuredItems = document.querySelector(".featured-items");
         const leftArrow = document.querySelector(".leftArrow");
         const rightArrow = document.querySelector(".rightArrow");

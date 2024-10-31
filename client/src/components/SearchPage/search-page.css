@@ -1,0 +1,43 @@
+.search-page-container {
+    display: flex;
+    align-items: flex-start;
+    margin: 50px 100px;
+    gap: 30px;
+}
+
+.search-products-container {
+
+    flex: 5; 
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.categories-sidebar {
+    flex: 1;
+    background-color: #e7e5e4;
+    border-radius: 10px;
+
+}
+
+
+.categories-sidebar h3 {
+    border-bottom: 1px black solid;
+    font-family: Roboto;
+    line-height: 1;
+    margin: 0;
+    padding: 7px 20px;
+}
+
+.categories-sidebar p {
+    border-bottom: 1px black solid;
+    font-family: Roboto;
+    font-size: 1.1rem;
+    line-height: 1;
+    margin: 0;
+    padding: 7px 20px;
+}
+
+.categories-sidebar .end {
+    border-bottom: none;
+}

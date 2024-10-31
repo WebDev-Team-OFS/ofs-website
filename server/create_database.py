@@ -40,7 +40,9 @@ CREATE TABLE IF NOT EXISTS product (
     price DECIMAL(10, 2),
     weight DECIMAL(5, 2),
     featured BOOLEAN,
-    description TEXT
+    category VARCHAR(50),
+    description TEXT,
+    image LONGBLOB
 )
 """)
 
@@ -58,37 +60,34 @@ CREATE TABLE IF NOT EXISTS orders (
 )
 """)
 
-
-
-# Create image table
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS image (
-    image_id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
-    image LONGBLOB,
-    FOREIGN KEY (product_id) REFERENCES product(product_id)
-)
-""")
-
 # Insert test data into user_info
 test_users = [
-    ("john123", "pass123", "John", "Doe", "john@example.com",0),
-    ("bobbyL", "loxd", "Bobby", "Lee", "bobby@example.com",0),
-    ("bjorkM", "vespertine", "Bjork", "Magnusson", "bjork@example.com",0),
+    ("john123", "pass123", "John", "Doe", "john@example.com", 0),
+    ("bobbyL", "loxd", "Bobby", "Lee", "bobby@example.com", 0),
+    ("bjorkM", "vespertine", "Bjork", "Magnusson", "bjork@example.com", 0),
     ("adminUser", "adminpass", "Admin", "User", "admin@example.com", 1)
 ]
 
 cursor.executemany("INSERT INTO user_info (username, password, first_name, last_name, email, is_admin) VALUES (%s, %s, %s, %s, %s, %s)", test_users)
 mydb.commit()
 
-# Insert test data into product
+# Insert test data into product (with category and placeholder for image)
 test_products = [
-    ("Organic Apples", "NatureFresh", 100, 1.99, 0.5, True, "Crisp and fresh organic apples."),
-    ("Almond Milk", "NutriFarm", 50, 3.49, 1.0, False, "Non-dairy almond milk."),
-    ("Whole Grain Bread", "Baker's Choice", 75, 2.99, 0.8, False, "Freshly baked whole grain bread.")
+    ("Organic Apples", "NatureFresh", 100, 1.99, 0.5, True, "produce", "Crisp and fresh organic apples.", None),
+    ("Almond Milk", "NutriFarm", 50, 3.49, 1.0, False, "dairy", "Non-dairy almond milk.", None),
+    ("Whole Grain Bread", "Baker's Choice", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
+    ("Baby Carrots", "Kroger", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
+    ("Whole wheat Bread", "Dave's Killer", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
+    ("Chocolate Chip Cookies", "Entenmann's", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
+    ("Large Farm Eggs", "Kirkland", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
+    ("Lunchly Fiesta Nachos with Prime", "Mr. Beast's", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
+    ("Dairy Free Plain Yogurt", "Kirckland", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
+    ("Prime Hydration", "KSI", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
+    ("Chicken Noodle Soup", "Progresso", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
+    ("2% Reduced Fat Milk", "Great Value", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None)
 ]
 
-cursor.executemany("INSERT INTO product (name, brand, stock, price, weight, featured, description) VALUES (%s, %s, %s, %s, %s, %s, %s)", test_products)
+cursor.executemany("INSERT INTO product (name, brand, stock, price, weight, featured, category, description, image) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", test_products)
 mydb.commit()
 
 # Insert test data into orders
@@ -99,11 +98,6 @@ test_orders = [
 
 cursor.executemany("INSERT INTO orders (user_id, amount, cost, order_date, product_id) VALUES (%s, %s, %s, %s, %s)", test_orders)
 mydb.commit()
-
-#These scripts will be need to be updated by the backend team 
-#is there are extra commands we need a extra file to call upon this so make another file for just user calls
-#This will be to create the data base only
-
 
 # Retrieve and display user data
 cursor.execute("SELECT * FROM user_info")
