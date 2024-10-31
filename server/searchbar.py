@@ -10,20 +10,23 @@ def search_products():
         # Get search query from request arguments
         query = request.args.get("query", "").strip()
         
-        if not query:
-            return jsonify({"error": "Search query is required"}), 400
-
         # Connect to the database
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
 
-        # Search for products by name or category
-        search_query = f"%{query}%"
-        cursor.execute("""
+        if query:       
+        # Search for products by name or category 
+            search_query = f"%{query}%"
+            cursor.execute("""
             SELECT product_id, name, brand, stock, price, weight, category, description
             FROM product
             WHERE name LIKE %s OR category LIKE %s
-        """, (search_query, search_query))
+            """, (search_query, search_query))
+        else:
+            cursor.execute("""
+            SELECT product_id, name, brand, stock, price, weight, category, description 
+            FROM product
+                """)
 
         # Fetch all matching products
         products = cursor.fetchall()
