@@ -23,10 +23,7 @@ def search_products():
             WHERE name LIKE %s OR category LIKE %s
             """, (search_query, search_query))
         else:
-            cursor.execute("""
-            SELECT product_id, name, brand, stock, price, weight, category, description 
-            FROM product
-                """)
+            cursor.execute("""SELECT * FROM product """)
 
         # Fetch all matching products
         products = cursor.fetchall()
