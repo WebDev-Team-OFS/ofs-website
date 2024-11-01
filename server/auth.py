@@ -47,6 +47,7 @@ def register():
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
+        confirm_passowrd = data.get('confirm_password')
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         email = data.get('email')
@@ -54,6 +55,8 @@ def register():
 
         if not all([username, password, first_name, last_name, email]):
             return jsonify({"error": "All fields are required"}), 400
+        if password != confirm_passowrd:
+            return jsonify ({"error": "Passwords do not match"}), 400
         
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
