@@ -3,11 +3,10 @@ from flask import Flask,jsonify
 from db_module import get_db_connection
 #create cart for user 
 
-
-
-
+#the functions are not connected to the server 10/31/2024 Bryan 
 #view cart
 def view_cart(user_id):
+
     cursor.execute("""
         SELECT p.name, p.price, c.quantity, (p.price * c.quantity) AS total
         FROM cart c
@@ -40,3 +39,6 @@ def update_cart_item(user_id, product_id, new_quantity):
     mydb.commit()
 
 
+
+if __name__ == "__main__":
+    print("Wrong Call")
