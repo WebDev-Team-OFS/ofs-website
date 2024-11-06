@@ -60,6 +60,19 @@ CREATE TABLE IF NOT EXISTS orders (
 )
 """)
 
+#create cart table
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS cart(
+    user_is INT,
+    product_id INT,
+    quantity INT,
+    PRIMARY KEY (user_id,product_id),
+    FOREIGN KEY (user_id) REFERENCES user_info(user_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+    )
+""")
+
 # Insert test data into user_info
 test_users = [
     ("john123", "pass123", "John", "Doe", "john@example.com", 0),
@@ -113,6 +126,12 @@ for product in cursor.fetchall():
 cursor.execute("SELECT * FROM orders")
 for order in cursor.fetchall():
     print(order)
+
+# Retrieve and display cart data
+cursor.execute("SELECT * FROM cart")
+for order in cursor.fetchall():
+    print(order)
+    
 
 cursor.close()
 mydb.close()
