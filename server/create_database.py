@@ -86,18 +86,18 @@ mydb.commit()
 
 # Insert test data into product (with category and placeholder for image)
 test_products = [
-    ("Organic Apples", "NatureFresh", 100, 1.99, 0.5, True, "produce", "Crisp and fresh organic apples.", None),
-    ("Almond Milk", "NutriFarm", 50, 3.49, 1.0, False, "dairy", "Non-dairy almond milk.", None),
-    ("Whole Grain Bread", "Baker's Choice", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
-    ("Baby Carrots", "Kroger", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
-    ("Whole wheat Bread", "Dave's Killer", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
-    ("Chocolate Chip Cookies", "Entenmann's", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
-    ("Large Farm Eggs", "Kirkland", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
-    ("Lunchly Fiesta Nachos with Prime", "Mr. Beast's", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
-    ("Dairy Free Plain Yogurt", "Kirckland", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
-    ("Prime Hydration", "KSI", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
-    ("Chicken Noodle Soup", "Progresso", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None),
-    ("2% Reduced Fat Milk", "Great Value", 75, 2.99, 0.8, False, "bakery", "Freshly baked whole grain bread.", None)
+    ("Organic Apples", "NatureFresh", 100, 1.99, 0.5, True, "Produce", "Crisp and fresh organic apples.", None),
+    ("Almond Milk", "NutriFarm", 50, 3.49, 1.0, False, "Dairy", "Non-dairy almond milk.", None),
+    ("Whole Grain Bread", "Baker's Choice", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
+    ("Baby Carrots", "Kroger", 75, 2.99, 0.8, False, "Produce", "Freshly baked whole grain bread.", None),
+    ("Whole wheat Bread", "Dave's Killer", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
+    ("Chocolate Chip Cookies", "Entenmann's", 75, 2.99, 0.8, False, "Snacks", "Freshly baked whole grain bread.", None),
+    ("Large Farm Eggs", "Kirkland", 75, 2.99, 0.8, False, "Produce", "Freshly baked whole grain bread.", None),
+    ("Lunchly Fiesta Nachos with Prime", "Mr. Beast's", 75, 2.99, 0.8, False, "Snacks", "Freshly baked whole grain bread.", None),
+    ("Dairy Free Plain Yogurt", "Kirckland", 75, 2.99, 0.8, False, "Dairy", "Freshly baked whole grain bread.", None),
+    ("Prime Hydration", "KSI", 75, 2.99, 0.8, False, "Drinks", "Freshly baked whole grain bread.", None),
+    ("Chicken Noodle Soup", "Progresso", 75, 2.99, 0.8, False, "Canned Foods", "Freshly baked whole grain bread.", None),
+    ("2% Reduced Fat Milk", "Great Value", 75, 2.99, 0.8, False, "Dairy", "Freshly baked whole grain bread.", None)
 ]
 
 cursor.executemany("INSERT INTO product (name, brand, stock, price, weight, featured, category, description, image) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", test_products)
