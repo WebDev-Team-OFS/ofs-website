@@ -70,7 +70,7 @@ def click_product(product_id):
         cursor = db_connection.cursor(dictionary=True)
 
 
-        cursor.execute("SELECT * FROM product WHERE product_id = %s", (product_id))
+        cursor.execute("SELECT * FROM product WHERE product_id = %s", (product_id,))
         product = cursor.fetchone()
 
         cursor.close()
