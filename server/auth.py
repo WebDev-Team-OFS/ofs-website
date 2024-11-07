@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 # Change app route as needed
@@ -31,6 +31,9 @@ def login():
         db_connection.close()
 
         if user and check_password_hash(user['password'], password):
+            session['user_id'] = user['user_id']
+            session['username'] = user['username']
+            session['is_admin'] = user['is_admin']
             user.pop('password')
             return jsonify({"message": "Login successful", "user": user}), 200
         else:
@@ -83,5 +86,27 @@ def register():
         return jsonify({"message": "Registration successful"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+
+@auth_bp.route("/api/protected", methods=["GET"])
+def protected():
+    # Check if the user is logged in
+    if 'user_id' not in session:
+        return jsonify({"error": "Unauthorized, please login first"}), 401
+
+    # Get user data from session
+    user_id = session['user_id']
+    username = session['username']
+    return jsonify({"message": f"Welcome {username}!", "user_id": user_id}), 200
+
+@auth_bp.route("/api/logout", methods=["POST"])
+def logout():
+    session.clear()  # Clears the session data
+    return jsonify({"message": "Logged out successfully"}), 200
+
+
+
+
 
 
