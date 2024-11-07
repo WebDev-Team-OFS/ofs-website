@@ -6,7 +6,8 @@ from flask_cors import CORS
 #Import area for the FLASK blue print
 from auth import auth_bp
 from searchbar import search_bp
-from credit_check import credit_card_bp
+from creditcard_check import credit_card_bp
+
 
 app = Flask(__name__)
 cors = CORS(app, origins="*")

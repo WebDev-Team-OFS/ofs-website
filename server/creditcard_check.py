@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import request, jsonify, Blueprint
 
 
-credit_card_bp = Blueprint("credit_check", __name__)
+credit_card_bp = Blueprint("credit_card_check", __name__)
 
 def luhn_check(card_number):
     # Reverse the card number and convert to a list of integers
