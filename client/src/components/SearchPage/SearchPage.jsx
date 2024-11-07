@@ -36,9 +36,16 @@ export const SearchPage = () => {
     }
 
     const selectCategory = (index) => {
-        setCategoryIndex(index);    
-        console.log(index);
-        navigate(`/search?q=${query}&category=${categories[index]}`);
+        if (categoryIndex === index) {
+            setCategoryIndex(-1);
+            index = -1;
+            navigate(`/search?q=${query}`);
+        }
+        else {
+            setCategoryIndex(index);    
+            navigate(`/search?q=${query}&category=${categories[index]}`);
+        }
+       
     }
 
     
@@ -61,11 +68,7 @@ export const SearchPage = () => {
                 {groceries.length > 0 ? (
                     groceries.map(grocery => (
                         <GroceryCard 
-                            key={grocery.id} 
-                            price={grocery.price} 
-                            title={grocery.brand + " " + grocery.name} 
-                            weight={grocery.weight} 
-                            imageURL={grocery.imageURL} 
+                            product ={grocery}
                         />
                     ))
                 ) : (

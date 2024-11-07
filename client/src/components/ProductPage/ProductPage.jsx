@@ -1,25 +1,26 @@
-
+import { formToJSON } from 'axios'
 import './product-page.css'
+import { useLocation } from 'react-router-dom'
 
 
 
-function ProductPage({imageURL, price, title, weight, description}) {
+function ProductPage() {
+    const location = useLocation();
+    const {product} = location.state || {};
     return (
         <>
             <div className="product-page-container">
                 <div className="product-image-container">
-                    <img src="./src/img/food/cookies.png" alt="" />
+                    <img src={product.imageURL} alt="" />
                 </div>
                 <div className="product-content">
-                    <h1 className="product-title">Pavesi Gocciole Chocolate Chip Cookies</h1>
+                    <h1 className="product-title">{product.brand + " " + product.name}</h1>
                     <div className="price-weight">
-                        <p className="product-price">$7.99</p>
-                        <p className="product-weight">1.00 lbs</p>
+                        <p className="product-price">${product.price}</p>
+                        <p className="product-weight">{product.weight} lbs</p>
                     </div>
                     <p className="product-description">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer semper dictum massa et elementum.
-                    Proin laoreet mi non turpis molestie ultricies. Vestibulum malesuada pellentesque urna vel vulputate. 
-                    Nulla sodales vel nulla vel convallis. Vestibulum ac urna porttitor, condimentum sapien ut, auctor lacus. 
+                        {product.description}
                     </p>
                     <button>ADD TO CART</button>
                 </div>
