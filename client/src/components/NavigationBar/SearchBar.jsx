@@ -1,11 +1,16 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import '../SearchPage/SearchPage'
 
 
 const SearchBar = () => {
     const [input, setInput] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const currentCategory = queryParams.get('category');
+
     
 
     const handleEnter = (event) => {
@@ -17,7 +22,13 @@ const SearchBar = () => {
     const search = (event) => {
         const searchInput = event.target.value;
         setInput(searchInput);
-        navigate(`/search?q=${searchInput}`);
+        if (currentCategory == null) {
+            navigate(`/search?q=${searchInput}`);
+        }
+        else {
+            navigate(`/search?q=${searchInput}&category=${currentCategory}`);
+        }
+        
     }
 
    
