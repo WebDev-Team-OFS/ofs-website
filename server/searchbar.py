@@ -59,3 +59,27 @@ def search_products():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+
+
+@search_bp.route("/api/product/<int:product_id>", methods=["GET"])
+def click_product(product_id):
+    try:
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor(dictionary=True)
+
+
+        cursor.execute("SELECT * FROM product WHERE product_id = %s", (product_id))
+        product = cursor.fetchone()
+
+        cursor.close()
+        db_connection.close()
+
+        if product:
+            return jsonify({"product": product}), 200
+        else:
+            return jsonify({"error": "product not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
