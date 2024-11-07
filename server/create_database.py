@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS orders (
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS cart(
-    user_is INT,
+    user_id INT,
     product_id INT,
     quantity INT,
     PRIMARY KEY (user_id,product_id),

@@ -14,7 +14,7 @@ export const SearchPage = () => {
 
     const fetchData = async () => {
         console.log("fetch data");
-        const response = await axios.get(`http://127.0.0.1:8080/api/search?query=${query}`);
+        const response = await axios.get(`http://127.0.0.1:8080/api/search?q=${query}`);
         console.log(response.data.products);
         console.log("fetch data");
         setGroceries(response.data.products);
