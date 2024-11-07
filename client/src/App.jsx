@@ -20,7 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route path ="/" element = {<LandingPage />} />
-            <Route path ="/product" element = {<ProductPage />} />
+            <Route path ="/product/:id" element = {<ProductPage />} />
             <Route path ="/checkout" element = {<CheckoutPage />} />
             <Route path ="/search" element = {<SearchPage />} />
             {/* <Route path ="/search?q=*" element = {<SearchPage />} /> */}

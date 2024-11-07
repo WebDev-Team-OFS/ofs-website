@@ -9,7 +9,7 @@ function GroceryCard({product}) {
         console.log("hello");
         console.log(product);
 
-     navigate(`/product?id=${product.product_id}`, { state: { product } });
+     navigate(`/product/${product.product_id}`);
 
     }
 

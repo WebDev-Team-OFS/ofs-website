@@ -1,12 +1,28 @@
-import { formToJSON } from 'axios'
 import './product-page.css'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import axios from 'axios'
+
 
 
 
 function ProductPage() {
-    const location = useLocation();
-    const {product} = location.state || {};
+
+    const [product, setProduct] = useState({});
+
+    const param = useParams();
+    const id = param.id;
+
+    const fetchData = async () => {
+        console.log("fetch data");
+        let response = await axios.get(`http://127.0.0.1:8080/api/product/${id}`); 
+        console.log(response.data.product);
+        setProduct(response.data.product);
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, [])
     return (
         <>
             <div className="product-page-container">
