@@ -36,8 +36,8 @@ def search_products():
             cursor.execute("""
             SELECT product_id, name, brand, stock, price, weight, category, description
             FROM product
-            WHERE name LIKE %s OR category LIKE %s
-            """, (search_query, search_query))
+            WHERE name LIKE %s OR category LIKE %s OR brand LIKE %s
+            """, (search_query, search_query, search_query))
         else:
             cursor.execute("""SELECT * FROM product """)
 
