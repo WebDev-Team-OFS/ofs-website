@@ -28,7 +28,7 @@ def search_products():
             cursor.execute("""
             SELECT product_id, name, brand, stock, price, weight, category, description
             FROM product
-            WHERE name LIKE %s or brand LIKE %s AND category LIKE %s
+            WHERE (name LIKE %s or brand LIKE %s) AND category LIKE %s
             """, (search_query, search_query, category_query))
         elif query:       
         # Search for products by name or category 
@@ -38,6 +38,13 @@ def search_products():
             FROM product
             WHERE name LIKE %s OR category LIKE %s OR brand LIKE %s
             """, (search_query, search_query, search_query))
+        elif category:
+            category_query = f"%{category}%"
+            cursor.execute("""
+            SELECT product_id, name, brand, stock, price, weight, category, description
+            FROM product
+            WHERE name LIKE %s OR category LIKE %s OR brand LIKE %s
+            """, (category_query, category_query, category_query))
         else:
             cursor.execute("""SELECT * FROM product """)
 
