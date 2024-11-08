@@ -10,7 +10,6 @@ from db_module import get_db_connection
 cart_bp = Blueprint("cart", __name__)
 #create cart for user 
 
-#the functions are not connected to the server 10/31/2024 Bryan 
 #view cart
 @cart_bp.route('/api/view_cart/<int:user_id>', methods= ['GET'])
 def view_cart(user_id):
