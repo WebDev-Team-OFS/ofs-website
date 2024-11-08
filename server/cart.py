@@ -1,13 +1,13 @@
-from flask import Flask,jsonify
+from flask import Blueprint,jsonify
 from db_module import get_db_connection
 
 
-app = Flask(__name__)
+cart_bp = Blueprint("cart", __name__)
 #create cart for user 
 
 #the functions are not connected to the server 10/31/2024 Bryan 
 #view cart
-@app.route('/view_cart/<int:user_id>', methods= ['GET'])
+@cart_bp.route('/api/view_cart/<int:user_id>', methods= ['GET'])
 def view_cart(user_id):
     mydb = get_db_connection()
     cursor = mydb.cursor()
@@ -26,7 +26,7 @@ def view_cart(user_id):
 
 
 #remove item from cart 
-@app.route('/remove_from_cart/<int:user_id>/<int:product_id>', methods=['DELETE'])
+@cart_bp.route('/api/remove_from_cart/<int:user_id>/<int:product_id>', methods=['DELETE'])
 def remove_from_cart(user_id, product_id):
     mydb = get_db_connection()
     cursor = mydb.cursor()
@@ -40,7 +40,7 @@ def remove_from_cart(user_id, product_id):
 
 #increase or decrease items in cart 
 
-@app.route('/update_cart_item/<int:user_id>/<int:product_id>/<int:new_quantity>', methods =['PUT'])
+@cart_bp.route('/api/update_cart_item/<int:user_id>/<int:product_id>/<int:new_quantity>', methods =['PUT'])
 def update_cart_item(user_id, product_id, new_quantity):
     mydb = get_db_connection()
     cursor = mydb.cursor()
@@ -56,8 +56,3 @@ def update_cart_item(user_id, product_id, new_quantity):
     cursor.close()
     mydb.close()
     return jsonify({"message": "Cart updated"})
-
-
-
-if __name__ == "__main__":
-    app.run(debug=True)

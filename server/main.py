@@ -7,6 +7,7 @@ from flask_cors import CORS
 from auth import auth_bp
 from searchbar import search_bp
 from creditcard_check import credit_card_bp
+from cart import cart_bp
 
 
 app = Flask(__name__)
@@ -17,6 +18,7 @@ cors = CORS(app, origins="*")
 app.register_blueprint(auth_bp)
 app.register_blueprint(search_bp)
 app.register_blueprint(credit_card_bp)
+app.register_blueprint(cart_bp)
 
 #health check to test if your are unsure API is working
 @app.route("/api/healthcheck", methods=['GET'])
