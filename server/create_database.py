@@ -150,12 +150,6 @@ test_products = [
 ("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
 ("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
 
-
-
-
-
-
-
 ]
 
 cursor.executemany("INSERT INTO product (name, brand, stock, price, weight, featured, category, description, image) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", test_products)
