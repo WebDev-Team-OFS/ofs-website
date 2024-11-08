@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS user_info (
 
 #admin table
 cursor.execute("""
-CREATE TABLE IF NOT EXIST emp_info(
+CREATE TABLE IF NOT EXIST admin_info(
     emp_id AUTO_INCREMENT PRIMARY KEY, 
     username VARCHAR(50),
     password VARCHAR(255),
@@ -98,7 +98,7 @@ mydb.commit()
 
 test_admin = [
     ("adminUser", "adminpass", "Admin", "User", "admin@example.com"),
-    ("emp1", "emppass", "emp1", "User", "emp1@example.com"),
+    ("employee1", "emppass", "employee1", "User", "employee1@example.com"),
 ]
 cursor.executemany("INSERT INTO user_info (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)", test_admin)
 mydb.commit()
