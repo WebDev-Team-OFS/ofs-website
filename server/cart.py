@@ -2,6 +2,11 @@ from flask import Blueprint,jsonify
 from db_module import get_db_connection
 
 
+
+#use sessions or jwt instead of dbwitch ever one works
+#bhuv this increae or decrease will be used in checkout as well
+#use execeptions for each things 
+
 cart_bp = Blueprint("cart", __name__)
 #create cart for user 
 
