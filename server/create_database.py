@@ -25,10 +25,23 @@ CREATE TABLE IF NOT EXISTS user_info (
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     email VARCHAR(100),
-    is_admin BOOLEAN DEFAULT 0,  # This column indicates if a user is an admin (1 for admin, 0 for non-admin)
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 """)
+
+#admin table
+cursor.execute("""
+CREATE TABLE IF NOT EXIST admin_info(
+    emp_id AUTO_INCREMENT PRIMARY KEY, 
+    username VARCHAR(50),
+    password VARCHAR(255),
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100),
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )                       
+""")
+
 
 # Create product table
 cursor.execute("""
@@ -75,14 +88,22 @@ CREATE TABLE IF NOT EXISTS cart(
 
 # Insert test data into user_info
 test_users = [
-    ("john123", "pass123", "John", "Doe", "john@example.com", 0),
-    ("bobbyL", "loxd", "Bobby", "Lee", "bobby@example.com", 0),
-    ("bjorkM", "vespertine", "Bjork", "Magnusson", "bjork@example.com", 0),
-    ("adminUser", "adminpass", "Admin", "User", "admin@example.com", 1)
+    ("john123", "pass123", "John", "Doe", "john@example.com"),
+    ("bobbyL", "loxd", "Bobby", "Lee", "bobby@example.com"),
+    ("bjorkM", "vespertine", "Bjork", "Magnusson", "bjork@example.com")
 ]
 
-cursor.executemany("INSERT INTO user_info (username, password, first_name, last_name, email, is_admin) VALUES (%s, %s, %s, %s, %s, %s)", test_users)
+cursor.executemany("INSERT INTO user_info (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)", test_users)
 mydb.commit()
+
+test_admin = [
+    ("adminUser", "adminpass", "Admin", "User", "admin@example.com"),
+    ("employee1", "emppass", "employee1", "User", "employee1@example.com"),
+]
+cursor.executemany("INSERT INTO user_info (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)", test_admin)
+mydb.commit()
+
+
 
 # Insert test data into product (with category and placeholder for image)
 test_products = [
