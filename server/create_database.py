@@ -5,7 +5,7 @@ import mysql.connector
 mydb = mysql.connector.connect(
     host = "localhost",
     user = "root",
-    password = "Barcelona123",#change if you set password   
+    password = "Barcelona123",   #change if you set password   
     auth_plugin = 'mysql_native_password'
 )
 
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS user_info (
 
 #admin table
 cursor.execute("""
-CREATE TABLE IF NOT EXIST admin_info(
-    emp_id AUTO_INCREMENT PRIMARY KEY, 
+CREATE TABLE IF NOT EXISTS admin_info(
+    emp_id INT AUTO_INCREMENT PRIMARY KEY, 
     username VARCHAR(50),
     password VARCHAR(255),
     first_name VARCHAR(50),
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS cart(
     user_id INT,
     product_id INT,
     quantity INT,
-    PRIMARY KEY (user_id,product_id),
+    PRIMARY KEY (user_id, product_id),
     FOREIGN KEY (user_id) REFERENCES user_info(user_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id)
     )
@@ -100,8 +100,9 @@ test_admin = [
     ("adminUser", "adminpass", "Admin", "User", "admin@example.com"),
     ("employee1", "emppass", "employee1", "User", "employee1@example.com"),
 ]
-cursor.executemany("INSERT INTO user_info (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)", test_admin)
+cursor.executemany("INSERT INTO admin_info (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)", test_admin)
 mydb.commit()
+
 
 
 
@@ -118,7 +119,7 @@ test_products = [
     ("Dairy Free Plain Yogurt", "Kirckland", 75, 2.99, 0.8, False, "Dairy", "Vanilla yogurt (32 oz) is a creamy, delicious treat with the perfect hint of natural vanilla flavor. Packed with live and active cultures, it's a great source of probiotics for gut health. Rich in protein and calcium, this smooth and versatile yogurt is perfect on its own, blended into smoothies, or topped with fruits and granola for a wholesome snack. The 32 oz container is ideal for sharing or enjoying throughout the week!", None),
     ("Prime Hydration", "KSI", 75, 2.99, 0.8, False, "Drinks", "Prime Hydration is a refreshing drink designed to keep you hydrated and energized throughout the day. With a blend of electrolytes, antioxidants, and B vitamins, it supports optimal hydration while boosting your energy levels. Whether you're working out, recovering, or just staying active, Prime Hydration provides the perfect balance of hydration and replenishment without added sugar. Stay refreshed and revitalized with every sip!", None),
     ("Chicken Noodle Soup", "Progresso", 75, 2.99, 0.8, False, "Canned Foods", "Progresso Chicken Noodle Soup is a comforting, ready-to-eat classic made with tender white meat chicken, hearty noodles, and a flavorful broth. Perfect for a quick and satisfying meal, it's packed with quality ingredients and rich, savory taste. Whether you're warming up on a chilly day or craving a comforting lunch, Progresso Chicken Noodle Soup offers a delicious, no-fuss solution that's ready in minutes!", None),
-    ("Takis", "Great Value", 75, 2.99, 0.8, False, "Snack", "Takis are bold, crunchy rolled tortilla chips with an intense kick of spice and tangy flavor. Each bite packs a punch, offering an unforgettable experience for snack lovers who crave something fiery and flavorful. Known for their distinctive shape and zesty seasoning, Takis are perfect for anyone looking for a snack with an extra edge. Ideal for sharing (or not!), these chips bring a burst of excitement to any snack time.", None)
+    ("Takis", "Great Value", 75, 2.99, 0.8, False, "Snack", "Takis are bold, crunchy rolled tortilla chips with an intense kick of spice and tangy flavor. Each bite packs a punch, offering an unforgettable experience for snack lovers who crave something fiery and flavorful. Known for their distinctive shape and zesty seasoning, Takis are perfect for anyone looking for a snack with an extra edge. Ideal for sharing (or not!), these chips bring a burst of excitement to any snack time.", None),
     ("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Meats", "Enjoy premium, high-quality chicken with Foster Farms Organic Free Range Chicken Breast Fillets. These boneless, skinless breast fillets are sourced from free-range chickens raised on organic vegetarian feed, ensuring a pure and natural taste. The chicken is air-chilled, meaning no water is added during processing, preserving the natural texture and flavor of the meat.", None),
 ("Tomato Paste", "Hunts", 75, 2.99, 0.8, False, "Canned Food", "Create rich, flavorful dishes with Hunt’s 100% Natural Tomato Paste. Made from carefully selected, vine-ripened tomatoes, this paste brings bold, robust tomato flavor to any recipe. Perfect for enhancing pasta sauces, soups, stews, and more, it’s a versatile pantry staple that helps elevate your cooking with its concentrated, authentic taste.", None),
 ("Ghost Sour Pink Lemonade Energy Drink", "Ghost", 75, 2.99, 0.8, False, "Drinks", "Power up your day with a refreshing twist from GHOST Energy – Sour Pink Lemonade. This energy drink offers a unique, tangy lemonade flavor designed to invigorate your taste buds while providing a clean energy boost. With zero sugar and no artificial colors, GHOST Energy is formulated to fuel your active lifestyle without the unwanted crash.", None),
@@ -130,25 +131,7 @@ test_products = [
 ("Pringles Sour Cream and Onion", "Pringles", 75, 2.99, 0.8, False, "Grains", "Satisfy your snack cravings with the bold and zesty flavor of Pringles Sour Cream & Onion. These iconic, stackable potato crisps offer the perfect blend of tangy sour cream and savory onion, delivering a taste that’s impossible to resist. Packaged in the signature resealable can, Pringles ensures your chips stay fresh and crunchy from the first bite to the last.", None),
 ("Cayanne Pepper", "Simply Organic", 75, 2.99, 0.8, False, "Ingredients", "Add a fiery kick to your favorite dishes with Simply Organic Cayenne Pepper. This high-quality spice is made from pure, organic cayenne peppers, providing a bold, hot flavor that enhances soups, sauces, meats, and more. Perfect for those who enjoy a touch of heat, this cayenne pepper is USDA Organic certified, ensuring it meets the highest standards of quality and sustainability.", None),
 ("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
-("Chicken breast", "Foster Farms", 75, 2.99, 0.8, False, "Grains", "Freshly baked whole grain bread.", None),
+
 
 ]
 
