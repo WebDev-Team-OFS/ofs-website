@@ -5,7 +5,7 @@ import mysql.connector
 mydb = mysql.connector.connect(
     host = "localhost",
     user = "root",
-    password = "adminpass",#change if you set password   
+    password = "Barcelona123",#change if you set password   
     auth_plugin = 'mysql_native_password'
 )
 
