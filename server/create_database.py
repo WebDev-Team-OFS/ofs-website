@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS user_info (
     password VARCHAR(255),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
-    email VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 """)
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXIST admin_info(
     password VARCHAR(255),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
-    email VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )                       
 """)

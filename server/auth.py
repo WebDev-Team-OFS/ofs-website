@@ -23,7 +23,7 @@ def login():
         cursor = db_connection.cursor(dictionary=True)
 
         # Query to check for user with provided email and password
-        cursor.execute("SELECT user_id, username, first_name, last_name, email, is_admin FROM user_info WHERE email = %s", (email))
+        cursor.execute("SELECT user_id, username, first_name, last_name, email, password FROM user_info WHERE email = %s", (email,))
         user = cursor.fetchone()
 
         # Close connection
@@ -33,14 +33,17 @@ def login():
         if user and check_password_hash(user['password'], password):
             session['user_id'] = user['user_id']
             session['username'] = user['username']
-            session['is_admin'] = user['is_admin']
             user.pop('password')
             return jsonify({"message": "Login successful", "user": user}), 200
         else:
             return jsonify({"error": "Invalid email or password"}), 401
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
 
 
 #registration api end point
@@ -50,21 +53,20 @@ def register():
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
-        confirm_passowrd = data.get('confirm_password')
+        confirm_password = data.get('confirm_password')
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         email = data.get('email')
-        is_admin = data.get('is_admin', False)
 
         if not all([username, password, first_name, last_name, email]):
             return jsonify({"error": "All fields are required"}), 400
-        if password != confirm_passowrd:
+        if password != confirm_password:
             return jsonify ({"error": "Passwords do not match"}), 400
         
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
 
-        cursor.execute("Select email from user_info WHERE email = %s",(email))
+        cursor.execute("Select email from user_info WHERE email = %s",(email,))
 
         if cursor.fetchone():
             cursor.close()
@@ -74,9 +76,9 @@ def register():
         hashed_password = generate_password_hash(password)
 
         cursor.execute("""
-            INSERT INTO user_info (username, password, first_name, last_name, email, is_admin)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (username, hashed_password, first_name, last_name, email, is_admin))
+            INSERT INTO user_info (username, password, first_name, last_name, email)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (username, hashed_password, first_name, last_name, email))
 
         db_connection.commit()
 
@@ -86,6 +88,11 @@ def register():
         return jsonify({"message": "Registration successful"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
     
 
 

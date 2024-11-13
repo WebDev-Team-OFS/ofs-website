@@ -59,6 +59,11 @@ def search_products():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
     
 
 
@@ -82,4 +87,9 @@ def click_product(product_id):
             return jsonify({"error": "product not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
 
