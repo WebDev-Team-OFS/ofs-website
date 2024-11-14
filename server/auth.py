@@ -1,8 +1,23 @@
-from flask import Blueprint, jsonify, request, session
+from flask import Blueprint, jsonify, request, session, current_app
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import timedelta
 # Change app route as needed
 auth_bp = Blueprint('auth', __name__)
+
+
+
+
+
+#might be really scuffed
+@auth_bp.before_app_request
+def set_admin_session_lifetime():
+    """Sets a shorter session duration for admin accounts."""
+    if 'admin_id' in session:
+        session.permanent = True  # Enables the use of PERMANENT_SESSION_LIFETIME
+        current_app.permanent_session_lifetime = timedelta(minutes=1)
+
+    #legit don't know what is happening (maybe work since rip login page AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
 
 
 
@@ -31,6 +46,7 @@ def login():
         db_connection.close()
 
         if user and check_password_hash(user['password'], password):
+            session.clear()
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             user.pop('password')
@@ -107,6 +123,20 @@ def protected():
     username = session['username']
     return jsonify({"message": f"Welcome {username}!", "user_id": user_id}), 200
 
+
+
+#check if the person is allowed in
+#security check ig (don't ask me)
+@auth_bp.route("/api/admin/protected", methods=["GET"])
+def admin_protected():
+    if 'admin_id' not in session:
+        return jsonify({"error": "Unauthorized, admin access only"}), 401
+    return jsonify({"message": "Welcome, admin!"}), 200
+
+
+
+
+
 @auth_bp.route("/api/logout", methods=["POST"])
 def logout():
     session.clear()  # Clears the session data
@@ -131,8 +161,9 @@ def admin_login():
         admin = cursor.fetchone()
 
         if admin and check_password_hash(admin['password'], password):
-            session['emp_id'] = admin['emp_id']
-            session['username'] = admin['username']
+            session.clear()
+            session['admin_id'] = admin['emp_id']
+            session['admin_username'] = admin['username']
             admin.pop('password')  # Remove password from response for security
             return jsonify({"message": "Admin login successful", "admin": admin}), 200
         else:

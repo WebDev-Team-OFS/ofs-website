@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-
+from datetime import timedelta
 
 
 #Import area for the FLASK blue print
@@ -12,6 +12,18 @@ from cart import cart_bp
 
 app = Flask(__name__)
 cors = CORS(app, origins="*")
+
+
+
+
+
+#all of these are global for the app
+#remove is its messing stuff up
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SECURE'] = True  # Use True only if running on HTTPS
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Prevent cross-site request issues
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)  # Default session lifetime
+
 
 
 #register all future API end points here
