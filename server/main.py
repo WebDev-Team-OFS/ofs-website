@@ -22,7 +22,7 @@ cors = CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = True  # Use True only if running on HTTPS
 app.config['SECRET_KEY'] = 'testkey'
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Prevent cross-site request issues
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # Prevent cross-site request issues
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)  # Default session lifetime
 
 

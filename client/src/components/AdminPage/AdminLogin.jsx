@@ -12,22 +12,38 @@ export default function AdminLogin() {
 
     const navigate = useNavigate();
 
+    const checkLogin = async (e) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8080/api/admin/protected`, {withCredentials: true});
+            navigate(`/admin/dashboard`);
+
+        }
+        catch (error) {
+            console.log(error.response);
+        }
+    }
+
     const submitLogin = async (e) => {
+
         e.preventDefault();
         try {
             const response = await axios.post(`http://127.0.0.1:8080/api/admin/login`, {
                 email,
                 password,
             }, { withCredentials: true });
-            console.log("hello");
             navigate(`/admin/dashboard`);
         }
         catch (error) {
             console.log(error.response ? error.response.data : error.message);
+            setError("The email or password is incorrect")
         }
       
 
     }
+
+    useEffect(() => {
+        checkLogin();
+    }, [])
 
   return (
     <div className="admin-login-wrapper">
