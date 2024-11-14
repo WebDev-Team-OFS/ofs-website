@@ -20,7 +20,7 @@ def search_products():
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
 
-
+        #need to fix query also to stop so many server requests
         #updated here to take in both catgory and normal search
         if query and category:
             search_query = f"%{query}%"
