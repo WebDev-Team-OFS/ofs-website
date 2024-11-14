@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request, session, current_app
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
+import datetime
+import jwt
 # Change app route as needed
 auth_bp = Blueprint('auth', __name__)
 
@@ -50,7 +52,9 @@ def login():
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             user.pop('password')
-            return jsonify({"message": "Login successful", "user": user}), 200
+
+            token = login_user(data.get('email'), data.get('password'))
+            return jsonify({"message": "Login successful", "user": user,"token": token}), 200
         else:
             return jsonify({"error": "Invalid email or password"}), 401
     except Exception as e:
@@ -60,6 +64,20 @@ def login():
             cursor.close()
         if db_connection:
             db_connection.close()
+
+
+def login_user(user_id, username):
+    SECRET_KEY = 'OFSGROCERY'
+    payload = {
+        'id': user_id,
+        'username': username,
+        'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=1)  # Token expiration
+    }
+    # Encode the JWT
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    return token
+
+
 
 
 #registration api end point
@@ -167,7 +185,8 @@ def admin_login():
             session['admin_id'] = admin['emp_id']
             session['admin_username'] = admin['username']
             admin.pop('password')  # Remove password from response for security
-            return jsonify({"message": "Admin login successful", "admin": admin}), 200
+            token = login_user(data.get('email'), data.get('password'))
+            return jsonify({"message": "Admin login successful", "admin": admin, "token": token}), 200
         else:
             return jsonify({"error": "Invalid email or password"}), 401
     except Exception as e:
