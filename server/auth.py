@@ -114,6 +114,36 @@ def logout():
 
 
 
+@auth_bp.route("/api/admin/login", methods = ['POST'])
+def admin_login():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email or not password:
+            return jsonify({"error": "Email and password are required"}), 400
+        
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor(dictionary=True)
+
+        cursor.execute("SELECT emp_id, username, first_name, last_name, email, password FROM admin_info WHERE email = %s", (email, ))
+        admin = cursor.fetchone()
+
+        if admin and check_password_hash(admin['password'], password):
+            session['emp_id'] = admin['emp_id']
+            session['username'] = admin['username']
+            admin.pop('password')  # Remove password from response for security
+            return jsonify({"message": "Admin login successful", "admin": admin}), 200
+        else:
+            return jsonify({"error": "Invalid email or password"}), 401
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
 
 
 
