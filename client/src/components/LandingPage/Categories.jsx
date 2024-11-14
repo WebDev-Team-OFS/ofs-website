@@ -1,8 +1,17 @@
 import { useEffect } from "react";
 import './categories.css';
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Categories() {
+    const navigate = useNavigate();
+
+    const searchCategory = (categoryName) => {
+        console.log("hello");
+        navigate(`/search?q=&category=${categoryName}`);
+    }
+
     const customScroll = () => {
         const featuredItems = document.querySelector(".categories");
         const leftArrow = document.querySelector(".category-leftArrow");
@@ -60,7 +69,7 @@ function Categories() {
                     {
                     categoriesList.map(category => (
                         <div className="image-container">
-                            <img src={`./src/img/categories/${category.imageName}`}alt="" />
+                            <img src={`./src/img/categories/${category.imageName}`}alt="" onClick={() => searchCategory(category.categoryName)} />
                             <p>{category.categoryName}</p>
                         </div>
                     ))
