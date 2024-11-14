@@ -57,3 +57,8 @@
     margin-top: 40px;
 }
 
+.admin-login-wrapper .error {
+    color: red;
+    font-weight: light;
+    font-family: Arial;
+}
