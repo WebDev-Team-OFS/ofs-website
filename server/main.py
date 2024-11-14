@@ -23,6 +23,7 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = True  # Use True only if running on HTTPS
 app.config['SECRET_KEY'] = 'testkey'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # Prevent cross-site request issues
+#the thing not working properly when samesite is set to lax we need to read more on documentation to figure out why
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)  # Default session lifetime
 
 
