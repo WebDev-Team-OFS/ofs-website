@@ -146,6 +146,8 @@ def logout():
 
 @auth_bp.route("/api/admin/login", methods = ['POST'])
 def admin_login():
+    cursor = None;
+    db_connection = None;
     try:
         data = request.get_json()
         email = data.get('email')
@@ -157,7 +159,7 @@ def admin_login():
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
 
-        cursor.execute("SELECT emp_id, username, first_name, last_name, email, password FROM admin_info WHERE email = %s", (email, ))
+        cursor.execute("SELECT emp_id, username, first_name, last_name, email, password FROM admin_info WHERE email = %s", (email,))
         admin = cursor.fetchone()
 
         if admin and check_password_hash(admin['password'], password):

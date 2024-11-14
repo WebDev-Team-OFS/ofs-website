@@ -11,6 +11,8 @@ import ProductPage from './components/ProductPage/ProductPage';
 import CheckoutPage from './components/CheckoutPage/CheckoutPage';
 import MainLayout from './components/MainLayout';
 import { SearchPage } from './components/SearchPage/SearchPage';
+import AdminLogin from './components/AdminPage/AdminLogin';
+import AdminDashboard from './components/AdminPage/AdminDashboard';
 
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
     <>
       <Router>
         <Routes>
+          <Route path="/admin/login" element= {<AdminLogin />} />
+          <Route path="/admin/dashboard" element= {<AdminDashboard />} />
           <Route path="/" element={<MainLayout />}>
             <Route path ="/" element = {<LandingPage />} />
             <Route path ="/product/:id" element = {<ProductPage />} />
