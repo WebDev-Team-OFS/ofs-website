@@ -1,4 +1,6 @@
 import mysql.connector
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 #update password to whatever you set your msql password to
@@ -108,8 +110,9 @@ test_users = [
 cursor.executemany("INSERT INTO user_info (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)", test_users)
 mydb.commit()
 
+admin_password = generate_password_hash("adminpass");
 test_admin = [
-    ("adminUser", "adminpass", "Admin", "User", "admin@example.com"),
+    ("adminUser", admin_password, "Admin", "User", "admin@example.com"),
     ("employee1", "emppass", "employee1", "User", "employee1@example.com"),
 ]
 cursor.executemany("INSERT INTO admin_info (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)", test_admin)
