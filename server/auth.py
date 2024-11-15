@@ -118,8 +118,8 @@ def register():
 
         cursor.close()
         db_connection.close()
-
-        return jsonify({"message": "Registration successful"}), 201
+        token = login_user(data.get('email'), data.get('password'))
+        return jsonify({"message": "Registration successful","token": token}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
