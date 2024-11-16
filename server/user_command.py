@@ -46,5 +46,52 @@ def view_profile():
             db_connection.close()
 
 
+@user_cmd_bp("api/profile", methods = ['PUT'])
+def edit_profile():
+    try:
+        if 'user_id' not in session:
+            return jsonify({"error": "Unauthoraized, login first"}), 401
+        
+        user_id = session['user_id']
+        data = request.get_json()
+
+        username = data.get('username')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        email = data.get('email')
+
+
+        if not all([username, first_name, last_name, email]):
+            return jsonify({"error": "All fields must be filled"}), 400
+        
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor()
+
+
+        cursor.execute("""
+            UPDATE user_info
+            SET username = %s, first_name= %s, last_name =%s, email = %s  
+            Where user_id = %s
+        """, (username, first_name, last_name, email, user_id))
+
+        db_connection.commit()
+
+        cursor.close()
+        db_connection.close()
+
+        return jsonify({"message": "user profile updated"}), 200
+    except Exception as e:
+        if db_connection:
+            db_connection.rollback()
+        return  jsonify({"error": str(e)}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
+        
+
+
 
 
