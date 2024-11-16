@@ -16,11 +16,17 @@ def set_admin_session_lifetime():
     if 'admin_id' in session:
         session.permanent = True  # Enables the use of PERMANENT_SESSION_LIFETIME
         current_app.permanent_session_lifetime = timedelta(minutes=1)
+    elif 'user_id' in session:
+        session.permanent = True
+        current_app.permanent_session_lifetime = timedelta(minutes=5)
 
     #legit don't know what is happening (maybe work since rip login page AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
 
-
-
+#the user time will update if they are doing something on the website
+@auth_bp.before_app_request
+def renew_session():
+    if 'user_id' in session or 'admin_id' in session:
+        session.modified = True
 
 #login in api end point
 @auth_bp.route("/api/login", methods=['POST'])
@@ -121,7 +127,9 @@ def protected():
     # Get user data from session
     user_id = session['user_id']
     username = session['username']
-    return jsonify({"message": f"Welcome {username}!", "user_id": user_id}), 200
+    session_expiry = session.permanent_session_lifetime.total_seconds() if session.permanent else None
+    
+    return jsonify({"message": f"Welcome {username}!", "user_id": user_id, "session_expiry_seconds": session_expiry}), 200
 
 
 
