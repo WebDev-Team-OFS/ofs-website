@@ -1,4 +1,6 @@
-from flask import Blueprint, jsonify, session
+from flask import Blueprint, jsonify, session, request
+from db_module import get_db_connection
+
 
 cart_bp = Blueprint("cart", __name__)
 
@@ -37,3 +39,59 @@ def update_cart_item(product_id, new_quantity):
         session["cart"] = cart
         return jsonify({"message": "Cart updated"})
     return jsonify({"error": "Item not in cart"}), 404
+
+
+
+#we should add a api to commit the order information to db 
+
+@cart_bp.route('/api/checkout', method = ['POST'])
+def checkout():
+    try:
+        if 'user_id' not in session:
+            return jsonify({"error": "User is not logged in"}), 401
+    
+        user_id = session['user_id']
+        data = request.get_json()
+        items = data.get('items')
+
+        if not items or not isinstance(items, list):
+            return jsonify({"error": "No items provided or invalid format"}), 400
+    
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor(dictionary=True)
+
+        for item in items:
+            product_id = item.get('product_id')
+            amount = item.get('quantity')
+            cost = item.get('price')
+
+            if not all([product_id, amount, cost]):
+                return jsonify({"error": "Not all parameters present"}), 401
+            
+
+            cursor.execute("""
+                INSERT INTO orders (user_id, product_id, amount, cost)
+                VALUES (%s, %s, %s, %s)
+                """, (user_id, product_id, amount, cost))
+        
+        db_connection.commit
+
+        cursor.close()
+        db_connection.close()
+
+        return jsonify({"Order Success": "All orders are put into the table"}), 201
+
+    except Exception as e:
+        # Rollback in case of an error
+        if get_db_connection:
+            get_db_connection.rollback()
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        # Ensure resources are closed
+        if cursor:
+            cursor.close()
+        if get_db_connection:
+            get_db_connection.close()
+
+
