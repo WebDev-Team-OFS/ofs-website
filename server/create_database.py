@@ -89,6 +89,8 @@ CREATE TABLE IF NOT EXISTS orders (
 
 #create cart table
 
+
+#remove if nont being used 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS cart(
     user_id INT,
@@ -99,6 +101,9 @@ CREATE TABLE IF NOT EXISTS cart(
     FOREIGN KEY (product_id) REFERENCES product(product_id)
     )
 """)
+
+
+
 
 # Insert test data into user_info
 test_users = [
