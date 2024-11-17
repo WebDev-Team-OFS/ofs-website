@@ -1,12 +1,16 @@
 /* Overall Container */
+
+
 .auth-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
   background-color: #f7f8fc;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
 }
+
+
 
 /* Auth Box */
 .auth-box {
@@ -48,6 +52,14 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   outline: none;
+  box-sizing: border-box;
+}
+
+.auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 /* Button */
