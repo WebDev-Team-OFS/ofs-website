@@ -44,7 +44,7 @@ def update_cart_item(product_id, new_quantity):
 
 #we should add a api to commit the order information to db 
 
-@cart_bp.route('/api/checkout', method = ['POST'])
+@cart_bp.route('/api/checkout', methods = ['POST'])
 def checkout():
     try:
         if 'user_id' not in session:
