@@ -13,13 +13,14 @@ import MainLayout from './components/MainLayout';
 import { SearchPage } from './components/SearchPage/SearchPage';
 import AdminLogin from './components/AdminPage/AdminLogin';
 import AdminDashboard from './components/AdminPage/AdminDashboard';
-
+import LoginPage from './components/LoginPage/LoginPage';
 
 function App() {
   return (
     <>
       <Router>
         <Routes>
+          <Route path="/login" element= {<LoginPage />} />
           <Route path="/admin/login" element= {<AdminLogin />} />
           <Route path="/admin/dashboard" element= {<AdminDashboard />} />
           <Route path="/" element={<MainLayout />}>
