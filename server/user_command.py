@@ -11,7 +11,7 @@ user_cmd_bp = Blueprint('user_command', __name__)
 #make sure you use the protected before accesses these
 
 
-@user_cmd_bp("api/profile", methods = ['GET'])
+@user_cmd_bp.route("/api/profile", methods = ['GET'])
 def view_profile():
     try:
         if 'user_id' not in session:
@@ -46,7 +46,7 @@ def view_profile():
             db_connection.close()
 
 
-@user_cmd_bp("api/profile", methods = ['PUT'])
+@user_cmd_bp.route("/api/profile", methods = ['PUT'])
 def edit_profile():
     try:
         if 'user_id' not in session:
