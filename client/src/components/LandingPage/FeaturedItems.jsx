@@ -1,8 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import GroceryCard from "../GroceryCard/GroceryCard"
+import axios from "axios";
 
 
 function FeaturedItems() {
+    const [featuredItems, updateFeaturedItems] = useState([])
+
+    const fetchData = async () => {
+        let response = await axios.get(`http://127.0.0.1:8080/api/search?q=`)
+        console.log(response.data.products);
+        
+        updateFeaturedItems(response.data.products.filter(grocery => grocery.featured === 1));
+    }
+
     const customScroll = () => {
         const featuredItems = document.querySelector(".featured-items");
         const leftArrow = document.querySelector(".leftArrow");
@@ -31,11 +41,8 @@ function FeaturedItems() {
 
     useEffect(() => {
         customScroll();
-    })
-
-    const product = {
-    
-    }
+        fetchData();
+    }, [])
 
 
    return (
@@ -45,6 +52,15 @@ function FeaturedItems() {
             <div className="featured-items-with-arrows">
                 <button className="leftArrow arrow">&#60;</button>
                 <div className="featured-items">
+                    {featuredItems.length > 0 ? (
+                        featuredItems.map(grocery => (
+                            <GroceryCard 
+                                product ={grocery}
+                            />   
+                        ))
+                    ) : (
+                        <p>No groceries found.</p> 
+                    )}
                     {/* <GroceryCard price="8.99" title="Kirkland Large Farm Eggs, 12 count" weight="1.25" imageURL="./src/img/food/eggs.png" />
                     <GroceryCard price = "13.99" title="Loaf of Nature's Whole Weat Bread" weight="1.25" imageURL="./src/img/food/bread.jpg" />
                     <GroceryCard price = "11.99" title = "Daidy Free Plain Yogurt" weight="2.00" imageURL="./src/img/food/yogurt.png" />

@@ -20,7 +20,7 @@ def search_products():
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
 
-
+        #need to fix query also to stop so many server requests
         #updated here to take in both catgory and normal search
         if query and category:
             search_query = f"%{query}%"
@@ -59,6 +59,11 @@ def search_products():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
     
 
 
@@ -82,4 +87,9 @@ def click_product(product_id):
             return jsonify({"error": "product not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
 
