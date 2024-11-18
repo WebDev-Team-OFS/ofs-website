@@ -22,14 +22,6 @@ def set_admin_session_lifetime():
 
     #legit don't know what is happening (maybe work since rip login page AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
 
-#the user time will update if they are doing something on the website
-@auth_bp.before_app_request
-def renew_session():
-    #if 'user_id' in session or 'admin_id' in session:
-    #    session.modified = True
-
-    if ('user_id' in session or 'admin_id' in session) and request.endpoint not in ('static',):
-        session.modified = True
 
 
 @auth_bp.before_app_request
@@ -42,6 +34,14 @@ def validate_session():
             response.set_cookie('session', '', expires=0)
             return response
 
+#the user time will update if they are doing something on the website
+@auth_bp.after_request
+def renew_session():
+    #if 'user_id' in session or 'admin_id' in session:
+    #    session.modified = True
+
+    if ('user_id' in session or 'admin_id' in session) and request.endpoint not in ('static',):
+        session.modified = True
 
 
 
