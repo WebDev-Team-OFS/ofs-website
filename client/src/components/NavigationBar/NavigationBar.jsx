@@ -1,6 +1,8 @@
 import SearchBar from './SearchBar'
+import ProfileButton from './ProfileButton';
 import './navigation-bar.css'
 import { useNavigate } from 'react-router-dom';
+
 
 function NavigationBar() {
     const navigate = useNavigate();
@@ -15,7 +17,7 @@ function NavigationBar() {
             <SearchBar />
             <div className="profile-container">
                 <img className="shopping-cart-icon" src="./src/img/shopping-cart-icon.png" alt="" />
-                <img className="profile-icon" src="./src/img/profile-icon.png" alt="" />
+                <ProfileButton />
             </div>
         </header>
     )

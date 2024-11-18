@@ -127,9 +127,9 @@ def protected():
     # Get user data from session
     user_id = session['user_id']
     username = session['username']
-    session_expiry = session.permanent_session_lifetime.total_seconds() if session.permanent else None
+    # session_expiry = session.permanent_session_lifetime.total_seconds() if session.permanent else None
     
-    return jsonify({"message": f"Welcome {username}!", "user_id": user_id, "session_expiry_seconds": session_expiry}), 200
+    return jsonify({"message": f"Welcome {username}!", "user_id": user_id}), 200
 
 
 
