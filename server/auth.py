@@ -25,7 +25,10 @@ def set_admin_session_lifetime():
 #the user time will update if they are doing something on the website
 @auth_bp.before_app_request
 def renew_session():
-    if 'user_id' in session or 'admin_id' in session:
+    #if 'user_id' in session or 'admin_id' in session:
+    #    session.modified = True
+
+    if ('user_id' in session or 'admin_id' in session) and request.endpoint not in ('static',):
         session.modified = True
 
 #login in api end point
