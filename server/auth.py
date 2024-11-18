@@ -33,7 +33,7 @@ def validate_session():
             response = make_response(jsonify({"error": "Session expired, please log in again."}))
             response.set_cookie('session', '', expires=0)
             return response
-
+'''
 #the user time will update if they are doing something on the website
 @auth_bp.after_request
 def renew_session():
@@ -42,7 +42,7 @@ def renew_session():
 
     if ('user_id' in session or 'admin_id' in session) and request.endpoint not in ('static',):
         session.modified = True
-
+'''
 
 
 #login in api end point
