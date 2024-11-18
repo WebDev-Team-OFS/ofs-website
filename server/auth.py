@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, session, current_app
+from flask import Blueprint, jsonify, request, session, current_app, make_response
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
@@ -148,7 +148,13 @@ def admin_protected():
 @auth_bp.route("/api/logout", methods=["POST"])
 def logout():
     session.clear()  # Clears the session data
-    return jsonify({"message": "Logged out successfully"}), 200
+
+    response = make_response(jsonify({"message": "Logged out successfully"}))
+    response.set_cookie('session', '', expires=0)
+    response.set_cookie('admin_id', '', expires=0)
+    response.set_cookie('user_id', '', expires=0)
+
+    return response, 200
 
 
 
