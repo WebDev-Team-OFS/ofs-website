@@ -31,6 +31,20 @@ def renew_session():
     if ('user_id' in session or 'admin_id' in session) and request.endpoint not in ('static',):
         session.modified = True
 
+
+@auth_bp.before_app_request
+def validate_session():
+    """Ensure the user is logged out if session data is invalid."""
+    if 'user_id' not in session and 'admin_id' not in session:
+        # Optionally: Clear client-side cookies if session is invalid
+        if request.cookies.get('session'):
+            response = make_response(jsonify({"error": "Session expired, please log in again."}))
+            response.set_cookie('session', '', expires=0)
+            return response
+
+
+
+
 #login in api end point
 @auth_bp.route("/api/login", methods=['POST'])
 def login():
