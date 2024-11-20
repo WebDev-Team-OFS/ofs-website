@@ -1,62 +1,93 @@
-/* Container for the whole checkout page */
+/* Checkout Container */
 .checkout-container {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Cart Items Section */
-  .cart-items {
-    margin-bottom: 30px;
-  }
-  
-  .cart-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .total-price {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: right;
-    margin-top: 20px;
-  }
-  
-  
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
 
-  /* Delivery Information Section */
-  .delivery-info, .payment-info {
-    margin-bottom: 30px;
-  }
-  
-  .checkout-container label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-  
-  .checkout-container input {
-    padding: 10px;
-    width: 100%;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  /* Button for submitting the order */
-  .checkout-container button {
-    background-color: #052E16;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .checkout-container button:hover {
-    background-color: #041E11;
-  }
-  
+/* Cart Items Section */
+.cart-items {
+  margin-bottom: 30px;
+}
+
+/* Header Row for Cart Items */
+.cart-header {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr; /* Item Name, Weight, Quantity, Price */
+  gap: 10px;
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+  padding: 10px 0;
+}
+
+.cart-header p {
+  margin: 0;
+  text-align: right; /* Align numeric headers to the right */
+}
+
+.cart-header p:first-child {
+  text-align: left; /* Align "Item Name" to the left */
+}
+
+/* Cart Item Rows */
+.cart-item {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr; /* Consistent layout for all columns */
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.cart-item p {
+  margin: 0;
+  text-align: right; /* Align numeric values to the right */
+  font-variant-numeric: tabular-nums; /* Ensures consistent spacing for numbers */
+}
+
+.cart-item p:first-child {
+  text-align: left; /* Align "Item Name" to the left */
+}
+
+/* Total Price Styling */
+.total-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: right;
+  margin-top: 20px;
+}
+
+/* Delivery and Payment Information */
+.delivery-info,
+.payment-info {
+  margin-bottom: 30px;
+}
+
+.checkout-container label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.checkout-container input {
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Button for submitting the order */
+.checkout-container button {
+  background-color: #052E16;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.checkout-container button:hover {
+  background-color: #041E11;
+}

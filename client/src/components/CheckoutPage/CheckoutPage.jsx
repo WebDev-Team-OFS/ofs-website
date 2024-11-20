@@ -1,7 +1,6 @@
 import NavigationBar from '../NavigationBar/NavigationBar';
 import React, { useState } from 'react';
 import './checkout-page.css'; // Link to your CSS file for styling
-// import './landing-page/landing-page.css'
 
 function CheckoutPage() {
   const [cartItems, setCartItems] = useState([
@@ -50,15 +49,26 @@ function CheckoutPage() {
       {/* Cart Items Section */}
       <section className="cart-items">
         <h2>Your Cart</h2>
+
+        {/* Header Row */}
+        <div className="cart-header">
+          <p>Item Name</p>
+          <p>Weight</p>
+          <p>Quantity</p>
+          <p>Price</p>
+        </div>
+
+        {/* Cart Items */}
         {cartItems.map((item) => (
           <div key={item.id} className="cart-item">
             <p>{item.name}</p>
-            <p>Weight: {item.weight.toFixed(2)}</p>
-            <p>Quantity: {item.quantity}</p>
+            <p>{item.weight.toFixed(2)} kg</p>
+            <p>{item.quantity}</p>
             <p>${item.price.toFixed(2)}</p>
-
           </div>
         ))}
+
+        {/* Total Price */}
         <div className="total-price">
           <h3>Total: ${totalPrice.toFixed(2)}</h3>
         </div>
@@ -83,7 +93,7 @@ function CheckoutPage() {
         </form>
       </section>
 
-      {/*}{/* Payment Information Form */}
+      {/* Payment Information Form */}
       <section className="payment-info">
         <h2>Payment Information</h2>
         <form onSubmit={handleSubmit}>
