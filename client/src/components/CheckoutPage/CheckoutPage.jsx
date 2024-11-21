@@ -2,13 +2,12 @@ import NavigationBar from '../NavigationBar/NavigationBar';
 import React, { useState, useEffect } from 'react';
 import './checkout-page.css'; // Link to your CSS file for styling
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function CheckoutPage() {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Kirkland Large Farm Eggs", price: 8.99, quantity: 1, weight: 1.25 },
-    { id: 2, name: "Loaf of Nature's Whole Wheat Bread", price: 13.99, quantity: 1, weight: 1.25 },
-    { id: 3, name: "Lunchly", price: 5.99, quantity: 5, weight: 2.5 }
-  ]);
+  const navigate = useNavigate();
+
+  const [cartItems, setCartItems] = useState([])
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -60,8 +59,8 @@ function CheckoutPage() {
   });
 
   // Total Price Calculation
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const totalWeight = cartItems.reduce((total, item) => total + item.weight * item.quantity, 0);
+  let totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  let totalWeight = cartItems.reduce((total, item) => total + item.weight * item.quantity, 0);
 
   // Handle input changes
   const handleInputChange = (event, section) => {
@@ -74,9 +73,29 @@ function CheckoutPage() {
   };
 
   // Form submission handler
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Order Submitted', { cartItems, deliveryDetails, paymentDetails });
+    totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    totalWeight = cartItems.reduce((total, item) => total + item.weight * item.quantity, 0);
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || []
+    const order = {
+      items: cart,
+      total_price: Number(totalPrice),
+      total_weight: Number(totalWeight),
+    }
+    console.log(order);
+    try {
+      const response = await axios.post('http://127.0.0.1:8080/api/checkout', {order});
+      console.log('Order Submitted', { cartItems, deliveryDetails, paymentDetails });
+      localStorage.removeItem('cart');
+      navigate('/');
+      alert("Your order has been submitted!")
+    }
+    catch (error) {
+      console.log("Cart not sent successfully: ", error);
+    }
+    
     // Process the order
   };
 

@@ -16,7 +16,7 @@ function ShoppingCartPage() {
     ];
 
     // State for cart items
-    const [cartItems, setCartItems] = useState(initialCartItems);
+    const [cartItems, setCartItems] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const getCart = async () => {

@@ -55,6 +55,7 @@
 .shopping-cart-icon {
     height: 55px;
     margin-bottom: 5px;
+    cursor: pointer;
 }
 
 .profile-icon {
