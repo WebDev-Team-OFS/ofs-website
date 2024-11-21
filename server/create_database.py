@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 mydb = mysql.connector.connect(
     host = "localhost",
     user = "root",
-    password = "Barcelona123",   #change if you set password   
+    password = "",   #change if you set password   
     auth_plugin = 'mysql_native_password'
 )
 
