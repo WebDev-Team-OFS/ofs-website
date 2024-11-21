@@ -10,6 +10,7 @@ admin_cmd_bp = Blueprint('admin_command', __name__)
 
 
 
+
 #view all stock
 @admin_cmd_bp.route('/admin/products', methods=['GET'])
 def review_stock():
@@ -140,7 +141,7 @@ def remove_item(product_id):
 
 
 #add admin
-@admin_cmd_bp.route("/add_admin", method = ["POST"])
+@admin_cmd_bp.route("/add_admin", methods = ["POST"])
 def add_admin():
     try:
 
