@@ -9,6 +9,8 @@ import axios from 'axios'
 function ProductPage() {
 
     const [product, setProduct] = useState({});
+    const [itemQuantity, setItemQuantity] = useState(1);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const param = useParams();
     const id = param.id;
@@ -20,9 +22,27 @@ function ProductPage() {
         setProduct(response.data.product);
     }
 
+
+    const addToCart = () => {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        
+        let cartProduct = cart.find(grocery => grocery.product_id === product.product_id);
+
+        if (cartProduct) {
+            cartProduct.quantity += itemQuantity;
+        }
+        else {
+            cart.push({ product_id: product.product_id, quantity: itemQuantity });
+        }        
+        localStorage.setItem("cart", JSON.stringify(cart));
+        setIsSuccess(true);
+
+    }
+
     useEffect(() => {
         fetchData();
     }, [])
+
     return (
         <>
             <div className="product-page-container">
@@ -38,7 +58,16 @@ function ProductPage() {
                     <p className="product-description">
                         {product.description}
                     </p>
-                    <button>ADD TO CART</button>
+                    <div className="quantity-control">
+                        <button onClick={() => setItemQuantity(itemQuantity-1)} disabled={itemQuantity <= 1} className="quantity-button">-</button>
+                        <span>{itemQuantity}</span>
+                        <button onClick={() => setItemQuantity(itemQuantity+1)} className="quantity-button">+</button>
+                     </div>
+                    <button className="add-to-cart" onClick={addToCart}>ADD TO CART</button>
+                    {
+                        isSuccess ? 
+                        <p className="success">You have added the item to your cart</p> : <></>
+                    }
                 </div>
             </div>
         </>

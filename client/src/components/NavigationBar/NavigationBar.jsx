@@ -12,7 +12,7 @@ function NavigationBar() {
     }
 
     const goToCart = () => {
-        navigate('/cart');
+        navigate('/cart')
     }
 
     return (

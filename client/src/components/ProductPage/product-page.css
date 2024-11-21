@@ -40,7 +40,7 @@
     gap: 20px;
 }
 
-.product-content button {
+.product-content .add-to-cart {
     display: block;
     background-color: #052E16;
     color: white;
@@ -52,6 +52,15 @@
     height: 60px;
     margin-top: 100px;
 }
+
+.product-content .add-to-cart:hover {
+    background-color: #0a4d27;
+}
+
+.product-content .add-to-cart:active {
+    background-color: #010904;
+}
+
 
 
 .product-price {
@@ -69,4 +78,13 @@
 
 .product-description {
     font-size: 1.2rem;
+}
+
+.product-page-container .success {
+    background-color: #e7f5e7;
+    color: #388e3c;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
 }
