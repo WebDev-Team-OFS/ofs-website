@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 mydb = mysql.connector.connect(
     host = "localhost",
     user = "root",
-    password = "",   #change if you set password   
+    password = "adminpass",   #change if you set password   
     auth_plugin = 'mysql_native_password'
 )
 
@@ -76,14 +76,13 @@ CREATE TABLE IF NOT EXISTS product (
 # Create orders table
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS orders (
-    order_number INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
-    amount INT,
-    cost DECIMAL(10, 2),
+    total_price DECIMAL(10, 2),
+    total_weight DECIMAL(10, 2),
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    product_id INT,
-    FOREIGN KEY (user_id) REFERENCES user_info(user_id),
-    FOREIGN KEY (product_id) REFERENCES product(product_id)
+    order_items JSON
+    -- FOREIGN KEY (user_id) REFERENCES user_info(user_id),
 )
 """)
 
@@ -177,13 +176,13 @@ cursor.executemany("INSERT INTO product (name, brand, stock, price, weight, feat
 mydb.commit()
 
 # Insert test data into orders
-test_orders = [
-    (1, 2, 5.98, "2024-10-01 10:30:00", 1),
-    (2, 1, 6.98, "2024-10-02 12:45:00", 2)
-]
+# test_orders = [
+#     (1, 2, 5.98, "2024-10-01 10:30:00", 1),
+#     (2, 1, 6.98, "2024-10-02 12:45:00", 2)
+# ]
 
-cursor.executemany("INSERT INTO orders (user_id, amount, cost, order_date, product_id) VALUES (%s, %s, %s, %s, %s)", test_orders)
-mydb.commit()
+# cursor.executemany("INSERT INTO orders (user_id, amount, cost, order_date, product_id) VALUES (%s, %s, %s, %s, %s)", test_orders)
+# mydb.commit()
 
 # Retrieve and display user data
 cursor.execute("SELECT * FROM user_info")
