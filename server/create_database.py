@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS product (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100),
     brand VARCHAR(100),
-    stock INt,
+    stock INT,
     price DECIMAL(10, 2),
     weight DECIMAL(5, 2),
     featured BOOLEAN,
@@ -128,8 +128,8 @@ mydb.commit()
 
 # Insert test data into product (with category and placeholder for image)
 test_products = [
-    ("Organic Apples", "NatureFresh", 100, 1.39, 1.0, True, "Produce", "Apples are a crisp, refreshing fruit packed with natural sweetness and a satisfying crunch. Rich in fiber and vitamin C, they make a healthy snack that's perfect for any time of day. Enjoy them whole, sliced, or added to salads, desserts, and recipes. With a variety of flavors from sweet to tart, apples are a versatile and nutritious choice for everyone!", None),
-    ("Almond Milk", "Silk", 50, 3.49, 1.0, True, "Dairy", "Indulge in the rich, smooth taste of Silk Organic Original Almond Milk. Carefully crafted from high-quality organic almonds, this plant-based milk alternative is certified USDA Organic and packed with natural goodness. With only 50 calories per serving, it offers a creamy, delicious flavor perfect for your morning cereal, smoothies, coffee, or just by itself.", None),
+    ("Organic Apples", "NatureFresh", 0, 1.39, 1.0, True, "Produce", "Apples are a crisp, refreshing fruit packed with natural sweetness and a satisfying crunch. Rich in fiber and vitamin C, they make a healthy snack that's perfect for any time of day. Enjoy them whole, sliced, or added to salads, desserts, and recipes. With a variety of flavors from sweet to tart, apples are a versatile and nutritious choice for everyone!", None),
+    ("Almond Milk", "Silk", 5, 3.49, 1.0, True, "Dairy", "Indulge in the rich, smooth taste of Silk Organic Original Almond Milk. Carefully crafted from high-quality organic almonds, this plant-based milk alternative is certified USDA Organic and packed with natural goodness. With only 50 calories per serving, it offers a creamy, delicious flavor perfect for your morning cereal, smoothies, coffee, or just by itself.", None),
     ("Whole Grain Bread", "Baker's Choice", 75, 2.99, 0.8, True, "Grains", "Whole wheat bread is a wholesome, hearty option made from 100% whole grains, offering a rich source of fiber and essential nutrients. Its nutty flavor and soft texture make it perfect for sandwiches, toast, or pairing with soups and salads. Packed with vitamins, minerals, and complex carbohydrates, whole wheat bread is a nutritious choice for a balanced diet.", None),
     ("Baby Carrots", "Kroger", 75, 2.99, 0.8, True, "Produce", "Baby carrots are a convenient and healthy snack, naturally sweet and bite-sized for easy munching. Perfect for salads, lunchboxes, or on-the-go, they are rich in vitamins A and C, supporting vision and immune health. Pre-washed and ready to eat, baby carrots are a fresh, crunchy choice for any occasion!", None),
     ("Whole wheat Bread", "Dave's Killer", 75, 2.99, 0.8, True, "Grains", "Fuel your day with the hearty, nutritious goodness of Dave’s Killer Bread 21 Whole Grains and Seeds. Each slice is packed with a rich blend of organic whole grains and seeds, providing a robust flavor and a satisfying crunch. Perfect for sandwiches, toast, or as a standalone snack, this bread is not only delicious but also loaded with essential nutrients to keep you energized throughout the day.", None),

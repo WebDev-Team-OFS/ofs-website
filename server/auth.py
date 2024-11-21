@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, session, current_app
+from flask import Blueprint, jsonify, request, session, current_app, make_response
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
@@ -22,11 +22,28 @@ def set_admin_session_lifetime():
 
     #legit don't know what is happening (maybe work since rip login page AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
 
-#the user time will update if they are doing something on the website
+
+
 @auth_bp.before_app_request
+def validate_session():
+    """Ensure the user is logged out if session data is invalid."""
+    if 'user_id' not in session and 'admin_id' not in session:
+        # Optionally: Clear client-side cookies if session is invalid
+        if request.cookies.get('session'):
+            response = make_response(jsonify({"error": "Session expired, please log in again."}))
+            response.set_cookie('session', '', expires=0)
+            return response
+'''
+#the user time will update if they are doing something on the website
+@auth_bp.after_request
 def renew_session():
-    if 'user_id' in session or 'admin_id' in session:
+    #if 'user_id' in session or 'admin_id' in session:
+    #    session.modified = True
+
+    if ('user_id' in session or 'admin_id' in session) and request.endpoint not in ('static',):
         session.modified = True
+'''
+
 
 #login in api end point
 @auth_bp.route("/api/login", methods=['POST'])
@@ -127,9 +144,9 @@ def protected():
     # Get user data from session
     user_id = session['user_id']
     username = session['username']
-    session_expiry = session.permanent_session_lifetime.total_seconds() if session.permanent else None
+    # session_expiry = session.permanent_session_lifetime.total_seconds() if session.permanent else None
     
-    return jsonify({"message": f"Welcome {username}!", "user_id": user_id, "session_expiry_seconds": session_expiry}), 200
+    return jsonify({"message": f"Welcome {username}!", "user_id": user_id}), 200
 
 
 
@@ -148,7 +165,13 @@ def admin_protected():
 @auth_bp.route("/api/logout", methods=["POST"])
 def logout():
     session.clear()  # Clears the session data
-    return jsonify({"message": "Logged out successfully"}), 200
+
+    response = make_response(jsonify({"message": "Logged out successfully"}))
+    response.set_cookie('session', '', expires=0)
+    response.set_cookie('admin_id', '', expires=0)
+    response.set_cookie('user_id', '', expires=0)
+
+    return response, 200
 
 
 
