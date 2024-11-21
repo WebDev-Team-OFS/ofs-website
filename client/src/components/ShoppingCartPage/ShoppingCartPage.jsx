@@ -98,11 +98,6 @@ function ShoppingCartPage() {
         <div className="shopping-cart">
             <div className="cart-header">
                 <h1>OFS Shopping Cart</h1>
-                {totalWeight < 20 && cartItems.length > 0 && (
-                    <p>
-                        *Qualifies for free shipping (under 20 lbs)
-                    </p>
-                )}
             </div>
             <div className="cart-body">
                 {cartItems.length > 0 ? (
@@ -137,7 +132,9 @@ function ShoppingCartPage() {
                     <div className="subtotal">
                         <h2>Est. Subtotal: ${total}</h2>
                         <p>Total Weight: {totalWeight} lbs</p>
-                        {deliveryCharge > 0 && <p>Delivery Charge: ${deliveryCharge}</p>}
+                        {deliveryCharge > 0 && 
+                        <p>*A shipping fee of ${deliveryCharge}.00 is added to deliveries over 20 pounds</p>
+                        }
                     </div>
                     <button className="checkout-button" onClick={() => navigate('/checkout')}>
                         Checkout
