@@ -99,10 +99,9 @@ function ShoppingCartPage() {
             <div className="cart-header">
                 <h1>OFS Shopping Cart</h1>
                 {totalWeight < 20 && cartItems.length > 0 && (
-                    <div>
-                        Free Shipping
-                        <div className="sub-text">(weight less than 20 lbs)</div>
-                    </div>
+                    <p>
+                        *Qualifies for free shipping (under 20 lbs)
+                    </p>
                 )}
             </div>
             <div className="cart-body">
@@ -113,14 +112,19 @@ function ShoppingCartPage() {
                                 <img src=/*{`./src/img/food/${item.name.toLowerCase().replace(/ /g, '-')}.png`}*/"" alt={item.name} />   
                             </div>
                             <div className="item-details">
-                                <h2>{item.brand + item.name} - Weight {item.weight} Lb</h2>
+                                <h2>{item.brand + " " + item.name}</h2>
                                 <p className="price">${item.price} each</p>
+                                <p className="weight">{item.weight} lbs each</p>
                                 <div className="quantity-control">
-                                    <button onClick={() => updateCartItemQuantity(item.product_id, -1)} disabled={item.quantity <= 1}>-</button>
+                                    <button onClick={() => updateCartItemQuantity(item.product_id, -1)} disabled={item.quantity <= 1} className="quantity-button">-</button>
                                     <span>{item.quantity}</span>
-                                    <button onClick={() => updateCartItemQuantity(item.product_id, 1)}>+</button>
+                                    <button onClick={() => updateCartItemQuantity(item.product_id, 1)} className="quantity-button">+</button>
                                     <button onClick={() => removeItemFromCart(item.product_id)} className="remove-button">Remove</button>
                                 </div>
+                            </div>
+                            <div className="item-totals">
+                                <p className="total-price">${(item.price * item.quantity).toFixed(2)}</p>
+                                <p className="total-weight">{(item.weight * item.quantity).toFixed(2)} lbs</p>
                             </div>
                         </div>
                     ))
