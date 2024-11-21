@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, session, request
 from db_module import get_db_connection
-
+import json
 
 
 cart_bp = Blueprint("cart", __name__)
@@ -150,35 +150,46 @@ def update_cart_item():
 
 @cart_bp.route('/api/checkout', methods = ['POST'])
 def checkout():
+    cursor = None;
+    db_connection = None;
     try:
-        if 'user_id' not in session:
-            return jsonify({"error": "User is not logged in"}), 401
+        # if 'user_id' not in session:
+        #     return jsonify({"error": "User is not logged in"}), 401
     
-        user_id = session['user_id']
+        # user_id = session['user_id']
+        #COMMENTED OUT USER ID UNTIL WE SET UP JWT
         data = request.get_json()
-        items = data.get('items')
+        order = data.get('order')
+        items = order.get('items') if order else None
+        total_price = order.get('total_price') if order else None
+        total_weight = order.get('total_weight') if order else None
 
-        if not items or not isinstance(items, list):
+        if not items or not isinstance(items, list) or not total_price or not total_weight:
             return jsonify({"error": "No items provided or invalid format"}), 400
     
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
 
-        for item in items:
-            product_id = item.get('product_id')
-            amount = item.get('quantity')
-            cost = item.get('price')
+        #SWITCHED TO USING JSON FOR CART ITEMS
+        # for item in items:
+        #     product_id = item.get('product_id')
+        #     amount = item.get('quantity')
+        #     cost = item.get('price')
 
-            if not all([product_id, amount, cost]):
-                return jsonify({"error": "Not all parameters present"}), 401
+        #     if not all([product_id, amount, cost]):
+        #         return jsonify({"error": "Not all parameters present"}), 401
             
 
-            cursor.execute("""
-                INSERT INTO orders (user_id, product_id, amount, cost)
-                VALUES (%s, %s, %s, %s)
-                """, (user_id, product_id, amount, cost))
+        #     cursor.execute("""
+        #         INSERT INTO orders (user_id, product_id, amount, cost)
+        #         VALUES (%s, %s, %s, %s)
+        #         """, (user_id, product_id, amount, cost))
+        cursor.execute("""
+            INSERT INTO orders(user_id, total_price, total_weight, order_items)
+            VALUES (%s, %s, %s, %s)
+            """, (None, total_price, total_weight, json.dumps(items)))
         
-        db_connection.commit
+        db_connection.commit()
 
         cursor.close()
         db_connection.close()
@@ -187,15 +198,18 @@ def checkout():
 
     except Exception as e:
         # Rollback in case of an error
-        if get_db_connection:
-            get_db_connection.rollback()
+        #GETING AN ERROR HERE
+        # if get_db_connection:
+        #     get_db_connection.rollback()
         return jsonify({"error": str(e)}), 500
 
     finally:
+        #ALSO ERRORS HEREE
         # Ensure resources are closed
-        if cursor:
-            cursor.close()
-        if get_db_connection:
-            get_db_connection.close()
+        # if cursor:
+        #     cursor.close()
+        # if db_connection:
+        #     db_connection.close()
+        print("done")
 
 
