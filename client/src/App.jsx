@@ -14,6 +14,8 @@ import { SearchPage } from './components/SearchPage/SearchPage';
 import AdminLogin from './components/AdminPage/AdminLogin';
 import AdminDashboard from './components/AdminPage/AdminDashboard';
 import LoginPage from './components/LoginPage/LoginPage';
+import ShoppingCartPage from './components/ShoppingCartPage/ShoppingCartPage';
+
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
             <Route path ="/" element = {<LandingPage />} />
             <Route path ="/product/:id" element = {<ProductPage />} />
             <Route path ="/checkout" element = {<CheckoutPage />} />
+            <Route path ="/cart" element = {<ShoppingCartPage />} />
             <Route path ="/search" element = {<SearchPage />} />
             {/* <Route path ="/search?q=*" element = {<SearchPage />} /> */}
           </Route>

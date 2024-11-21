@@ -68,4 +68,17 @@
     width: 200px;
     height: 40px;
     margin-top: 5px;
+    z-index: 10;
+}
+
+.grocery-card button:hover {
+    background-color: #0a4d27;
+}
+
+.grocery-card button:active {
+    background-color: #010904;
+}
+
+.out-of-stock:hover {
+    opacity: 0.5
 }

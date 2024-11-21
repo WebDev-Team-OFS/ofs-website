@@ -1,14 +1,49 @@
 import NavigationBar from '../NavigationBar/NavigationBar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './checkout-page.css'; // Link to your CSS file for styling
-// import './landing-page/landing-page.css'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function CheckoutPage() {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Kirkland Large Farm Eggs", price: 8.99, quantity: 1, weight: 1.25 },
-    { id: 2, name: "Loaf of Nature's Whole Wheat Bread", price: 13.99, quantity: 1, weight: 1.25 },
-    { id: 3, name: "Lunchly", price: 5.99, quantity: 5, weight: 2.5 }
-  ]);
+  const navigate = useNavigate();
+
+  const [cartItems, setCartItems] = useState([])
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const getCart = async () => {
+    console.log("GETTING CART");
+    let cart = []
+    if (isLoggedIn) {
+
+    }
+    else {
+        const localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        for (let i = 0; i < localStorageCart.length; i++) {
+            console.log(localStorageCart[i].product_id)
+            try{
+                let response = await axios.get(`http://127.0.0.1:8080/api/product/${localStorageCart[i].product_id}`);
+                
+                response.data.product.quantity = localStorageCart[i].quantity;
+                console.log(response.data.product);
+                cart.push(response.data.product);
+            }
+            catch (error) {
+                console.log(error);
+            }
+            
+        }
+    }
+    console.log(cart);
+    setCartItems(cart);
+  }
+
+  
+
+  useEffect(() => {
+    getCart();
+  }, [])
 
   const [deliveryDetails, setDeliveryDetails] = useState({
     address: '',
@@ -24,7 +59,8 @@ function CheckoutPage() {
   });
 
   // Total Price Calculation
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  let totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  let totalWeight = cartItems.reduce((total, item) => total + item.weight * item.quantity, 0);
 
   // Handle input changes
   const handleInputChange = (event, section) => {
@@ -37,9 +73,29 @@ function CheckoutPage() {
   };
 
   // Form submission handler
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Order Submitted', { cartItems, deliveryDetails, paymentDetails });
+    totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    totalWeight = cartItems.reduce((total, item) => total + item.weight * item.quantity, 0);
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || []
+    const order = {
+      items: cart,
+      total_price: Number(totalPrice),
+      total_weight: Number(totalWeight),
+    }
+    console.log(order);
+    try {
+      const response = await axios.post('http://127.0.0.1:8080/api/checkout', {order});
+      console.log('Order Submitted', { cartItems, deliveryDetails, paymentDetails });
+      localStorage.removeItem('cart');
+      navigate('/');
+      alert("Your order has been submitted!")
+    }
+    catch (error) {
+      console.log("Cart not sent successfully: ", error);
+    }
+    
     // Process the order
   };
 
@@ -50,17 +106,38 @@ function CheckoutPage() {
       {/* Cart Items Section */}
       <section className="cart-items">
         <h2>Your Cart</h2>
+
+        {/* Header Row */}
+        <div className="cart-header">
+          <p>Item Name</p>
+          <p>Weight</p>
+          <p>Quantity</p>
+          <p>Price</p>
+        </div>
+
+        {/* Cart Items */}
         {cartItems.map((item) => (
           <div key={item.id} className="cart-item">
-            <p>{item.name}</p>
-            <p>Weight: {item.weight.toFixed(2)}</p>
-            <p>Quantity: {item.quantity}</p>
-            <p>${item.price.toFixed(2)}</p>
-
+            <p>{item.brand + " " + item.name}</p>
+            <p>{(item.weight * item.quantity).toFixed(2)} lbs</p>
+            <p>{item.quantity}</p>
+            <p>${(item.price*item.quantity).toFixed(2)}</p>
           </div>
         ))}
+
+        {/* Total Price */}
+        
         <div className="total-price">
-          <h3>Total: ${totalPrice.toFixed(2)}</h3>
+          {
+            Number(totalWeight) > 20 ? (
+              <>
+                 <p>Shipping Free: $5.00</p>
+                 <h3>Total: ${Number(totalPrice + 5).toFixed(2)}</h3>
+              </>
+             
+            ) : <h3>Total: ${Number(totalPrice).toFixed(2)}</h3>
+          }
+          
         </div>
       </section>
 
@@ -83,7 +160,7 @@ function CheckoutPage() {
         </form>
       </section>
 
-      {/*}{/* Payment Information Form */}
+      {/* Payment Information Form */}
       <section className="payment-info">
         <h2>Payment Information</h2>
         <form onSubmit={handleSubmit}>
