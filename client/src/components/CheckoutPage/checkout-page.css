@@ -7,21 +7,21 @@
 }
 
 /* Cart Items Section */
-.cart-items {
+.checkout-container .cart-items {
   margin-bottom: 30px;
 }
 
 /* Header Row for Cart Items */
-.cart-header {
+.checkout-container .cart-header {
   display: grid;
   grid-template-columns: 3fr 1fr 1fr 1fr; /* Item Name, Weight, Quantity, Price */
   gap: 10px;
   font-weight: bold;
   border-bottom: 2px solid #ddd;
-  padding: 10px 0;
+  padding: 10px 10px;
 }
 
-.cart-header p {
+.checkout-container .cart-header p {
   margin: 0;
   text-align: right; /* Align numeric headers to the right */
 }
@@ -31,16 +31,16 @@
 }
 
 /* Cart Item Rows */
-.cart-item {
+.checkout-container .cart-item {
   display: grid;
   grid-template-columns: 3fr 1fr 1fr 1fr; /* Consistent layout for all columns */
   gap: 10px;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px 10px;
   border-bottom: 1px solid #ddd;
 }
 
-.cart-item p {
+.checkout-container .cart-item p {
   margin: 0;
   text-align: right; /* Align numeric values to the right */
   font-variant-numeric: tabular-nums; /* Ensures consistent spacing for numbers */
@@ -51,11 +51,15 @@
 }
 
 /* Total Price Styling */
-.total-price {
+.checkout-container .total-price {
   font-size: 1.5rem;
   font-weight: bold;
   text-align: right;
   margin-top: 20px;
+}
+
+.checkout-container .total-price h3 {
+  display: inline;
 }
 
 /* Delivery and Payment Information */
@@ -90,4 +94,9 @@
 
 .checkout-container button:hover {
   background-color: #041E11;
+}
+
+.checkout-container .total-price p {
+  font-weight: 300;
+  font-size: 1rem;
 }

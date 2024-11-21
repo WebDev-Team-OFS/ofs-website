@@ -40,6 +40,8 @@ function CheckoutPage() {
     setCartItems(cart);
   }
 
+  
+
   useEffect(() => {
     getCart();
   }, [])
@@ -59,6 +61,7 @@ function CheckoutPage() {
 
   // Total Price Calculation
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalWeight = cartItems.reduce((total, item) => total + item.weight * item.quantity, 0);
 
   // Handle input changes
   const handleInputChange = (event, section) => {
@@ -97,15 +100,25 @@ function CheckoutPage() {
         {cartItems.map((item) => (
           <div key={item.id} className="cart-item">
             <p>{item.brand + " " + item.name}</p>
-            <p>{Number(item.weight).toFixed(2)} kg</p>
+            <p>{(item.weight * item.quantity).toFixed(2)} lbs</p>
             <p>{item.quantity}</p>
-            <p>${Number(item.price).toFixed(2) * item.quantity}</p>
+            <p>${(item.price*item.quantity).toFixed(2)}</p>
           </div>
         ))}
 
         {/* Total Price */}
+        
         <div className="total-price">
-          <h3>Total: ${Number(totalPrice).toFixed(2)}</h3>
+          {
+            Number(totalWeight) > 20 ? (
+              <>
+                 <p>Shipping Free: $5.00</p>
+                 <h3>Total: ${Number(totalPrice + 5).toFixed(2)}</h3>
+              </>
+             
+            ) : <h3>Total: ${Number(totalPrice).toFixed(2)}</h3>
+          }
+          
         </div>
       </section>
 
