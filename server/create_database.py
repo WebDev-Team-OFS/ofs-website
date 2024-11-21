@@ -104,10 +104,10 @@ CREATE TABLE IF NOT EXISTS cart(
 
 
 
-
+user_password = generate_password_hash("pass123")
 # Insert test data into user_info
 test_users = [
-    ("john123", "pass123", "John", "Doe", "john@example.com"),
+    ("john123", user_password, "John", "Doe", "john@example.com"),
     ("bobbyL", "loxd", "Bobby", "Lee", "bobby@example.com"),
     ("bjorkM", "vespertine", "Bjork", "Magnusson", "bjork@example.com")
 ]
