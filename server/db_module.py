@@ -4,6 +4,6 @@ def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="Barcelona123",  # Change this to your MySQL password
+        password="adminpass",  # Change this to your MySQL password
         database="ofs_database"  # Your actual database name
     )
