@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 mydb = mysql.connector.connect(
     host = "localhost",
     user = "root",
-    password = "adminpass",#change if you set password   
+    password = "",   #change if you set password   
     auth_plugin = 'mysql_native_password'
 )
 
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS cart(
     user_id INT,
     product_id INT,
     quantity INT,
-    PRIMARY KEY (user_id,product_id),
+    PRIMARY KEY (user_id, product_id),
     FOREIGN KEY (user_id) REFERENCES user_info(user_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id)
     )
@@ -122,6 +122,7 @@ test_admin = [
 ]
 cursor.executemany("INSERT INTO admin_info (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)", test_admin)
 mydb.commit()
+
 
 
 
