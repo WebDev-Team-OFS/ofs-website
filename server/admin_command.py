@@ -17,7 +17,7 @@ def review_stock():
         if 'admin_id' not in session:
             return jsonify({"error": "Unauthorized access, login first"}), 401
 
-        admin_id = session['admin_id']
+        #admin_id = session['admin_id']
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
@@ -25,10 +25,11 @@ def review_stock():
 
 
         cursor.execute("SELECT * FROM product")
-        products = cursor.fetchall()
-        return jsonify(products), 200
         cursor.close()
         db_connection.close()
+        products = cursor.fetchall()
+        return jsonify(products), 200
+
 
 
     except Exception as e:
@@ -49,7 +50,7 @@ def change_stock(product_id):
         if 'admin_id' not in session:
             return jsonify({"error": "Unauthorized access, login first"}), 401
 
-        admin_id = session['admin_id']
+        #admin_id = session['admin_id']
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
@@ -84,7 +85,7 @@ def update_price(product_id):
         if 'admin_id' not in session:
             return jsonify({"error": "Unauthorized access, login first"}), 401
 
-        admin_id = session['admin_id']
+        #admin_id = session['admin_id']
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
@@ -118,7 +119,7 @@ def remove_item(product_id):
         if 'admin_id' not in session:
             return jsonify({"error": "Unauthorized access, login first"}), 401
 
-        admin_id = session['admin_id']
+        #admin_id = session['admin_id']
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
@@ -142,7 +143,6 @@ def remove_item(product_id):
 @admin_cmd_bp.route("/add_admin", method = ["POST"])
 def add_admin():
     try:
-
 
         data = request.json;
         username = data.get("username")
