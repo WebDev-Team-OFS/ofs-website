@@ -1,6 +1,7 @@
 import NavigationBar from '../NavigationBar/NavigationBar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './checkout-page.css'; // Link to your CSS file for styling
+import axios from 'axios';
 
 function CheckoutPage() {
   const [cartItems, setCartItems] = useState([
@@ -8,6 +9,40 @@ function CheckoutPage() {
     { id: 2, name: "Loaf of Nature's Whole Wheat Bread", price: 13.99, quantity: 1, weight: 1.25 },
     { id: 3, name: "Lunchly", price: 5.99, quantity: 5, weight: 2.5 }
   ]);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const getCart = async () => {
+    console.log("GETTING CART");
+    let cart = []
+    if (isLoggedIn) {
+
+    }
+    else {
+        const localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        for (let i = 0; i < localStorageCart.length; i++) {
+            console.log(localStorageCart[i].product_id)
+            try{
+                let response = await axios.get(`http://127.0.0.1:8080/api/product/${localStorageCart[i].product_id}`);
+                
+                response.data.product.quantity = localStorageCart[i].quantity;
+                console.log(response.data.product);
+                cart.push(response.data.product);
+            }
+            catch (error) {
+                console.log(error);
+            }
+            
+        }
+    }
+    console.log(cart);
+    setCartItems(cart);
+  }
+
+  useEffect(() => {
+    getCart();
+  }, [])
 
   const [deliveryDetails, setDeliveryDetails] = useState({
     address: '',
@@ -61,16 +96,16 @@ function CheckoutPage() {
         {/* Cart Items */}
         {cartItems.map((item) => (
           <div key={item.id} className="cart-item">
-            <p>{item.name}</p>
-            <p>{item.weight.toFixed(2)} kg</p>
+            <p>{item.brand + " " + item.name}</p>
+            <p>{Number(item.weight).toFixed(2)} kg</p>
             <p>{item.quantity}</p>
-            <p>${item.price.toFixed(2)}</p>
+            <p>${Number(item.price).toFixed(2) * item.quantity}</p>
           </div>
         ))}
 
         {/* Total Price */}
         <div className="total-price">
-          <h3>Total: ${totalPrice.toFixed(2)}</h3>
+          <h3>Total: ${Number(totalPrice).toFixed(2)}</h3>
         </div>
       </section>
 

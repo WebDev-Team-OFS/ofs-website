@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './shoppingcart-page.css';
+import axios from 'axios';
+
 
 function ShoppingCartPage() {
     const navigate = useNavigate();
@@ -15,17 +17,67 @@ function ShoppingCartPage() {
 
     // State for cart items
     const [cartItems, setCartItems] = useState(initialCartItems);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const getCart = async () => {
+        let cart = []
+        if (isLoggedIn) {
+
+        }
+        else {
+            const localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            for (let i = 0; i < localStorageCart.length; i++) {
+                console.log(localStorageCart[i].product_id)
+                try{
+                    let response = await axios.get(`http://127.0.0.1:8080/api/product/${localStorageCart[i].product_id}`);
+                    
+                    response.data.product.quantity = localStorageCart[i].quantity;
+                    console.log(response.data.product);
+                    cart.push(response.data.product);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+                
+            }
+        }
+        console.log(cart);
+        setCartItems(cart);
+    }
+
+    useEffect(() => {
+        getCart();
+    }, [])
 
     // Function to handle adding or subtracting quantity
     const updateCartItemQuantity = (id, delta) => {
         setCartItems(cartItems.map(item => 
-            item.id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item
+            item.product_id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item
         ));
+
+        if (isLoggedIn) {
+           
+        }
+        else {
+            let localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
+            localStorageCart = localStorageCart.map(item => item.product_id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item);
+            localStorage.setItem("cart", JSON.stringify(localStorageCart));
+        }
     };
 
     // Function to remove an item from the cart
     const removeItemFromCart = (id) => {
-        setCartItems(cartItems.filter(item => item.id !== id));
+        setCartItems(cartItems.filter(item => item.product_id !== id));
+        
+        if (isLoggedIn) {
+
+        }
+        else {
+            let localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
+            localStorageCart = localStorageCart.filter(item => item.product_id !== id);
+            localStorage.setItem("cart", JSON.stringify(localStorageCart));
+        }
     };
 
     // Calculate total price and weight
@@ -37,7 +89,7 @@ function ShoppingCartPage() {
             totalWeight += item.weight * item.quantity;
         });
         const deliveryCharge = totalWeight > 20 ? 5 : 0;
-        return { total: total.toFixed(2), deliveryCharge, totalWeight };
+        return { total: total.toFixed(2), deliveryCharge, totalWeight: totalWeight.toFixed(2) }; //CHECK
     };
 
     const { total, deliveryCharge, totalWeight } = calculateTotal();
@@ -56,18 +108,18 @@ function ShoppingCartPage() {
             <div className="cart-body">
                 {cartItems.length > 0 ? (
                     cartItems.map(item => (
-                        <div key={item.id} className="cart-item">
+                        <div key={item.product_id} className="cart-item">
                             <div className="item-image">
-                                <img src={`./src/img/food/${item.name.toLowerCase().replace(/ /g, '-')}.png`} alt={item.name} />   
+                                <img src=/*{`./src/img/food/${item.name.toLowerCase().replace(/ /g, '-')}.png`}*/"" alt={item.name} />   
                             </div>
                             <div className="item-details">
-                                <h2>{item.name} - Weight {item.weight} Lb</h2>
-                                <p className="price">${item.price.toFixed(2)} each</p>
+                                <h2>{item.brand + item.name} - Weight {item.weight} Lb</h2>
+                                <p className="price">${item.price} each</p>
                                 <div className="quantity-control">
-                                    <button onClick={() => updateCartItemQuantity(item.id, -1)} disabled={item.quantity <= 1}>-</button>
+                                    <button onClick={() => updateCartItemQuantity(item.product_id, -1)} disabled={item.quantity <= 1}>-</button>
                                     <span>{item.quantity}</span>
-                                    <button onClick={() => updateCartItemQuantity(item.id, 1)}>+</button>
-                                    <button onClick={() => removeItemFromCart(item.id)} className="remove-button">Remove</button>
+                                    <button onClick={() => updateCartItemQuantity(item.product_id, 1)}>+</button>
+                                    <button onClick={() => removeItemFromCart(item.product_id)} className="remove-button">Remove</button>
                                 </div>
                             </div>
                         </div>
