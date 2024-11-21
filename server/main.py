@@ -9,6 +9,7 @@ from searchbar import search_bp
 from creditcard_check import credit_card_bp
 from cart import cart_bp
 from user_command import user_cmd_bp
+from admin_command import admin_cmd_bp
 
 
 app = Flask(__name__)
@@ -35,6 +36,7 @@ app.register_blueprint(search_bp)
 app.register_blueprint(credit_card_bp)
 app.register_blueprint(cart_bp)
 app.register_blueprint(user_cmd_bp)
+app.register_blueprint(admin_cmd_bp)
 
 #health check to test if your are unsure API is working
 @app.route("/api/healthcheck", methods=['GET'])
