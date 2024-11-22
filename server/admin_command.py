@@ -1,14 +1,10 @@
 #file where all the admin commands go
 from flask import Blueprint, request, jsonify, session
 from db_module import get_db_connection
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
 
 
 admin_cmd_bp = Blueprint('admin_command', __name__)
-
-
-
-
 
 
 #view all stock
@@ -183,8 +179,7 @@ def add_admin():
     
 
 
-#add item
-
+#remove admin
 @admin_cmd_bp.route("/remove_admin", methods=["DELETE"])
 def remove_admin():
     try:
