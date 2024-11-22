@@ -223,3 +223,87 @@ def checkout():
         print("done")
 
 
+
+
+
+
+
+
+#a new api to get all orders and to update the database with the status of the order
+@cart_bp.route('/api/checkout', methods=['POST'])
+def checkout():
+    cursor = None
+    db_connection = None
+    try:
+        if 'user_id' not in session:
+            return jsonify({"error": "User is not logged in"}), 401
+            
+        user_id = session['user_id']
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor()
+        
+        # Start transaction
+        db_connection.begin()
+        
+        # Get cart items
+        cursor.execute("""
+            SELECT c.product_id, c.quantity, p.stock_quantity 
+            FROM cart c
+            JOIN products p ON c.product_id = p.id
+            WHERE c.user_id = %s
+        """, (user_id,))
+        cart_items = cursor.fetchall()
+        
+        if not cart_items:
+            return jsonify({"error": "Cart is empty"}), 400
+            
+        # Check inventory and update stocks
+        for product_id, cart_qty, stock_qty in cart_items:
+            if stock_qty < cart_qty:
+                db_connection.rollback()
+                return jsonify({
+                    "error": f"Not enough stock for product {product_id}"
+                }), 400
+                
+            # Update product inventory
+            cursor.execute("""
+                UPDATE products 
+                SET stock_quantity = stock_quantity - %s
+                WHERE id = %s
+            """, (cart_qty, product_id))
+        
+        # Create order record
+        cursor.execute("""
+            INSERT INTO orders (user_id, status, created_at)
+            VALUES (%s, 'pending', NOW())
+        """, (user_id,))
+        order_id = cursor.lastrowid
+        
+        # Move cart items to order_items
+        cursor.execute("""
+            INSERT INTO order_items (order_id, product_id, quantity)
+            SELECT %s, product_id, quantity 
+            FROM cart WHERE user_id = %s
+        """, (order_id, user_id))
+        
+        # Clear user's cart
+        cursor.execute("DELETE FROM cart WHERE user_id = %s", (user_id,))
+        
+        # Commit transaction
+        db_connection.commit()
+        
+        return jsonify({
+            "message": "Checkout successful",
+            "order_id": order_id
+        })
+
+    except Exception as e:
+        if db_connection:
+            db_connection.rollback()
+        return jsonify({"error": str(e)}), 500
+        
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
