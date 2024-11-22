@@ -26,8 +26,10 @@ def view_cart():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
-        cursor.close()
-        db_connection.close()
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
 
     
 
@@ -76,8 +78,10 @@ def add_to_cart():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
-        cursor.close()
-        db_connection.close()
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
 
 
 @cart_bp.route('/api/remove_from_cart/<int:product_id>', methods=['DELETE'])
@@ -100,8 +104,11 @@ def remove_from_cart(product_id):
     except Exception as e:
         return jsonify({"error":  "Item not in cart"}), 404
     finally:
-        cursor.close()
-        db_connection.close()
+        if cursor:  
+            cursor.close()
+        if db_connection:
+            db_connection.close()
+
 
 
 
@@ -142,8 +149,11 @@ def update_cart_item():
     except Exception as e:
         return jsonify({"error": "Item not in cart"}), 404
     finally:
-        cursor.close()
-        db_connection.close()
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
+
 
 
 #we should add a api to commit the order information to db 
