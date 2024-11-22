@@ -19,8 +19,6 @@ def review_stock():
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
 
-
-
         cursor.execute("SELECT * FROM product")
         cursor.close()
         db_connection.close()
@@ -51,7 +49,7 @@ def change_stock(product_id):
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
-        data = request.json
+        data = request.get_json()   
         new_stock = data.get('stock')
 
         if new_stock is None or new_stock < 0:
@@ -86,7 +84,7 @@ def update_price(product_id):
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
-        data = request.json
+        data = request.get_json()
 
         new_price = data.get('price')
 
@@ -141,7 +139,7 @@ def remove_item(product_id):
 def add_admin():
     try:
 
-        data = request.json;
+        data = request.get_json()
         username = data.get("username")
         password = data.get("password")
         first_name = data.get("first_name")
@@ -183,7 +181,7 @@ def add_admin():
 @admin_cmd_bp.route("/remove_admin", methods=["DELETE"])
 def remove_admin():
     try:
-        data = request.json
+        data = request.get_json()
         #can be changed to user_id or something later
         username = data.get("username")
 
