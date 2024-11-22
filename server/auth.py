@@ -159,7 +159,28 @@ def admin_protected():
     return jsonify({"message": "Welcome, admin!"}), 200
 
 
+#generate code check to test
+'''
 
+@auth_bp.route("/api/logout", methods=["POST"])
+def logout():
+    # Clear server-side session
+    user_was_admin = 'admin_id' in session
+    session.clear()
+    
+    # Create response
+    response = make_response(jsonify({
+        "message": "Logged out successfully",
+        "wasAdmin": user_was_admin
+    }))
+    
+    # Clear all session-related cookies
+    response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Strict')
+    response.set_cookie('admin_id', '', expires=0, secure=True, httponly=True, samesite='Strict')
+    response.set_cookie('user_id', '', expires=0, secure=True, httponly=True, samesite='Strict')
+    
+    return response, 200
+'''
 
 
 @auth_bp.route("/api/logout", methods=["POST"])
