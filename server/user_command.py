@@ -95,3 +95,4 @@ def edit_profile():
 
 
 
+#add past transactions
