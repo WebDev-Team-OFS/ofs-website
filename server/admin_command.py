@@ -185,3 +185,39 @@ def add_admin():
 
 #add item
 
+@admin_cmd_bp.route("/remove_admin", methods=["DELETE"])
+def remove_admin():
+    try:
+        data = request.json
+        #can be changed to user_id or something later
+        username = data.get("username")
+
+        if not username:
+            return jsonify({"error": "Username is required"}), 400
+
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor(dictionary=True)
+
+        # Check if the admin exists
+        check_query = "SELECT * FROM admin_info WHERE username = %s"
+        cursor.execute(check_query, (username,))
+        admin = cursor.fetchone()
+
+        if not admin:
+            return jsonify({"error": "Admin not found"}), 404
+
+        # Delete the admin
+        delete_query = "DELETE FROM admin_info WHERE username = %s"
+        cursor.execute(delete_query, (username,))
+        db_connection.commit()
+
+        return jsonify({"message": f"Admin '{username}' removed successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": "An error occurred while removing the admin", "details": str(e)}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
