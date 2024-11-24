@@ -2,11 +2,13 @@
 from flask import Blueprint, jsonify, request, session, current_app
 from db_module import get_db_connection
 from datetime import timedelta
+import json
 
 
 user_cmd_bp = Blueprint('user_command', __name__)
 
 
+#whole fine needs to change dependent on JWT or sessions
 
 #make sure you use the protected before accesses these
 
@@ -96,3 +98,42 @@ def edit_profile():
 
 
 #add past transactions
+@user_cmd_bp.route("/api/past_transactions", methods = ['GET'])
+def view_past_transactions():
+    cursor = None
+    db_connection = None
+    try:
+        #change if we are not using session idk
+        if 'user_id' not in session:
+            return jsonify({"error": "Unauthorized access, login first"}), 401
+        
+        user_id = session['user_id']
+
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT order_id, user_id, total_price, total_weight, order_date, order_items
+            FROM orders
+            WHERE user_id = %s
+            ORDER BY order_date DESC
+        """, (user_id,))
+
+        transactions = cursor.fetchall()
+
+        for order in transactions:
+            order['order_date'] = order['order_date'].isoformat()
+            # Parse order_items from JSON if it's stored as string
+            if isinstance(order['order_items'], str):
+                order['order_items'] = json.loads(order['order_items'])
+
+        return jsonify({"transactions": transactions}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
+
