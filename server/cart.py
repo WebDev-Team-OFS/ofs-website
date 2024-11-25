@@ -155,80 +155,6 @@ def update_cart_item():
             db_connection.close()
 
 
-
-#we should add a api to commit the order information to db 
-
-@cart_bp.route('/api/checkout', methods = ['POST'])
-def checkout():
-    cursor = None;
-    db_connection = None;
-    try:
-        # if 'user_id' not in session:
-        #     return jsonify({"error": "User is not logged in"}), 401
-    
-        # user_id = session['user_id']
-        #COMMENTED OUT USER ID UNTIL WE SET UP JWT
-        data = request.get_json()
-        order = data.get('order')
-        items = order.get('items') if order else None
-        total_price = order.get('total_price') if order else None
-        total_weight = order.get('total_weight') if order else None
-
-        if not items or not isinstance(items, list) or not total_price or not total_weight:
-            return jsonify({"error": "No items provided or invalid format"}), 400
-    
-        db_connection = get_db_connection()
-        cursor = db_connection.cursor(dictionary=True)
-
-        #SWITCHED TO USING JSON FOR CART ITEMS
-        # for item in items:
-        #     product_id = item.get('product_id')
-        #     amount = item.get('quantity')
-        #     cost = item.get('price')
-
-        #     if not all([product_id, amount, cost]):
-        #         return jsonify({"error": "Not all parameters present"}), 401
-            
-
-        #     cursor.execute("""
-        #         INSERT INTO orders (user_id, product_id, amount, cost)
-        #         VALUES (%s, %s, %s, %s)
-        #         """, (user_id, product_id, amount, cost))
-        cursor.execute("""
-            INSERT INTO orders(user_id, total_price, total_weight, order_items)
-            VALUES (%s, %s, %s, %s)
-            """, (None, total_price, total_weight, json.dumps(items)))
-        
-        db_connection.commit()
-
-        cursor.close()
-        db_connection.close()
-
-        return jsonify({"Order Success": "All orders are put into the table"}), 201
-
-    except Exception as e:
-        # Rollback in case of an error
-        #GETING AN ERROR HERE
-        # if get_db_connection:
-        #     get_db_connection.rollback()
-        return jsonify({"error": str(e)}), 500
-
-    finally:
-        #ALSO ERRORS HEREE
-        # Ensure resources are closed
-        # if cursor:
-        #     cursor.close()
-        # if db_connection:
-        #     db_connection.close()
-        print("done")
-
-
-
-
-
-
-
-
 #a new api to get all orders and to update the database with the status of the order
 @cart_bp.route('/api/checkout', methods=['POST'])
 def checkout():
@@ -240,7 +166,7 @@ def checkout():
             
         user_id = session['user_id']
         db_connection = get_db_connection()
-        cursor = db_connection.cursor()
+        cursor = db_connection.cursor(dictionary=True)
         
         # Start transaction
         db_connection.begin()
@@ -255,7 +181,22 @@ def checkout():
         cart_items = cursor.fetchall()
         
         if not cart_items:
-            return jsonify({"error": "Cart is empty"}), 400
+            return jsonify({"error": "Cart is empty. Please add items before checking out."}), 400
+        
+        total_price = 0
+
+        # Check inventory and calculate total price
+        for item in cart_items:
+            product_id = item['product_id']
+            cart_qty = item['quantity']
+            stock_qty = item['stock_quantity']
+            price = item['price']
+
+            if stock_qty < cart_qty:
+                db_connection.rollback()
+                return jsonify({"error": f"Not enough stock for product ID {product_id}"}), 400
+
+            total_price += cart_qty * price
             
         # Check inventory and update stocks
         for product_id, cart_qty, stock_qty in cart_items:
@@ -294,13 +235,14 @@ def checkout():
         
         return jsonify({
             "message": "Checkout successful",
-            "order_id": order_id
-        })
+            "order_id": order_id,
+            "total_price": total_price
+        }), 200
 
     except Exception as e:
         if db_connection:
             db_connection.rollback()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Checkout failed: {str(e)}"}), 500
         
     finally:
         if cursor:
