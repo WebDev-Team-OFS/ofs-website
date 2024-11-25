@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_file
 from db_module import get_db_connection
 
 search_bp = Blueprint("search", __name__)
@@ -26,7 +26,7 @@ def search_products():
             search_query = f"%{query}%"
             category_query = f"%{category}"
             cursor.execute("""
-            SELECT product_id, name, brand, stock, price, weight, category, description
+            SELECT product_id, name, brand, stock, price, weight, category, description, featured
             FROM product
             WHERE (name LIKE %s or brand LIKE %s) AND category LIKE %s
             """, (search_query, search_query, category_query))
@@ -34,19 +34,20 @@ def search_products():
         # Search for products by name or category 
             search_query = f"%{query}%"
             cursor.execute("""
-            SELECT product_id, name, brand, stock, price, weight, category, description
+            SELECT product_id, name, brand, stock, price, weight, category, description, featured
             FROM product
             WHERE name LIKE %s OR category LIKE %s OR brand LIKE %s
             """, (search_query, search_query, search_query))
         elif category:
             category_query = f"%{category}%"
             cursor.execute("""
-            SELECT product_id, name, brand, stock, price, weight, category, description
+            SELECT product_id, name, brand, stock, price, weight, category, description, featured
             FROM product
             WHERE name LIKE %s OR category LIKE %s OR brand LIKE %s
             """, (category_query, category_query, category_query))
         else:
-            cursor.execute("""SELECT product_id, name, brand, stock, price, weight, category, description FROM product """)
+            print("NO QUERY")
+            cursor.execute("""SELECT product_id, name, brand, stock, price, weight, category, description, featured FROM product """)
 
         # Fetch all matching products
         products = cursor.fetchall()
@@ -75,7 +76,7 @@ def click_product(product_id):
         cursor = db_connection.cursor(dictionary=True)
 
 
-        cursor.execute("SELECT * FROM product WHERE product_id = %s", (product_id,))
+        cursor.execute("SELECT product_id, name, brand, stock, price, weight, category, description, featured FROM product WHERE product_id = %s", (product_id,))
         product = cursor.fetchone()
 
         cursor.close()
@@ -93,3 +94,29 @@ def click_product(product_id):
         if db_connection:
             db_connection.close()
 
+@search_bp.route("/api/image/<int:product_id>", methods=["GET"])
+def return_image(product_id):
+    db_connection = None
+    cursor = None
+    try:
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor(dictionary=True)
+
+        cursor.execute("SELECT image FROM product WHERE product_id = %s", (product_id,))
+        image = cursor.fetchone()
+        if image:
+            image_path = image['image'].decode('utf-8')
+
+            return send_file(image_path)
+            # return Response(image['image'], mimetype="image/png", direct_passthrough=True)
+        else:
+            return "No image found", 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
+
+       
