@@ -1,7 +1,7 @@
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
+#lastest db update 11/25/2024
 
 #update password to whatever you set your msql password to
 mydb = mysql.connector.connect(
@@ -31,18 +31,6 @@ CREATE TABLE IF NOT EXISTS user_info (
 )
 """)
 
-#admin table
-# cursor.execute("""
-# CREATE TABLE IF NOT EXIST admin_info (
-#     emp_id INT AUTO_INCREMENT PRIMARY KEY, 
-#     username VARCHAR(50),
-#     password VARCHAR(255),
-#     first_name VARCHAR(50),
-#     last_name VARCHAR(50),
-#     email VARCHAR(100) UNIQUE,
-#     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-#     )                       
-# """)
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS admin_info (
@@ -157,6 +145,9 @@ test_products = [
 
 cursor.executemany("INSERT INTO product (name, brand, stock, price, weight, featured, category, description, image) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", test_products)
 mydb.commit()
+#formatting for the order items, name, brand, stock, price, weight ,featured, category, description, image#
+#make sure data is consistent 
+
 
 # Insert test data into orders
 # test_orders = [
