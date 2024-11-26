@@ -155,11 +155,6 @@ def update_cart_item():
             db_connection.close()
 
 
-
-
-
-
-
 #a new api to get all orders and to update the database with the status of the order
 @cart_bp.route('/api/checkout', methods=['POST'])
 def checkout():
