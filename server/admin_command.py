@@ -134,6 +134,47 @@ def remove_item(product_id):
             db_connection.close()
 
 
+
+#add item (this needs a fix due to still using session id)
+@admin_cmd_bp.route('/admin/add_products', methods=['POST'])
+def add_product():
+    cursor = None
+    db_connection = None
+    try:
+        if 'admin_id' not in session:
+            return jsonify({"error": "Unauthorized access, login first"}), 401
+
+        data = request.get_json()
+        required_fields = ['name', 'brand', 'stock', 'price', 'weight', 'category', 'description']
+
+
+        for field in required_fields:
+                    if field not in data:
+                        return jsonify({"error": f"Missing required field: {field}"}), 400
+        
+        image = data.get('image')
+
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor(dictionary=True)
+
+        cursor.execute("INSERT INTO product(name, brand, stock, price, weight, category, description, image) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                (data['name'], data['brand'], data['stock'], data['price'], data['weight'], data['category'], data['description'], image))
+        
+        db_connection.commit()
+
+        return jsonify({"message": "Product added successfully"}), 201
+    except Exception as e:
+        if db_connection:
+            db_connection.rollback()
+        return jsonify({"error": "An error occurred while adding the product", "details": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
+
+
+
 #add admin
 @admin_cmd_bp.route("/add_admin", methods = ["POST"])
 def add_admin():
