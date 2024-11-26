@@ -47,7 +47,7 @@ function ProductPage() {
         <>
             <div className="product-page-container">
                 <div className="product-image-container">
-                    <img src={product.imageURL} alt="" />
+                    <img src={`http://127.0.0.1:8080/api/image/${product.product_id}`} alt="" />
                 </div>
                 <div className="product-content">
                     <h1 className="product-title">{product.brand + " " + product.name}</h1>

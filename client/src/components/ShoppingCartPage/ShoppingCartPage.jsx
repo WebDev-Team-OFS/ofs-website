@@ -104,7 +104,7 @@ function ShoppingCartPage() {
                     cartItems.map(item => (
                         <div key={item.product_id} className="cart-item">
                             <div className="item-image">
-                                <img src=/*{`./src/img/food/${item.name.toLowerCase().replace(/ /g, '-')}.png`}*/"" alt={item.name} />   
+                                <img src={`http://127.0.0.1:8080/api/image/${item.product_id}`} alt={item.name} />   
                             </div>
                             <div className="item-details">
                                 <h2>{item.brand + " " + item.name}</h2>

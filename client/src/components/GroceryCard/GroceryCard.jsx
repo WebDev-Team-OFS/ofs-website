@@ -46,7 +46,7 @@ function GroceryCard({product}) {
     return(
         <>
             <div className="grocery-card" onClick={goToProduct}>
-                <img src={product.imageURL} alt="" />
+                <img src={`http://127.0.0.1:8080/api/image/${product.product_id}`} alt="" />
                 <div>
                     <p className="price">${product.price}</p>
                     <p className="title">{product.brand + " " + product.name}</p>

@@ -8,7 +8,8 @@ function FeaturedItems() {
 
     const fetchData = async () => {
         let response = await axios.get(`http://127.0.0.1:8080/api/search?q=`)
-        console.log(response.data.products);
+        console.log("FeaturedItems");
+        console.log(response.data.products)
         
         updateFeaturedItems(response.data.products.filter(grocery => grocery.featured === 1));
     }
