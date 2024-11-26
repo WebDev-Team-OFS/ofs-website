@@ -156,6 +156,8 @@ def update_cart_item():
 
 
 
+
+
 #we should add a api to commit the order information to db 
 
 # @cart_bp.route('/api/checkout', methods = ['POST'])
@@ -221,11 +223,6 @@ def update_cart_item():
 #         # if db_connection:
 #         #     db_connection.close()
 #         print("done")
-
-
-
-
-
 
 
 
