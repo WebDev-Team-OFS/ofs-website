@@ -166,7 +166,7 @@ def checkout():
             
         user_id = session['user_id']
         db_connection = get_db_connection()
-        cursor = db_connection.cursor()
+        cursor = db_connection.cursor(dictionary=True)
         
         # Start transaction
         db_connection.begin()
@@ -181,7 +181,22 @@ def checkout():
         cart_items = cursor.fetchall()
         
         if not cart_items:
-            return jsonify({"error": "Cart is empty"}), 400
+            return jsonify({"error": "Cart is empty. Please add items before checking out."}), 400
+        
+        total_price = 0
+
+        # Check inventory and calculate total price
+        for item in cart_items:
+            product_id = item['product_id']
+            cart_qty = item['quantity']
+            stock_qty = item['stock_quantity']
+            price = item['price']
+
+            if stock_qty < cart_qty:
+                db_connection.rollback()
+                return jsonify({"error": f"Not enough stock for product ID {product_id}"}), 400
+
+            total_price += cart_qty * price
             
         # Check inventory and update stocks
         for product_id, cart_qty, stock_qty in cart_items:
@@ -220,13 +235,14 @@ def checkout():
         
         return jsonify({
             "message": "Checkout successful",
-            "order_id": order_id
-        })
+            "order_id": order_id,
+            "total_price": total_price
+        }), 200
 
     except Exception as e:
         if db_connection:
             db_connection.rollback()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Checkout failed: {str(e)}"}), 500
         
     finally:
         if cursor:
