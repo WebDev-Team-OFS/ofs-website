@@ -7,7 +7,7 @@ cart_bp = Blueprint("cart", __name__)
 
 @cart_bp.route('/api/view_cart', methods=['GET'])
 def view_cart():
-    """View the current user's cart."""
+    # Check if the user is logged in
     if 'user_id' not in session:
         return jsonify({"error": "User is not logged in"}), 401
 
@@ -16,6 +16,7 @@ def view_cart():
     cursor = db_connection.cursor(dictionary=True)
 
     try:
+        # View the current user's cart
         cursor.execute("""
             SELECT product_id, quantity
             FROM user_cart
@@ -35,6 +36,7 @@ def view_cart():
 
 @cart_bp.route('/api/add_to_cart/', methods=['POST'])
 def add_to_cart():
+    # Check if the user is logged in
     if 'user_id' not in session:
         return jsonify({"error": "User is not logged in"}), 401
 
@@ -86,6 +88,7 @@ def add_to_cart():
 
 @cart_bp.route('/api/remove_from_cart/<int:product_id>', methods=['DELETE'])
 def remove_from_cart(product_id):
+    # Check if the user is logged in
     if 'user_id' not in session:
         return jsonify({"error": "User is not logged in"}), 401
 
@@ -94,6 +97,7 @@ def remove_from_cart(product_id):
     cursor = db_connection.cursor(dictionary=True)
 
     try:
+        # Verify item is in cart and remove from cart 
         cursor.execute("""
             DELETE FROM user_cart
             WHERE user_id = %s AND product_id = %s
@@ -114,7 +118,7 @@ def remove_from_cart(product_id):
 
 @cart_bp.route('/api/update_cart_item', methods=['PUT'])
 def update_cart_item():
-    """Update the quantity of an item in the cart."""
+    # Check if the user is logged in
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized, please log in first"}), 401
 
@@ -122,7 +126,8 @@ def update_cart_item():
     data = request.get_json()
     product_id = data.get('product_id')
     new_quantity = data.get('quantity')
-
+    
+    # Verify that product id and quantity values are provided
     if not all([product_id, new_quantity]):
         return jsonify({"error": "Product ID and new quantity are required"}), 400
 
@@ -130,6 +135,7 @@ def update_cart_item():
     cursor = db_connection.cursor(dictionary=True)
 
     try:
+        # Update the quantity of an item in the cart
         if new_quantity > 0:
             # Update the quantity
             cursor.execute("""
