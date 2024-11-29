@@ -44,8 +44,6 @@ function ProfileButton() {
             const response = await axios.post('http://127.0.0.1:8080/api/logout', {
                 withCredentials: true
             });
-            setIsLoggedIn(false);
-            setProfileOptions(false);
             console.log(response.data);
             window.location.reload();
 
