@@ -23,7 +23,7 @@ def set_admin_session_lifetime():
     #legit don't know what is happening (maybe work since rip login page AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
 
 
-
+'''
 @auth_bp.before_app_request
 def validate_session():
     """Ensure the user is logged out if session data is invalid."""
@@ -33,6 +33,7 @@ def validate_session():
             response = make_response(jsonify({"error": "Session expired, please log in again."}))
             response.set_cookie('session', '', expires=0)
             return response
+'''
 '''
 #the user time will update if they are doing something on the website
 @auth_bp.after_request
@@ -72,22 +73,21 @@ def login():
             session.clear()
             session['user_id'] = user['user_id']
             session['username'] = user['username']
+            session.permanent = True
             user.pop('password')
             return jsonify({"message": "Login successful", "user": user}), 200
         else:
             return jsonify({"error": "Invalid email or password"}), 401
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        if cursor:
-            cursor.close()
-        if db_connection:
-            db_connection.close()
+
 
 
 #registration api end point
 @auth_bp.route("/api/register", methods=['POST'])
 def register():
+    cursor = None
+    db_connection = None
     try:
         data = request.get_json()
         username = data.get('username')
@@ -137,16 +137,49 @@ def register():
 
 @auth_bp.route("/api/protected", methods=["GET"])
 def protected():
-    # Check if the user is logged in
-    if 'user_id' not in session:
-        return jsonify({"error": "Unauthorized, please login first"}), 401
+    try:
+        # Debug logging
+        print("Session data:", dict(session))
+        print("Cookies:", request.cookies)
 
-    # Get user data from session
-    user_id = session['user_id']
-    username = session['username']
-    # session_expiry = session.permanent_session_lifetime.total_seconds() if session.permanent else None
-    
-    return jsonify({"message": f"Welcome {username}!", "user_id": user_id}), 200
+        # Check if user is logged in
+        if 'user_id' not in session:
+            return jsonify({
+                "error": "Unauthorized, please login first",
+                "session_exists": False
+            }), 401
+
+        # Validate session data
+        user_id = session.get('user_id')
+        username = session.get('username')
+        
+        if not user_id or not username:
+            session.clear()
+            return jsonify({
+                "error": "Invalid session data",
+                "session_exists": True,
+                "session_valid": False
+            }), 401
+
+        # Ensure session is permanent
+        if not session.permanent:
+            session.permanent = True
+
+        # Return successful response with debug info
+        return jsonify({
+            "message": f"Welcome {username}!",
+            "user_id": user_id,
+            "session_valid": True,
+            "session_permanent": session.permanent,
+            "session_lifetime": current_app.permanent_session_lifetime.total_seconds()
+        }), 200
+
+    except Exception as e:
+        print(f"Protected route error: {str(e)}")
+        return jsonify({
+            "error": "Session validation failed",
+            "details": str(e)
+        }), 500
 
 
 
@@ -191,11 +224,11 @@ def logout():
         response = make_response(jsonify({"message": "Logged out successfully"}))
         cookie_settings = {
             'expires': 0,
-            'secure': True,
+            'secure': False,
             'httponly': True,
-            'samesite': 'None',  # Match the session cookie settings
+            'samesite': 'Lax',  # Match the session cookie settings
             'path': '/',
-            'domain': None
+            'domain': None,
         }
         # Clear all session-related cookies with same settings
         response.set_cookie('session', '', **cookie_settings)
@@ -210,8 +243,8 @@ def logout():
 
 @auth_bp.route("/api/admin/login", methods = ['POST'])
 def admin_login():
-    cursor = None;
-    db_connection = None;
+    cursor = None
+    db_connection = None
     try:
         data = request.get_json()
         email = data.get('email')
@@ -241,6 +274,3 @@ def admin_login():
             cursor.close()
         if db_connection:
             db_connection.close()
-
-
-
