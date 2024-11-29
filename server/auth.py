@@ -74,6 +74,7 @@ def login():
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             session.permanent = True
+            print("Session after login:", dict(session))
             user.pop('password')
             return jsonify({"message": "Login successful", "user": user}), 200
         else:
@@ -226,15 +227,17 @@ def logout():
             'expires': 0,
             'secure': False,
             'httponly': True,
-            'samesite': 'Lax',  # Match the session cookie settings
+            'samesite': 'None',  # Match the session cookie settings
             'path': '/',
-            'domain': None,
+            'domain': 'localhost',
         }
         # Clear all session-related cookies with same settings
-        response.set_cookie('session', '', **cookie_settings)
-        response.set_cookie('admin_id', '', **cookie_settings) 
-        response.set_cookie('user_id', '', **cookie_settings)
-
+        for cookie in ['session', 'admin_id', 'user_id']:
+            response.delete_cookie(cookie, 
+                                path='/', 
+                                domain=None,
+                                secure=False,
+                                samesite='None')
         return response, 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

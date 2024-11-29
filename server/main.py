@@ -13,7 +13,8 @@ from admin_command import admin_cmd_bp
 
 
 app = Flask(__name__)
-cors = CORS(app, supports_credentials=True, origins=["http://localhost:5173"], allow_credentials=True)  # Enable CORS for frontend
+cors = CORS(app, supports_credentials=True, origins=["http://localhost:5173"], allow_credentials=True,
+            expose_headers=['Set-Cookie'], methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])  # Enable CORS for frontend
 
 
 
@@ -21,10 +22,11 @@ cors = CORS(app, supports_credentials=True, origins=["http://localhost:5173"], a
 
 #all of these are global for the app
 #remove is its messing stuff up
+#app.config['SESSION_COOKIE_DOMAIN'] = 'localhost'  # Set to your domain
 app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['SESSION_COOKIE_SECURE'] = False  # Use True only if running on HTTPS
+app.config['SESSION_COOKIE_SECURE'] = True  # Use True only if running on HTTPS
 app.config['SECRET_KEY'] = 'testkey'
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Prevent cross-site request issues
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # Prevent cross-site request issues
 #the thing not working properly when samesite is set to lax we need to read more on documentation to figure out why
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)  # Default session lifetime
 
