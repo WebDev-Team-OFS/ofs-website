@@ -13,7 +13,8 @@ from admin_command import admin_cmd_bp
 
 
 app = Flask(__name__)
-cors = CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+cors = CORS(app, supports_credentials=True, origins=["http://localhost:5173"], \
+        allow_credentials=True, expose_headers=["Set-Cookie"])
 
 
 

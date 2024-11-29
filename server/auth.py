@@ -185,14 +185,26 @@ def logout():
 
 @auth_bp.route("/api/logout", methods=["POST"])
 def logout():
-    session.clear()  # Clears the session data
+    try:
+        session.clear()  # Clears the session data
 
-    response = make_response(jsonify({"message": "Logged out successfully"}))
-    response.set_cookie('session', '', expires=0)
-    response.set_cookie('admin_id', '', expires=0)
-    response.set_cookie('user_id', '', expires=0)
+        response = make_response(jsonify({"message": "Logged out successfully"}))
+        cookie_settings = {
+            'expires': 0,
+            'secure': True,
+            'httponly': True,
+            'samesite': 'None',  # Match the session cookie settings
+            'path': '/',
+            'domain': None
+        }
+        # Clear all session-related cookies with same settings
+        response.set_cookie('session', '', **cookie_settings)
+        response.set_cookie('admin_id', '', **cookie_settings) 
+        response.set_cookie('user_id', '', **cookie_settings)
 
-    return response, 200
+        return response, 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 
