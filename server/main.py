@@ -16,6 +16,7 @@ app = Flask(__name__)
 cors = CORS(app, supports_credentials=True, 
             origins=["http://localhost:5173", "http://127.0.0.1:5173"], 
             allow_credentials=True,
+            allow_headers=['Content-Type', 'Authorization'],
             expose_headers=['Set-Cookie'], 
             methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             resources={r"/api/*": {"origins": ["http://127.0.0.1:5173", "http://localhost:5173"]}} 
@@ -29,8 +30,8 @@ app.config['JWT_SECRET_KEY'] = 'super'
 app.config['JWT_TOKEN_LOCATION'] = [ 'headers']
 #app.config['JWT_COOKIE_SECURE'] = False
 #app.config['JWT_COOKIE_SAMESITE'] = 'Lax'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=5)
-app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(minutes=10)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(minutes=30)
 jwt = JWTManager(app)
 
 

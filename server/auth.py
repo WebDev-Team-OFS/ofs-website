@@ -67,9 +67,18 @@ def renew_session():
 def refresh():
     try:
         current_user = get_jwt_identity()
-        access_token = create_access_token(identity=current_user)
+        claims = get_jwt()
+        if claims.get('is_admin', False):
+            access_token = create_access_token(identity=current_user, 
+                                               additional_claims={"is_admin": True},
+                                               expires_delta=timedelta(minutes=5))
+        else:
+            access_token = create_access_token(identity=current_user)
 
-        response = jsonify({"message": "Token refreshed", "access_token": access_token})
+        return jsonify({
+            "access_token": access_token,
+            "message": "Token refreshed"
+        }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -249,7 +258,9 @@ def admin_login():
         if admin and check_password_hash(admin['password'], password):
             admin.pop('password')
             admin['is_admin'] = True
-            access_token = create_access_token(identity=str(admin['emp_id']), expires_delta=timedelta(minutes=1), additional_claims={"is_admin": True})
+            access_token = create_access_token(identity=str(admin['emp_id']), 
+                                               expires_delta=timedelta(minutes=5), 
+                                               additional_claims={"is_admin": True})
             refresh_token = create_refresh_token(identity=admin['emp_id'])
 
             return jsonify({"message": "Login successful", "admin": admin, "access_token": access_token, "refresh_token": refresh_token}), 200

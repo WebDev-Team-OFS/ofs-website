@@ -27,9 +27,11 @@ def view_profile():
         cursor = db_connection.cursor(dictionary=True)
 
         cursor.execute("""
-                Select user_id, username, first_name, last_name, email data_create, from user_info where user_id = %s  
+                Select user_id, username, first_name, last_name, email data_create,
+                        FROM user_info 
+                       WHERE user_id = %s  
                     
-                    """, (user_id))
+                    """, (user_id,))
         user_profile = cursor.fetchone()
 
 
