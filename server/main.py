@@ -33,16 +33,6 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=5)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(minutes=10)
 jwt = JWTManager(app)
 
-#all of these are global for the app
-#remove is its messing stuff up
-#app.config['SESSION_COOKIE_DOMAIN'] = 'localhost'  # Set to your domain
-# app.config['SESSION_COOKIE_HTTPONLY'] = True
-# app.config['SESSION_COOKIE_SECURE'] = True  # Use True only if running on HTTPS
-# app.config['SECRET_KEY'] = 'testkey'
-# app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # Prevent cross-site request issues
-# #the thing not working properly when samesite is set to lax we need to read more on documentation to figure out why
-# app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)  # Default session lifetime
-
 
 
 #register all future API end points here

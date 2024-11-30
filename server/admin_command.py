@@ -2,17 +2,19 @@
 from flask import Blueprint, request, jsonify, session
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash
-
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 admin_cmd_bp = Blueprint('admin_command', __name__)
 
 
 #view all stock
 @admin_cmd_bp.route('/admin/products', methods=['GET'])
+@jwt_required()
 def review_stock():
     try: 
-        if 'admin_id' not in session:
-            return jsonify({"error": "Unauthorized access, login first"}), 401
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
 
         #admin_id = session['admin_id']
 
@@ -20,30 +22,29 @@ def review_stock():
         cursor = db_connection.cursor(dictionary=True)
 
         cursor.execute("SELECT * FROM product")
+        products = cursor.fetchall()
+
         cursor.close()
         db_connection.close()
-        products = cursor.fetchall()
+
         return jsonify(products), 200
 
 
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
-    finally:
-        if cursor:
-            cursor.close()
-        if db_connection:
-            db_connection.close()
 
 
 
 # Update Stock
 @admin_cmd_bp.route('/admin/products/<int:product_id>/stock', methods=['PUT'])
+@jwt_required()
 def change_stock(product_id):
     try: 
-        if 'admin_id' not in session:
-            return jsonify({"error": "Unauthorized access, login first"}), 401
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
+
 
         #admin_id = session['admin_id']
 
@@ -75,10 +76,12 @@ def change_stock(product_id):
 
 # Update price
 @admin_cmd_bp.route('/admin/products/<int:product_id>/price', methods=['PUT'])
+@jwt_required()
 def update_price(product_id):
     try: 
-        if 'admin_id' not in session:
-            return jsonify({"error": "Unauthorized access, login first"}), 401
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
 
         #admin_id = session['admin_id']
 
@@ -109,10 +112,12 @@ def update_price(product_id):
 
 #remove item
 @admin_cmd_bp.route('/admin/products/<int:product_id>', methods=['DELETE'])
+@jwt_required()
 def remove_item(product_id):
     try: 
-        if 'admin_id' not in session:
-            return jsonify({"error": "Unauthorized access, login first"}), 401
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
 
         #admin_id = session['admin_id']
 
@@ -137,12 +142,14 @@ def remove_item(product_id):
 
 #add item (this needs a fix due to still using session id)
 @admin_cmd_bp.route('/admin/add_products', methods=['POST'])
+@jwt_required()
 def add_product():
     cursor = None
     db_connection = None
     try:
-        if 'admin_id' not in session:
-            return jsonify({"error": "Unauthorized access, login first"}), 401
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
 
         data = request.get_json()
         required_fields = ['name', 'brand', 'stock', 'price', 'weight', 'category', 'description']
@@ -177,9 +184,14 @@ def add_product():
 
 #add admin
 @admin_cmd_bp.route("/add_admin", methods = ["POST"])
+@jwt_required()
 def add_admin():
     try:
 
+        claims  = get_jwt()
+        if not claims.get('is_admin', False):  
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
+        
         data = request.get_json()
         username = data.get("username")
         password = data.get("password")
@@ -220,8 +232,13 @@ def add_admin():
 
 #remove admin
 @admin_cmd_bp.route("/remove_admin", methods=["DELETE"])
+@jwt_required()
 def remove_admin():
     try:
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
+        
         data = request.get_json()
         #can be changed to user_id or something later
         username = data.get("username")

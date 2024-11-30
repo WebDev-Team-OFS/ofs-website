@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request, session, current_app
 from db_module import get_db_connection
 from datetime import timedelta
 import json
-
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 user_cmd_bp = Blueprint('user_command', __name__)
 
@@ -14,12 +14,14 @@ user_cmd_bp = Blueprint('user_command', __name__)
 
 
 @user_cmd_bp.route("/api/profile", methods = ['GET'])
+@jwt_required() 
 def view_profile():
     try:
-        if 'user_id' not in session:
-            return jsonify({"error": "Unauthorazied access, login first"}), 401
+        user_id = get_jwt_identity()
+        if not user_id:
+            return jsonify({"error": "Unauthorized access, login first"}), 401
         
-        user_id = session['user_id']
+        # user_id = session['user_id']
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
@@ -49,12 +51,14 @@ def view_profile():
 
 
 @user_cmd_bp.route("/api/profile", methods = ['PUT'])
+@jwt_required()
 def edit_profile():
     try:
-        if 'user_id' not in session:
-            return jsonify({"error": "Unauthoraized, login first"}), 401
+        user_id = get_jwt_identity()
+        if not user_id:
+            return jsonify({"error": "Unauthorized access, login first"}), 401
         
-        user_id = session['user_id']
+        # user_id = session['user_id']
         data = request.get_json()
 
         username = data.get('username')
@@ -87,11 +91,6 @@ def edit_profile():
             db_connection.rollback()
         return  jsonify({"error": str(e)}), 500
 
-    finally:
-        if cursor:
-            cursor.close()
-        if db_connection:
-            db_connection.close()
         
 
 
@@ -99,15 +98,17 @@ def edit_profile():
 
 #add past transactions
 @user_cmd_bp.route("/api/past_transactions", methods = ['GET'])
+@jwt_required()
 def view_past_transactions():
     cursor = None
     db_connection = None
     try:
         #change if we are not using session idk
-        if 'user_id' not in session:
-            return jsonify({"error": "Unauthorized access, login first"}), 401
+        user_id = get_jwt_identity()
+        if not user_id:
+            return jsonify({"error": "Unauthorized access, login first"}), 401  
         
-        user_id = session['user_id']
+        # user_id = session['user_id']
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)

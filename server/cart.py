@@ -1,17 +1,20 @@
 from flask import Blueprint, jsonify, session, request
 from db_module import get_db_connection
 import json
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 
 cart_bp = Blueprint("cart", __name__)
 
 @cart_bp.route('/api/view_cart', methods=['GET'])
+@jwt_required()
 def view_cart():
     """View the current user's cart."""
-    if 'user_id' not in session:
+    user_id = get_jwt_identity()
+    if not user_id:
         return jsonify({"error": "User is not logged in"}), 401
 
-    user_id = session['user_id']
+    # user_id = session['user_id']
     db_connection = get_db_connection()
     cursor = db_connection.cursor(dictionary=True)
 
@@ -34,11 +37,13 @@ def view_cart():
     
 
 @cart_bp.route('/api/add_to_cart/', methods=['POST'])
+@jwt_required()
 def add_to_cart():
-    if 'user_id' not in session:
+    user_id = get_jwt_identity()
+    if not user_id:
         return jsonify({"error": "User is not logged in"}), 401
-
-    user_id = session['user_id']
+    
+    # user_id = session['user_id']
     data = request.get_json()
     product_id = data.get('product_id')
     quantity = data.get('quantity')
@@ -85,11 +90,13 @@ def add_to_cart():
 
 
 @cart_bp.route('/api/remove_from_cart/<int:product_id>', methods=['DELETE'])
+@jwt_required()
 def remove_from_cart(product_id):
-    if 'user_id' not in session:
+    user_id = get_jwt_identity()
+    if not user_id:
         return jsonify({"error": "User is not logged in"}), 401
 
-    user_id = session['user_id']
+    # user_id = session['user_id']
     db_connection = get_db_connection()
     cursor = db_connection.cursor(dictionary=True)
 
@@ -113,12 +120,14 @@ def remove_from_cart(product_id):
 
 
 @cart_bp.route('/api/update_cart_item', methods=['PUT'])
+@jwt_required()
 def update_cart_item():
     """Update the quantity of an item in the cart."""
-    if 'user_id' not in session:
-        return jsonify({"error": "Unauthorized, please log in first"}), 401
+    user_id = get_jwt_identity()
+    if not user_id: 
+        return jsonify({"error": "User is not logged in"}), 401 
 
-    user_id = session['user_id']
+    # user_id = session['user_id']
     data = request.get_json()
     product_id = data.get('product_id')
     new_quantity = data.get('quantity')
@@ -157,14 +166,16 @@ def update_cart_item():
 
 #a new api to get all orders and to update the database with the status of the order
 @cart_bp.route('/api/checkout', methods=['POST'])
+@jwt_required()
 def checkout():
     cursor = None
     db_connection = None
     try:
-        if 'user_id' not in session:
+        user_id = get_jwt_identity()
+        if not user_id: 
             return jsonify({"error": "User is not logged in"}), 401
             
-        user_id = session['user_id']
+        # user_id = session['user_id']
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
         
