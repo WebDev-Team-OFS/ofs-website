@@ -2,6 +2,19 @@ from flask import Blueprint, jsonify, request, session, current_app, make_respon
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    jwt_required,
+    get_jwt_identity,
+    set_access_cookies,
+    set_refresh_cookies,
+    unset_jwt_cookies,
+    get_jwt,
+    get_csrf_token,
+
+)
+
 # Change app route as needed
 auth_bp = Blueprint('auth', __name__)
 
@@ -9,6 +22,7 @@ auth_bp = Blueprint('auth', __name__)
 
 
 
+'''
 #might be really scuffed
 @auth_bp.before_app_request
 def set_admin_session_lifetime():
@@ -23,7 +37,6 @@ def set_admin_session_lifetime():
     #legit don't know what is happening (maybe work since rip login page AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
 
 
-
 @auth_bp.before_app_request
 def validate_session():
     """Ensure the user is logged out if session data is invalid."""
@@ -34,6 +47,7 @@ def validate_session():
             response.set_cookie('session', '', expires=0)
             return response
 '''
+'''
 #the user time will update if they are doing something on the website
 @auth_bp.after_request
 def renew_session():
@@ -43,6 +57,21 @@ def renew_session():
     if ('user_id' in session or 'admin_id' in session) and request.endpoint not in ('static',):
         session.modified = True
 '''
+
+
+
+
+
+@auth_bp.route("/api/refresh", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh():
+    try:
+        current_user = get_jwt_identity()
+        access_token = create_access_token(identity=current_user)
+
+        response = jsonify({"message": "Token refreshed", "access_token": access_token})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 #login in api end point
@@ -69,25 +98,25 @@ def login():
         db_connection.close()
 
         if user and check_password_hash(user['password'], password):
-            session.clear()
-            session['user_id'] = user['user_id']
-            session['username'] = user['username']
-            user.pop('password')
-            return jsonify({"message": "Login successful", "user": user}), 200
+            user.pop('password')  # Remove password from response for security
+            access_token = create_access_token(identity=str(user['user_id']))
+            refresh_token = create_refresh_token(identity=str(user['user_id']))
+
+            return jsonify({"message": "Login successful", "user": user, "access_token": access_token,
+                "refresh_token": refresh_token
+            }),200
         else:
             return jsonify({"error": "Invalid email or password"}), 401
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        if cursor:
-            cursor.close()
-        if db_connection:
-            db_connection.close()
+
 
 
 #registration api end point
 @auth_bp.route("/api/register", methods=['POST'])
 def register():
+    cursor = None
+    db_connection = None
     try:
         data = request.get_json()
         username = data.get('username')
@@ -136,27 +165,33 @@ def register():
 
 
 @auth_bp.route("/api/protected", methods=["GET"])
+@jwt_required()
 def protected():
-    # Check if the user is logged in
-    if 'user_id' not in session:
-        return jsonify({"error": "Unauthorized, please login first"}), 401
-
-    # Get user data from session
-    user_id = session['user_id']
-    username = session['username']
-    # session_expiry = session.permanent_session_lifetime.total_seconds() if session.permanent else None
-    
-    return jsonify({"message": f"Welcome {username}!", "user_id": user_id}), 200
+    try:
+        current_user = get_jwt_identity()
+        return jsonify({
+            "message": "Access granted",
+            "current_user": current_user
+        }),200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 
 #check if the person is allowed in
 #security check ig (don't ask me)
 @auth_bp.route("/api/admin/protected", methods=["GET"])
+@jwt_required()
 def admin_protected():
-    if 'admin_id' not in session:
-        return jsonify({"error": "Unauthorized, admin access only"}), 401
-    return jsonify({"message": "Welcome, admin!"}), 200
+    try:
+        current_user = get_jwt_identity()
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Access denied"}), 403
+
+        return jsonify({"message": "Access granted", "current_user": current_user}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 #generate code check to test
@@ -185,21 +220,18 @@ def logout():
 
 @auth_bp.route("/api/logout", methods=["POST"])
 def logout():
-    session.clear()  # Clears the session data
-
-    response = make_response(jsonify({"message": "Logged out successfully"}))
-    response.set_cookie('session', '', expires=0)
-    response.set_cookie('admin_id', '', expires=0)
-    response.set_cookie('user_id', '', expires=0)
-
-    return response, 200
+    try:
+        response = jsonify({"message": "Logged out successfully"})
+        return response, 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 
 @auth_bp.route("/api/admin/login", methods = ['POST'])
 def admin_login():
-    cursor = None;
-    db_connection = None;
+    cursor = None
+    db_connection = None
     try:
         data = request.get_json()
         email = data.get('email')
@@ -215,11 +247,12 @@ def admin_login():
         admin = cursor.fetchone()
 
         if admin and check_password_hash(admin['password'], password):
-            session.clear()
-            session['admin_id'] = admin['emp_id']
-            session['admin_username'] = admin['username']
-            admin.pop('password')  # Remove password from response for security
-            return jsonify({"message": "Admin login successful", "admin": admin}), 200
+            admin.pop('password')
+            admin['is_admin'] = True
+            access_token = create_access_token(identity=str(admin['emp_id']), expires_delta=timedelta(minutes=1), additional_claims={"is_admin": True})
+            refresh_token = create_refresh_token(identity=admin['emp_id'])
+
+            return jsonify({"message": "Login successful", "admin": admin, "access_token": access_token, "refresh_token": refresh_token}), 200
         else:
             return jsonify({"error": "Invalid email or password"}), 401
     except Exception as e:
@@ -229,6 +262,3 @@ def admin_login():
             cursor.close()
         if db_connection:
             db_connection.close()
-
-
-
