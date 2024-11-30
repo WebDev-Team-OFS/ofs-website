@@ -127,7 +127,7 @@ def update_cart_item():
     product_id = data.get('product_id')
     new_quantity = data.get('quantity')
     
-    # Verify that product id and quantity values are provided
+    # Verify that product id and quantity values are provided       
     if not all([product_id, new_quantity]):
         return jsonify({"error": "Product ID and new quantity are required"}), 400
 
