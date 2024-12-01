@@ -93,7 +93,6 @@ export const SearchPage = () => {
 
   return (
     <div className="search-page-container">
-       
         <aside className="sidebar">
             <div className="categories-sidebar">
                 <h3>Categories</h3>

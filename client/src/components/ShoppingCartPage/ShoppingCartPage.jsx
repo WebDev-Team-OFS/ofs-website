@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './shoppingcart-page.css';
 import axios from 'axios';
 import { checkLoginHelper } from '../utils';
+import PopUp from '../PopUp/PopUp';
 
 
 function ShoppingCartPage() {
@@ -19,6 +20,7 @@ function ShoppingCartPage() {
     // State for cart items
     const [cartItems, setCartItems] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [showPopUp, setShowPopUp] = useState(false);
 
     const getCart = async () => {
         let cart = []
@@ -39,9 +41,6 @@ function ShoppingCartPage() {
             }
 
         }
-        else {
-            tempCart = JSON.parse(localStorage.getItem("cart")) || [];
-        }
         for (let i = 0; i < tempCart.length; i++) {
             console.log(tempCart[i].product_id)
             try{
@@ -57,6 +56,16 @@ function ShoppingCartPage() {
         }
         console.log(cart);
         setCartItems(cart);
+    }
+
+
+    const goToCheckOut = async () => {
+        if (await checkLoginHelper()) {
+            navigate('/checkout');
+        }
+        else {
+            setShowPopUp(true);
+        }
     }
 
     useEffect(() => {
@@ -89,9 +98,7 @@ function ShoppingCartPage() {
 
         }
         else {
-            let localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
-            localStorageCart = localStorageCart.map(item => item.product_id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item);
-            localStorage.setItem("cart", JSON.stringify(localStorageCart));
+            setShowPopUp(true)
         }
     };
 
@@ -110,12 +117,9 @@ function ShoppingCartPage() {
             catch {
                 console.log("DID NOT REMOVE FROM THE DB CART")
             }
-
         }
         else {
-            let localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
-            localStorageCart = localStorageCart.filter(item => item.product_id !== id);
-            localStorage.setItem("cart", JSON.stringify(localStorageCart));
+           setShowPopUp(true)
         }
     };
 
@@ -135,6 +139,7 @@ function ShoppingCartPage() {
 
     return (
         <div className="shopping-cart">
+            {showPopUp ? <PopUp text="Your login has expired. Refresh" closePopUp={() => setShowPopUp(false)} /> : <></>}
             <div className="cart-header">
                 <h1>OFS Shopping Cart</h1>
             </div>
@@ -175,7 +180,7 @@ function ShoppingCartPage() {
                         <p>*A shipping fee of ${deliveryCharge}.00 is added to deliveries over 20 pounds</p>
                         }
                     </div>
-                    <button className="checkout-button" onClick={() => navigate('/checkout')}>
+                    <button className="checkout-button" onClick={goToCheckOut}>
                         Checkout
                     </button>
                 </div>

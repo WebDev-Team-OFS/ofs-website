@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { checkLoginHelper} from '../utils'
 import axios from 'axios'
+import PopUp from '../PopUp/PopUp'
 
 
 function GroceryCard({product}) {
     const navigate = useNavigate();
     const [outOfStock, setOutOfStock] = useState(false);
+    const [showPopUp, setShowPopUp] = useState(false);
 
     const goToProduct = (event) => {
         if (!event.target.classList.contains("add-to-cart-button")) {
@@ -43,26 +45,28 @@ function GroceryCard({product}) {
             }
         }
         else {
-            console.log("CART!!")
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            // console.log("CART!!")
+            // let cart = JSON.parse(localStorage.getItem("cart")) || [];
             
-            let cartProduct = cart.find(grocery => grocery.product_id === product.product_id);
+            // let cartProduct = cart.find(grocery => grocery.product_id === product.product_id);
     
-            if (cartProduct) {
-                cartProduct.quantity++;
-            }
-            else {
-                cart.push({ product_id: product.product_id, quantity: 1 });
-            }
-            console.log(cart);
+            // if (cartProduct) {
+            //     cartProduct.quantity++;
+            // }
+            // else {
+            //     cart.push({ product_id: product.product_id, quantity: 1 });
+            // }
+            // console.log(cart);
             
-            localStorage.setItem("cart", JSON.stringify(cart));
+            // localStorage.setItem("cart", JSON.stringify(cart));
+            setShowPopUp(true);
         }
         
     }
 
     return(
         <>
+            {showPopUp ? <PopUp text="Log in to add to your cart" closePopUp={() => setShowPopUp(false)} /> : <></>}
             <div className="grocery-card" onClick={goToProduct}>
                 <img src={`http://127.0.0.1:8080/api/image/${product.product_id}`} alt="" />
                 <div>

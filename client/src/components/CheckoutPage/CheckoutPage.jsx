@@ -4,6 +4,7 @@ import './checkout-page.css'; // Link to your CSS file for styling
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { checkLoginHelper } from '../utils';
+import PopUp from '../PopUp/PopUp';
 
 function CheckoutPage() {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ function CheckoutPage() {
   const [cartItems, setCartItems] = useState([])
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [showPopUp, setShowPopUp] = useState(false);
 
   const getCart = async () => {
     let cart = []
@@ -32,7 +35,7 @@ function CheckoutPage() {
 
     }
     else {
-        tempCart = JSON.parse(localStorage.getItem("cart")) || [];
+      navigate('/')
     }
     for (let i = 0; i < tempCart.length; i++) {
         console.log(tempCart[i].product_id)
@@ -87,7 +90,6 @@ function CheckoutPage() {
   // Form submission handler
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(localStorage.getItem("access_token"));
     if (await checkLoginHelper()) {
       try {
           const response = await axios.post('http://127.0.0.1:8080/api/checkout', {}, {
@@ -99,41 +101,17 @@ function CheckoutPage() {
           navigate(`/`)
       }
       catch {
-          console.log("DID NOT CHECKOUT CART")
+        setShowPopUp(true)
       }
    }
    else {
-    totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    totalWeight = cartItems.reduce((total, item) => total + item.weight * item.quantity, 0);
-
-    const cart = JSON.parse(localStorage.getItem("cart")) || []
-    const order = {
-      items: cart,
-      total_price: Number(totalPrice),
-      total_weight: Number(totalWeight),
-    }
-    console.log(order);
-    try {
-      const response = await axios.post('http://127.0.0.1:8080/api/guest_checkout', {order});
-
-      console.log('Order Submitted', { cartItems, deliveryDetails, paymentDetails });
-      localStorage.removeItem('cart');
-      navigate('/');
-      alert("Your order has been submitted!")
-    }
-    catch (error) {
-      console.log("Cart not sent successfully: ", error);
-    }
+    setShowPopUp(true)
    }
-
-    
-    
-    
-    // Process the order
   };
 
   return (
     <main className="checkout-container">
+      {showPopUp ? <PopUp text="Your login has expired. Refresh" closePopUp={() => setShowPopUp(false)} /> : <></>}
       <h1>Checkout</h1>
 
       {/* Cart Items Section */}

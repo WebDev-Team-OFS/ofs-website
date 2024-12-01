@@ -3,6 +3,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 import { checkLoginHelper } from '../utils'
+import PopUp from '../PopUp/PopUp'
 
 
 
@@ -12,6 +13,7 @@ function ProductPage() {
     const [product, setProduct] = useState({});
     const [itemQuantity, setItemQuantity] = useState(1);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [showPopUp, setShowPopUp] = useState(false);
     // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const param = useParams();
@@ -41,18 +43,8 @@ function ProductPage() {
             }
         }
         else {
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        
-            let cartProduct = cart.find(grocery => grocery.product_id === product.product_id);
-    
-            if (cartProduct) {
-                cartProduct.quantity += itemQuantity;
-            }
-            else {
-                cart.push({ product_id: product.product_id, quantity: itemQuantity });
-            }        
-            localStorage.setItem("cart", JSON.stringify(cart));
-            setIsSuccess(true);
+            setShowPopUp(true)
+            setIsSuccess(false);
         }
         
 
@@ -64,6 +56,7 @@ function ProductPage() {
 
     return (
         <>
+            {showPopUp ? <PopUp text="Log in to add items to your cart" closePopUp={() => setShowPopUp(false)} /> : <></>}
             <div className="product-page-container">
                 <div className="product-image-container">
                     <img src={`http://127.0.0.1:8080/api/image/${product.product_id}`} alt="" />

@@ -7,6 +7,12 @@ import Categories from "./Categories"
 function LandingPage() {
     return (
         <div className="landing-page-container">
+            {/* <div className="pop-up">
+                <div>Log in to add items to your cart</div>
+                <div className="close-pop-up">
+                &#10005;
+                </div>
+            </div> */}
          <img className="background-image" src="./src/img/landing-page-background.jpg" alt="" />
             <FeaturedItems />
             <div className="row">
