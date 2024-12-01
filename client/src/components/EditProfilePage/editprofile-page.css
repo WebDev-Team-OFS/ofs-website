@@ -1,0 +1,80 @@
+/* General Styles */
+.edit-profile-page body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+.edit-profile-page {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+.edit-profile-page h1 {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Profile Sections */
+  .edit-profile-page .profile-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .edit-profile-page .profile-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .edit-profile-page .label {
+    font-weight: bold;
+    color: #052E16;
+    flex: 1;
+  }
+  
+  .edit-profile-page .value {
+    flex: 2;
+    text-align: left;
+    color: #333;
+  }
+  
+  .edit-profile-page .status {
+    color: green;
+    font-size: 0.9rem;
+    margin-left: 1rem;
+  }
+  
+  .edit-profile-page .edit-btn, .add-btn {
+    background-color: #052E16;
+    color: #fff;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .edit-profile-page .edit-btn:hover, .edit-profile-page .add-btn:hover {
+    background-color: #041d0f;
+  }
+  
+  /* Add Button */
+  .edit-profile-page .add-btn {
+    background-color: #999;
+  }
+  
+  .edit-profile-page .add-btn:hover {
+    background-color: #666;
+  }
+  

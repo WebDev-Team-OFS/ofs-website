@@ -47,17 +47,26 @@ function ProfileButton() {
             setIsLoggedIn(false);
             setProfileOptions(false);
             console.log(response.data);
-            window.location.reload();
-
         }
         catch (error) {
             console.log(error.response);
         }
         finally {
             setProfileOptions(false);
+            navigate(`/`);
             console.log("final");
         }
          
+    }
+
+    const goToProfile = async () => {
+        if (await checkLoginHelper()) {
+            navigate('/profile')
+        }
+        else {
+            console.log("no logged in")
+        }
+        setProfileOptions(false);
     }
 
     useEffect(() => {
@@ -74,7 +83,7 @@ function ProfileButton() {
             {
                 isLoggedIn && (
                     <>
-                        <p>View Profile</p>
+                        <p onClick={goToProfile}>View Profile</p>
                         <p className="end" onClick={handleLogOutButton}>Logout</p>
                     </>
                 )

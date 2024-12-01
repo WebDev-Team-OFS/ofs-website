@@ -1,0 +1,129 @@
+/* General Reset */
+.profile-page body, .profile-page h1, .profile-page h2, .profile-page p, .profile-page ul, .profile-page li {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Profile Page Container */
+  .profile-page {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    padding: 1rem;
+  }
+  
+  /* Header Section */
+  .profile-header {
+    background-color: #052E16; /* Changed from #800000 */
+    color: #fff;
+    padding: 1.5rem;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  
+  .profile-header h1 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .points {
+    font-weight: bold;
+    color: #ffd700; /* Retained gold for points */
+  }
+  
+  .save-points-btn {
+    background-color: #ffd700;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: #052E16; /* Complementary dark green */
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  
+  .save-points-btn:hover {
+    background-color: #e6c200; /* Slightly darker gold on hover */
+  }
+  
+  /* Main Content Section */
+  .profile-content {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  /* Profile Info Section */
+  .profile-info {
+    flex: 1;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-info h2 {
+    margin-bottom: 1rem;
+    color: #052E16; 
+  }
+  
+  .profile-info p {
+    margin: 0.5rem 0;
+  }
+  
+  .profile-info strong {
+    color: #333;
+  }
+  
+  .edit-btn {
+    display: inline-block;
+    background-color: #052E16; 
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .edit-btn:hover {
+    background-color: #041d0f; /* A darker shade of green */
+  }
+  
+  /* Navigation Links Section */
+  .profile-nav {
+    flex: 1;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-nav h2 {
+    margin-bottom: 1rem;
+    color: #052E16; 
+  }
+  
+  .profile-nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .profile-nav li {
+    margin: 0.5rem 0;
+  }
+  
+  .profile-nav a {
+    text-decoration: none;
+    color: #052E16; 
+    font-weight: bold;
+  }
+  
+  .profile-nav a:hover {
+    text-decoration: underline;
+  }
+  
+  .profile-page .order-end {
+    margin-bottom: 50px;
+  }
