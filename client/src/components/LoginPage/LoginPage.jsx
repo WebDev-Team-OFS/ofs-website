@@ -37,12 +37,14 @@ const AuthPages = () => {
       }, {
         withCredentials: true
       });
-
-      if (response.data.user) {
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        setSuccessMessage('Login successful!');
-        setTimeout(() => navigate('/'), 1500);
-      }
+        if (response.data) {
+          localStorage.setItem('access_token', response.data.access_token);
+          localStorage.setItem('refresh_token', response.data.refresh_token);
+          setSuccessMessage('Login successful!');
+          console.log("login successful")
+          setTimeout(() => navigate('/'), 1500);
+        }
+       
     } catch (err) {
       console.log(err.response ? err.response.data : err.message);
       setError(err.response?.data?.error || 'An error occurred during login');
