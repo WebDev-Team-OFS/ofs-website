@@ -35,7 +35,7 @@ def view_cart():
             db_connection.close()
 
     
-
+#adds item to the users temporary cart
 @cart_bp.route('/api/add_to_cart', methods=['POST'])
 @jwt_required()
 def add_to_cart():
@@ -88,7 +88,7 @@ def add_to_cart():
         if db_connection:
             db_connection.close()
 
-
+#removes item from the users temporary cart
 @cart_bp.route('/api/remove_from_cart/<int:product_id>', methods=['DELETE'])
 @jwt_required()
 def remove_from_cart(product_id):
@@ -118,7 +118,7 @@ def remove_from_cart(product_id):
 
 
 
-
+#if the users adds more items later to the cart
 @cart_bp.route('/api/update_cart_item', methods=['PUT'])
 @jwt_required()
 def update_cart_item():
@@ -180,7 +180,7 @@ def checkout():
             
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
-        print("HI!!")
+        print("HI!!")# tf is this
         
         # Start transaction
         db_connection.start_transaction() 
