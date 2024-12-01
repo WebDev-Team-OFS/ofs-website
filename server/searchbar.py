@@ -4,6 +4,8 @@ from db_module import get_db_connection
 search_bp = Blueprint("search", __name__)
 
 
+
+#add protection from sql injection 
 @search_bp.route("/api/search", methods=["GET"])
 def search_products():
     try:

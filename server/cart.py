@@ -218,6 +218,8 @@ def checkout():
             total_price += cart_qty * price
             total_weight += cart_qty * weight
         print("DID WE GET TOTAL PRICE?")
+
+
             
         # Check inventory and update stocks
         for item in cart_items:
@@ -247,6 +249,11 @@ def checkout():
         print(cart_items[0])
         cart_json = json.dumps(cart_items[0])
         print("DID THIS WORK?")
+
+        if total_weight > 20:
+            total_price +=5
+
+
         cursor.execute("""
             INSERT INTO orders (user_id, total_price, total_weight, order_date, order_items)
             VALUES (%s, %s, %s, NOW(), %s)
