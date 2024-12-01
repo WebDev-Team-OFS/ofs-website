@@ -272,3 +272,8 @@ def remove_admin():
             cursor.close()
         if db_connection:
             db_connection.close()
+
+
+
+#more admin commands
+#add view all admins or something

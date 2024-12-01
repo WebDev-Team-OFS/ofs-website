@@ -22,46 +22,6 @@ auth_bp = Blueprint('auth', __name__)
 
 
 
-'''
-#might be really scuffed
-@auth_bp.before_app_request
-def set_admin_session_lifetime():
-    """Sets a shorter session duration for admin accounts."""
-    if 'admin_id' in session:
-        session.permanent = True  # Enables the use of PERMANENT_SESSION_LIFETIME
-        current_app.permanent_session_lifetime = timedelta(minutes=1)
-    elif 'user_id' in session:
-        session.permanent = True
-        current_app.permanent_session_lifetime = timedelta(minutes=5)
-
-    #legit don't know what is happening (maybe work since rip login page AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
-
-
-@auth_bp.before_app_request
-def validate_session():
-    """Ensure the user is logged out if session data is invalid."""
-    if 'user_id' not in session and 'admin_id' not in session:
-        # Optionally: Clear client-side cookies if session is invalid
-        if request.cookies.get('session'):
-            response = make_response(jsonify({"error": "Session expired, please log in again."}))
-            response.set_cookie('session', '', expires=0)
-            return response
-'''
-'''
-#the user time will update if they are doing something on the website
-@auth_bp.after_request
-def renew_session():
-    #if 'user_id' in session or 'admin_id' in session:
-    #    session.modified = True
-
-    if ('user_id' in session or 'admin_id' in session) and request.endpoint not in ('static',):
-        session.modified = True
-'''
-
-
-
-
-
 @auth_bp.route("/api/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
@@ -203,28 +163,6 @@ def admin_protected():
         return jsonify({"error": str(e)}), 500
 
 
-#generate code check to test
-'''
-
-@auth_bp.route("/api/logout", methods=["POST"])
-def logout():
-    # Clear server-side session
-    user_was_admin = 'admin_id' in session
-    session.clear()
-    
-    # Create response
-    response = make_response(jsonify({
-        "message": "Logged out successfully",
-        "wasAdmin": user_was_admin
-    }))
-    
-    # Clear all session-related cookies
-    response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Strict')
-    response.set_cookie('admin_id', '', expires=0, secure=True, httponly=True, samesite='Strict')
-    response.set_cookie('user_id', '', expires=0, secure=True, httponly=True, samesite='Strict')
-    
-    return response, 200
-'''
 
 
 @auth_bp.route("/api/logout", methods=["POST"])
