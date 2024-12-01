@@ -15,8 +15,8 @@ import AdminLogin from './components/AdminPage/AdminLogin';
 import AdminDashboard from './components/AdminPage/AdminDashboard';
 import LoginPage from './components/LoginPage/LoginPage';
 import ShoppingCartPage from './components/ShoppingCartPage/ShoppingCartPage';
-
-
+import ProfilePage from './components/ProfilePage/ProfilePage';
+import EditProfile from './components/EditProfilePage/EditProfilePage';
 function App() {
   return (
     <>
@@ -31,7 +31,11 @@ function App() {
             <Route path ="/checkout" element = {<CheckoutPage />} />
             <Route path ="/cart" element = {<ShoppingCartPage />} />
             <Route path ="/search" element = {<SearchPage />} />
+            <Route path ="/profile" element = {<ProfilePage />} />
+            <Route path ="/edit-profile" element = {<EditProfile />} />
             {/* <Route path ="/search?q=*" element = {<SearchPage />} /> */}
+            {/* */}
+            
           </Route>
         </Routes>
       </Router>

@@ -1,0 +1,80 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .edit-profile-page {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Profile Sections */
+  .profile-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .profile-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .label {
+    font-weight: bold;
+    color: #052E16;
+    flex: 1;
+  }
+  
+  .value {
+    flex: 2;
+    text-align: left;
+    color: #333;
+  }
+  
+  .status {
+    color: green;
+    font-size: 0.9rem;
+    margin-left: 1rem;
+  }
+  
+  .edit-btn, .add-btn {
+    background-color: #052E16;
+    color: #fff;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .edit-btn:hover, .add-btn:hover {
+    background-color: #041d0f;
+  }
+  
+  /* Add Button */
+  .add-btn {
+    background-color: #999;
+  }
+  
+  .add-btn:hover {
+    background-color: #666;
+  }
+  
