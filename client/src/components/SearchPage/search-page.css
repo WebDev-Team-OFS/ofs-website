@@ -11,13 +11,20 @@
     display: flex;
     flex-wrap: wrap;
     gap: 30px;
+    background-color: blue;
 }
 
 .categories-sidebar {
-    flex: 1;
     background-color: #e7e5e4;
     border-radius: 10px;
 
+}
+
+.sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 
@@ -53,5 +60,18 @@
 
 .categories-sidebar .active {
     background-color: #b3b3b3;
+}
 
+.filters {
+    background-color: #e7e5e4;
+    text-align: left;
+    border: none;
+    font-family: Roboto;
+    font-size: 1.1rem;
+    line-height: 1;
+    margin: 0;
+    padding: 7px 20px;
+    padding-right: 10px;
+    width: 100%;
+    border-radius: 10px;
 }
