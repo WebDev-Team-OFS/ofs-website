@@ -13,10 +13,11 @@
     height: 700px;
     display: flex;
     justify-content: center;
+    overflow: hidden;
 }
 
 .product-image-container img {
-    object-fit: contain;
+    object-fit: cover;
     align-items : center;
 }
 
