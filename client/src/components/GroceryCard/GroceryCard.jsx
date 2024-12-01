@@ -1,6 +1,8 @@
 import './grocery-card.css'
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { checkLoginHelper} from '../utils'
+import axios from 'axios'
 
 
 function GroceryCard({product}) {
@@ -26,21 +28,37 @@ function GroceryCard({product}) {
         checkStock();
     }, [])
 
-    const addToCart = () => {
-        console.log("CART!!")
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        
-        let cartProduct = cart.find(grocery => grocery.product_id === product.product_id);
-
-        if (cartProduct) {
-            cartProduct.quantity++;
+    const addToCart = async () => {
+        if (await checkLoginHelper()) {
+            try {
+                const response = await axios.post('http://127.0.0.1:8080/api/add_to_cart', {product_id: product.product_id, quantity: 1}, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+                    }  
+                });
+                console.log("ADD TO DB CART");
+            }
+            catch {
+                console.log("DID NOT ADD TO DB CART")
+            }
         }
         else {
-            cart.push({ product_id: product.product_id, quantity: 1 });
+            console.log("CART!!")
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            
+            let cartProduct = cart.find(grocery => grocery.product_id === product.product_id);
+    
+            if (cartProduct) {
+                cartProduct.quantity++;
+            }
+            else {
+                cart.push({ product_id: product.product_id, quantity: 1 });
+            }
+            console.log(cart);
+            
+            localStorage.setItem("cart", JSON.stringify(cart));
         }
-        console.log(cart);
         
-        localStorage.setItem("cart", JSON.stringify(cart));
     }
 
     return(

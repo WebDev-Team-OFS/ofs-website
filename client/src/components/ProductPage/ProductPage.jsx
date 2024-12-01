@@ -2,6 +2,7 @@ import './product-page.css'
 import { useLocation, useParams } from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import axios from 'axios'
+import { checkLoginHelper } from '../utils'
 
 
 
@@ -11,6 +12,7 @@ function ProductPage() {
     const [product, setProduct] = useState({});
     const [itemQuantity, setItemQuantity] = useState(1);
     const [isSuccess, setIsSuccess] = useState(false);
+    // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const param = useParams();
     const id = param.id;
@@ -23,19 +25,36 @@ function ProductPage() {
     }
 
 
-    const addToCart = () => {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        
-        let cartProduct = cart.find(grocery => grocery.product_id === product.product_id);
-
-        if (cartProduct) {
-            cartProduct.quantity += itemQuantity;
+    const addToCart = async () => {
+        if (await checkLoginHelper()) {
+            try {
+                const response = await axios.post('http://127.0.0.1:8080/api/add_to_cart', {product_id: product.product_id, quantity: itemQuantity}, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+                    }  
+                });
+                console.log("ADD TO DB CART");
+                setIsSuccess(true);
+            }
+            catch {
+                console.log("DID NOT ADD TO DB CART")
+            }
         }
         else {
-            cart.push({ product_id: product.product_id, quantity: itemQuantity });
-        }        
-        localStorage.setItem("cart", JSON.stringify(cart));
-        setIsSuccess(true);
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        
+            let cartProduct = cart.find(grocery => grocery.product_id === product.product_id);
+    
+            if (cartProduct) {
+                cartProduct.quantity += itemQuantity;
+            }
+            else {
+                cart.push({ product_id: product.product_id, quantity: itemQuantity });
+            }        
+            localStorage.setItem("cart", JSON.stringify(cart));
+            setIsSuccess(true);
+        }
+        
 
     }
 

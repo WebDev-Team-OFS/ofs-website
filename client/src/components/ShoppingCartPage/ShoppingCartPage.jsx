@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './shoppingcart-page.css';
 import axios from 'axios';
+import { checkLoginHelper } from '../utils';
 
 
 function ShoppingCartPage() {
@@ -21,26 +22,38 @@ function ShoppingCartPage() {
 
     const getCart = async () => {
         let cart = []
-        if (isLoggedIn) {
+        let tempCart = []
+        if (await checkLoginHelper()) {
+            try {
+                const response = await axios.get('http://127.0.0.1:8080/api/view_cart', {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+                    }  
+                });
+                console.log("GET DB CART");
+                console.log(response.data.cart)
+                tempCart = response.data.cart;
+            }
+            catch {
+                console.log("DID NOT GET THE DB CART")
+            }
 
         }
         else {
-            const localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-            for (let i = 0; i < localStorageCart.length; i++) {
-                console.log(localStorageCart[i].product_id)
-                try{
-                    let response = await axios.get(`http://127.0.0.1:8080/api/product/${localStorageCart[i].product_id}`);
+            tempCart = JSON.parse(localStorage.getItem("cart")) || [];
+        }
+        for (let i = 0; i < tempCart.length; i++) {
+            console.log(tempCart[i].product_id)
+            try{
+                let response = await axios.get(`http://127.0.0.1:8080/api/product/${tempCart[i].product_id}`);
                     
-                    response.data.product.quantity = localStorageCart[i].quantity;
-                    console.log(response.data.product);
-                    cart.push(response.data.product);
-                }
-                catch (error) {
-                    console.log(error);
-                }
-                
+                response.data.product.quantity = tempCart[i].quantity;
+                console.log(response.data.product);
+                cart.push(response.data.product);
             }
+            catch (error) {
+                console.log(error);
+            }        
         }
         console.log(cart);
         setCartItems(cart);
@@ -51,13 +64,29 @@ function ShoppingCartPage() {
     }, [])
 
     // Function to handle adding or subtracting quantity
-    const updateCartItemQuantity = (id, delta) => {
-        setCartItems(cartItems.map(item => 
-            item.product_id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item
-        ));
+    const updateCartItemQuantity = async (id, delta) => {
+       
 
-        if (isLoggedIn) {
-           
+        let currentItem = cartItems.find(item => item.product_id === id);
+        let currentQuantity = currentItem.quantity;
+        
+
+        if (await checkLoginHelper()) {
+            try {
+                const response = await axios.put(`http://127.0.0.1:8080/api/update_cart_item`, {product_id: id, quantity: currentQuantity + delta}, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+                    }  
+                });
+                setCartItems(cartItems.map(item => 
+                    item.product_id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item
+                ));
+                console.log("REMOVE FROM DB CART");
+            }
+            catch {
+                console.log("DID NOT REMOVE FROM THE DB CART")
+            }
+
         }
         else {
             let localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -67,10 +96,20 @@ function ShoppingCartPage() {
     };
 
     // Function to remove an item from the cart
-    const removeItemFromCart = (id) => {
-        setCartItems(cartItems.filter(item => item.product_id !== id));
-        
-        if (isLoggedIn) {
+    const removeItemFromCart = async (id) => {
+        if (await checkLoginHelper()) {
+            try {
+                const response = await axios.delete(`http://127.0.0.1:8080/api/remove_from_cart/${id}`, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+                    }  
+                });
+                setCartItems(cartItems.filter(item => item.product_id !== id));
+                console.log("REMOVE FROM DB CART");
+            }
+            catch {
+                console.log("DID NOT REMOVE FROM THE DB CART")
+            }
 
         }
         else {

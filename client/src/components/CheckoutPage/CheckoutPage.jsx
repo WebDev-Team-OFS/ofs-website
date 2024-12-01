@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './checkout-page.css'; // Link to your CSS file for styling
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { checkLoginHelper } from '../utils';
 
 function CheckoutPage() {
   const navigate = useNavigate();
@@ -12,28 +13,39 @@ function CheckoutPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const getCart = async () => {
-    console.log("GETTING CART");
     let cart = []
-    if (isLoggedIn) {
+    let tempCart = []
+    if (await checkLoginHelper()) {
+        try {
+            const response = await axios.get('http://127.0.0.1:8080/api/view_cart', {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+                }  
+            });
+            console.log("GET DB CART");
+            console.log(response.data.cart)
+            tempCart = response.data.cart;
+        }
+        catch {
+            console.log("DID NOT GET THE DB CART")
+        }
 
     }
     else {
-        const localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-        for (let i = 0; i < localStorageCart.length; i++) {
-            console.log(localStorageCart[i].product_id)
-            try{
-                let response = await axios.get(`http://127.0.0.1:8080/api/product/${localStorageCart[i].product_id}`);
+        tempCart = JSON.parse(localStorage.getItem("cart")) || [];
+    }
+    for (let i = 0; i < tempCart.length; i++) {
+        console.log(tempCart[i].product_id)
+        try{
+            let response = await axios.get(`http://127.0.0.1:8080/api/product/${tempCart[i].product_id}`);
                 
-                response.data.product.quantity = localStorageCart[i].quantity;
-                console.log(response.data.product);
-                cart.push(response.data.product);
-            }
-            catch (error) {
-                console.log(error);
-            }
-            
+            response.data.product.quantity = tempCart[i].quantity;
+            console.log(response.data.product);
+            cart.push(response.data.product);
         }
+        catch (error) {
+            console.log(error);
+        }        
     }
     console.log(cart);
     setCartItems(cart);
@@ -75,6 +87,22 @@ function CheckoutPage() {
   // Form submission handler
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(localStorage.getItem("access_token"));
+    if (await checkLoginHelper()) {
+      try {
+          const response = await axios.post('http://127.0.0.1:8080/api/checkout', {}, {
+              headers: {
+                  "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+              }  
+          });
+          console.log("CHECKOUT CART");
+          navigate(`/`)
+      }
+      catch {
+          console.log("DID NOT CHECKOUT CART")
+      }
+   }
+   else {
     totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     totalWeight = cartItems.reduce((total, item) => total + item.weight * item.quantity, 0);
 
@@ -86,7 +114,8 @@ function CheckoutPage() {
     }
     console.log(order);
     try {
-      const response = await axios.post('http://127.0.0.1:8080/api/checkout', {order});
+      const response = await axios.post('http://127.0.0.1:8080/api/guest_checkout', {order});
+
       console.log('Order Submitted', { cartItems, deliveryDetails, paymentDetails });
       localStorage.removeItem('cart');
       navigate('/');
@@ -95,6 +124,10 @@ function CheckoutPage() {
     catch (error) {
       console.log("Cart not sent successfully: ", error);
     }
+   }
+
+    
+    
     
     // Process the order
   };
