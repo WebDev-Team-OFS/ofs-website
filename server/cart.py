@@ -246,8 +246,8 @@ def checkout():
             item['price'] = float(item['price'])
             item['weight'] = float(item['weight'])
 
-        print(cart_items[0])
-        cart_json = json.dumps(cart_items[0])
+        print(cart_items)
+        cart_json = json.dumps(cart_items)
         print("DID THIS WORK?")
 
         if total_weight > 20:
@@ -257,7 +257,7 @@ def checkout():
         cursor.execute("""
             INSERT INTO orders (user_id, total_price, total_weight, order_date, order_items)
             VALUES (%s, %s, %s, NOW(), %s)
-        """, (user_id, total_price, total_weight, json.dumps(cart_items[0])))
+        """, (user_id, total_price, total_weight, json.dumps(cart_items)))
         print("LOL")
         
         # Move cart items to order_items

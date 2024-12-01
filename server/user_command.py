@@ -25,14 +25,15 @@ def view_profile():
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
+        print("are we here")
 
         cursor.execute("""
-                Select user_id, username, first_name, last_name, email data_create,
-                        FROM user_info 
-                       WHERE user_id = %s  
-                    
-                    """, (user_id,))
+                SELECT user_id, username, first_name, last_name, email, date_created
+                    FROM user_info 
+                    WHERE user_id = %s  
+                """, (user_id,))
         user_profile = cursor.fetchone()
+        print("here?")
 
 
         cursor.close()
@@ -44,6 +45,7 @@ def view_profile():
             return jsonify({"error": "profile not found"}), 404
     
     except Exception as e:
+        print(str(e))
         return jsonify({"error": str(e)}), 500
     finally:
         if cursor:
