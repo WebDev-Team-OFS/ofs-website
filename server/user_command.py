@@ -1,5 +1,5 @@
 #user queries go here such as search item
-from flask import Blueprint, jsonify, request, session, current_app
+from flask import Blueprint, jsonify, request
 from db_module import get_db_connection
 from datetime import timedelta
 import json

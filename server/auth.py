@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, session, current_app, make_response
+from flask import Blueprint, jsonify, request
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
@@ -7,12 +7,7 @@ from flask_jwt_extended import (
     create_refresh_token,
     jwt_required,
     get_jwt_identity,
-    set_access_cookies,
-    set_refresh_cookies,
-    unset_jwt_cookies,
     get_jwt,
-    get_csrf_token,
-
 )
 
 # Change app route as needed
@@ -132,7 +127,7 @@ def register():
             db_connection.close()
     
 
-
+#check if the person is allowed in
 @auth_bp.route("/api/protected", methods=["GET"])
 @jwt_required()
 def protected():
@@ -164,7 +159,7 @@ def admin_protected():
 
 
 
-
+#universal logout end point
 @auth_bp.route("/api/logout", methods=["POST"])
 def logout():
     try:
@@ -174,7 +169,7 @@ def logout():
         return jsonify({"error": str(e)}), 500
 
 
-
+#login end point for admin
 @auth_bp.route("/api/admin/login", methods = ['POST'])
 def admin_login():
     cursor = None

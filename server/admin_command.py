@@ -1,5 +1,5 @@
 #file where all the admin commands go
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
