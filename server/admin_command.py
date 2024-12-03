@@ -381,38 +381,38 @@ def add_admin():
 
 
 #remove admin
-@admin_cmd_bp.route("/remove_admin", methods=["DELETE"])
+@admin_cmd_bp.route("/api/admin/remove_admin/<int:emp_id>", methods=["DELETE"])
 @jwt_required()
-def remove_admin():
+def remove_admin(emp_id):
     try:
         claims = get_jwt()
         if not claims.get('is_admin', False):
             return jsonify({"error": "Unauthorized access, admin only"}), 403
         
-        data = request.get_json()
-        #can be changed to user_id or something later
-        username = data.get("username")
+        # data = request.get_json()
+        # #can be changed to user_id or something later
+        # username = data.get("username")
 
-        if not username:
-            return jsonify({"error": "Username is required"}), 400
+        # if not username:
+        #     return jsonify({"error": "Username is required"}), 400
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
 
         # Check if the admin exists
-        check_query = "SELECT * FROM admin_info WHERE username = %s"
-        cursor.execute(check_query, (username,))
+        check_query = "SELECT * FROM admin_info WHERE emp_id = %s"
+        cursor.execute(check_query, (emp_id,))
         admin = cursor.fetchone()
 
         if not admin:
             return jsonify({"error": "Admin not found"}), 404
 
         # Delete the admin
-        delete_query = "DELETE FROM admin_info WHERE username = %s"
-        cursor.execute(delete_query, (username,))
+        delete_query = "DELETE FROM admin_info WHERE emp_id = %s"
+        cursor.execute(delete_query, (emp_id,))
         db_connection.commit()
 
-        return jsonify({"message": f"Admin '{username}' removed successfully"}), 200
+        return jsonify({"message": f"Admin '{emp_id}' removed successfully"}), 200
 
     except Exception as e:
         return jsonify({"error": "An error occurred while removing the admin", "details": str(e)}), 500
@@ -423,7 +423,39 @@ def remove_admin():
         if db_connection:
             db_connection.close()
 
+@admin_cmd_bp.route("/api/admin/view_admins", methods=["GET"])
+# @jwt_required()
+def view_admins():
+    try:
+        # claims = get_jwt()
+        # if not claims.get('is_admin', False):
+        #     return jsonify({"error": "Unauthorized access, admin only"}), 403
+        
+        #can be changed to user_id or something later
 
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor(dictionary=True)
+
+        # Check if the admin exists
+        check_query = "SELECT emp_id, date_created, email, first_name, last_name, username FROM admin_info"
+        cursor.execute(check_query)
+        admins = cursor.fetchall()
+
+        if not admins:
+            return jsonify({"error": "Admin accounts not found"}), 404
+        
+        db_connection.commit()
+
+        return jsonify({"admins": admins}), 200
+
+    except Exception as e:
+        return jsonify({"error": "An error occurred while removing the admin", "details": str(e)}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if db_connection:
+            db_connection.close()
 
 #more admin commands
 #add view all admins or something
