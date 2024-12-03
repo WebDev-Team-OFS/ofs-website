@@ -123,6 +123,7 @@ def update_product():
 @admin_cmd_bp.route('/api/admin/add-product/', methods=['POST'])
 @jwt_required()
 def add_product():
+    print("DELETING")
     cursor = None;
     db_connection = None;
     try: 
@@ -263,15 +264,13 @@ def update_image():
 
 
 #remove item
-@admin_cmd_bp.route('/admin/products/<int:product_id>', methods=['DELETE'])
+@admin_cmd_bp.route('/api/admin/products/<int:product_id>', methods=['DELETE'])
 @jwt_required()
 def remove_item(product_id):
     try: 
         claims = get_jwt()
         if not claims.get('is_admin', False):
             return jsonify({"error": "Unauthorized access, admin only"}), 403
-
-        #admin_id = session['admin_id']
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
