@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt
 import os
 import json
 
@@ -18,8 +18,6 @@ def review_stock():
         claims = get_jwt()
         if not claims.get('is_admin', False):
             return jsonify({"error": "Unauthorized access, admin only"}), 403
-
-        #admin_id = session['admin_id']
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
@@ -38,42 +36,6 @@ def review_stock():
         return jsonify({"error": str(e)}), 500
 
 
-
-# Update Stock
-# @admin_cmd_bp.route('/admin/products/<int:product_id>/stock', methods=['POST'])
-# @jwt_required()
-# def change_stock(product_id):
-#     try: 
-#         claims = get_jwt()
-#         if not claims.get('is_admin', False):
-#             return jsonify({"error": "Unauthorized access, admin only"}), 403
-
-
-#         #admin_id = session['admin_id']
-
-#         db_connection = get_db_connection()
-#         cursor = db_connection.cursor(dictionary=True)
-#         data = request.get_json()   
-#         new_stock = data.get('stock')
-
-#         if new_stock is None or new_stock < 0:
-#             return jsonify({"error": "Invalid stock value"}), 400
-
-#         cursor.execute("UPDATE product SET stock = %s WHERE product_id = %s", (new_stock, product_id))
-#         db_connection.commit()
-
-#         return jsonify({"message": "Stock updated successfully"}), 200
-    
-#     except Exception as e: 
-#         if db_connection:
-#             db_connection.rollback()
-#         return jsonify({"error": "An error occurred while updating stock", "details": str(e)}), 500
-
-#     finally:
-#         if cursor: 
-#             cursor.close
-#         if db_connection:
-#             db_connection.close()
 
 @admin_cmd_bp.route('/api/admin/update-product/', methods=['PUT'])
 @jwt_required()
@@ -186,6 +148,29 @@ def add_product():
         if db_connection:
             db_connection.close()
 
+
+
+
+def validate_image(file):
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+    errors =[]
+    if not file:
+        errors.append("No file found")
+        return errors
+    filename = file.filename
+    if '.' not in filename or filename.split('.')[-1].lower() not in ALLOWED_EXTENSIONS:
+        errors.append("Invalid file type")
+    
+    file.seek(0, os.SEEK_END)
+    file_length = file.tell()
+    file.seek(0) 
+
+    if file_length > 2* 1024 *1024 *1024:
+        errors.append("File too large")
+    
+    return errors
+
+
 @admin_cmd_bp.route('/api/admin/update-image/', methods=['PUT'])
 @jwt_required()
 def update_image():
@@ -193,8 +178,16 @@ def update_image():
         claims = get_jwt()
         if not claims.get('is_admin', False):
             return jsonify({"error": "Unauthorized access, admin only"}), 403
+        
         image = request.files['image']
         product_id = request.form.get('product_id')
+
+        if not product_id:
+            return jsonify({"error": "Product ID is required"}), 400
+        
+        errors = validate_image(image)
+        if errors:
+            return jsonify({"error": errors}), 400
 
         #path to upload folder
         upload_folder = os.path.join(os.getcwd(),'images')
@@ -219,48 +212,14 @@ def update_image():
         cursor.execute("UPDATE product SET image = %s WHERE product_id = %s", (relative_image_path, product_id))
         db_connection.commit()
 
+        cursor.close()
+        db_connection.close()
+
         return jsonify({"message": "File uploaded successfully", "path": image_path}), 200
     except Exception as e: 
         return jsonify({"error": "An error occurred while uploading image", "details": str(e)}), 500
    
 
-
-
-
-# NOT NEEDED?
-# Update price
-# @admin_cmd_bp.route('/admin/products/<int:product_id>/price', methods=['PUT'])
-# @jwt_required()
-# def update_price(product_id):
-#     try: 
-#         claims = get_jwt()
-#         if not claims.get('is_admin', False):
-#             return jsonify({"error": "Unauthorized access, admin only"}), 403
-
-#         #admin_id = session['admin_id']
-
-#         db_connection = get_db_connection()
-#         cursor = db_connection.cursor(dictionary=True)
-#         data = request.get_json()
-
-#         new_price = data.get('price')
-
-#         if new_price is None or new_price < 0:
-#             return jsonify({"error": "Invalid price value"}), 400
-
-#         cursor.execute("UPDATE product SET price = %s WHERE product_id = %s", (new_price, product_id))
-#         db_connection.commit()
-
-#         return jsonify({"message": "Price updated successfully"}), 200
-#     except Exception as e: 
-#         if db_connection:
-#             db_connection.rollback()
-#         return jsonify({"error": "An error occurred while updating price", "details": str(e)}), 500
-#     finally:
-#         if cursor:
-#             cursor.close()
-#         if db_connection:
-#             db_connection.close()
 
 
 #remove item
@@ -290,46 +249,33 @@ def remove_item(product_id):
             db_connection.close()
 
 
-#OLD ADD PRODUCT API
-# #add item (this needs a fix due to still using session id)
-# @admin_cmd_bp.route('/admin/add_products', methods=['POST'])
-# @jwt_required()
-# def add_product_test():
-#     cursor = None
-#     db_connection = None
-#     try:
-#         claims = get_jwt()
-#         if not claims.get('is_admin', False):
-#             return jsonify({"error": "Unauthorized access, admin only"}), 403
+def validate_admin_data(data):
+    """Validate admin input data"""
+    errors = []
+    
+    required_fields = ['username', 'password', 'confirm_password', 'email', 'first_name', 'last_name']
+    for field in required_fields:
+        if not data.get(field):
+            errors.append(f"Missing required field: {field}")
 
-#         data = request.get_json()
-#         required_fields = ['name', 'brand', 'stock', 'price', 'weight', 'category', 'description']
+    if data.get('email') and '@' not in data['email']:
+        errors.append("Invalid email format")
 
+    if data.get('password'):
+        if len(data['password']) < 8:
+            errors.append("Password must be at least 8 characters")
+        if not any(c.isupper() for c in data['password']):
+            errors.append("Password must contain at least one uppercase letter")
+        if not any(c.isdigit() for c in data['password']):
+            errors.append("Password must contain at least one number")
 
-#         for field in required_fields:
-#                     if field not in data:
-#                         return jsonify({"error": f"Missing required field: {field}"}), 400
-        
-#         image = data.get('image')
-
-#         db_connection = get_db_connection()
-#         cursor = db_connection.cursor(dictionary=True)
-
-#         cursor.execute("INSERT INTO product(name, brand, stock, price, weight, category, description, image) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-#                 (data['name'], data['brand'], data['stock'], data['price'], data['weight'], data['category'], data['description'], image))
-        
-#         db_connection.commit()
-
-#         return jsonify({"message": "Product added successfully"}), 201
-#     except Exception as e:
-#         if db_connection:
-#             db_connection.rollback()
-#         return jsonify({"error": "An error occurred while adding the product", "details": str(e)}), 500
-#     finally:
-#         if cursor:
-#             cursor.close()
-#         if db_connection:
-#             db_connection.close()
+    if data.get('username'):
+        if len(data['username']) < 3:
+            errors.append("Username must be at least 3 characters")
+        if not data['username'].isalnum():
+            errors.append("Username must contain only letters and numbers")
+            
+    return errors
 
 
 
@@ -344,6 +290,10 @@ def add_admin():
         
         
         data = request.get_json()
+        admin_errors = validate_admin_data(data)
+        if admin_errors:
+            return jsonify({"error": admin_errors}), 400
+
         username = data.get("username")
         password = data.get("password")
         confirm_password = data.get("confirm_password")
@@ -391,12 +341,7 @@ def remove_admin(emp_id):
         if not claims.get('is_admin', False):
             return jsonify({"error": "Unauthorized access, admin only"}), 403
         
-        # data = request.get_json()
-        # #can be changed to user_id or something later
-        # username = data.get("username")
 
-        # if not username:
-        #     return jsonify({"error": "Username is required"}), 400
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
@@ -426,14 +371,9 @@ def remove_admin(emp_id):
             db_connection.close()
 
 @admin_cmd_bp.route("/api/admin/view_admins", methods=["GET"])
-# @jwt_required()
+@jwt_required()
 def view_admins():
     try:
-        # claims = get_jwt()
-        # if not claims.get('is_admin', False):
-        #     return jsonify({"error": "Unauthorized access, admin only"}), 403
-        
-        #can be changed to user_id or something later
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
