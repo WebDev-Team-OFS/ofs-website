@@ -63,7 +63,8 @@ def login():
 
         if user and check_password_hash(user['password'], password):
             user.pop('password')  # Remove password from response for security
-            access_token = create_access_token(identity=str(user['user_id']))
+            access_token = create_access_token(identity=str(user['user_id']),
+                                                additional_claims={"is_admin": False})
             refresh_token = create_refresh_token(identity=str(user['user_id']))
 
             return jsonify({"message": "Login successful", "user": user, "access_token": access_token,
@@ -133,6 +134,9 @@ def register():
 def protected():
     try:
         current_user = get_jwt_identity()
+        claims = get_jwt()
+        if claims.get('is_admin'):
+            return jsonify({"error": "Access denied. Log into user account"}), 403
         return jsonify({
             "message": "Access granted",
             "current_user": current_user
@@ -150,7 +154,7 @@ def admin_protected():
     try:
         current_user = get_jwt_identity()
         claims = get_jwt()
-        if not claims.get('is_admin', False):
+        if not claims.get('is_admin'):
             return jsonify({"error": "Access denied"}), 403
 
         return jsonify({"message": "Access granted", "current_user": current_user}), 200
