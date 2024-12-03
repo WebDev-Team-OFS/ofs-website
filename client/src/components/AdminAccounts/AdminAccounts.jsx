@@ -6,11 +6,13 @@ import AdminGroceryCard from '../AdminGroceryCard/AdminGroceryCard'
 import ProductForm from '../ProductForm/ProductForm';
 import { checkAdminLoginHelper } from '../utils';
 import { useNavigate } from 'react-router-dom';
+import AdminRegister from '../AdminRegister/AdminRegister';
 
 
 function AdminProducts() {
 
     const [adminAccounts, setAdminAccounts] = useState([]);
+    const [showAdminRegister, setShowAdminRegister] = useState(false);
 
     const navigate = useNavigate();
 
@@ -51,6 +53,11 @@ function AdminProducts() {
         }
     }
 
+    const handleAddAdmin = async () =>{
+        checkLogin();
+        setShowAdminRegister(true)
+    }
+
     useEffect(() =>{
         checkLogin();
         fetchData();
@@ -58,6 +65,12 @@ function AdminProducts() {
 
     return(
         <div className="admin-page-container">
+            {showAdminRegister ? (
+                <>
+                    <AdminRegister onCancel={() => {setShowAdminRegister(false)}} />
+                    <div className="background-shadow" onClick={() => {setShowAdminRegister(false)}}></div>
+                </>
+            ) : <></>}
            <header>
             <h1>OFS Admin Dashboard</h1>
             <div className="admin-page-buttons">
@@ -68,6 +81,7 @@ function AdminProducts() {
            </header>
            <div className="admin-accounts-body">
             <h1>Admin Accounts</h1>
+            <button className="add-admin-button" onClick={handleAddAdmin}>ADD NEW ADMIN</button>
             <div className="admin-accounts-container">
                 {adminAccounts.map((admin) => (
                     <div key={admin.emp_id} className="admin-account">

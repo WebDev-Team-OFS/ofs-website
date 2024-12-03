@@ -52,3 +52,31 @@
 
 
 
+.add-admin-button {
+    font-weight: bold;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    font-size: 1.1rem;
+    padding: 7px 20px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    background-color: green;
+    margin-bottom: 10px;
+    width: 200px;
+    cursor: pointer;
+}
+
+.add-admin-button:hover {
+    background-color: rgb(1, 75, 1);
+}
+
+.background-shadow {
+    background-color: rgba(0, 0, 0, 0.486);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 50
+}
