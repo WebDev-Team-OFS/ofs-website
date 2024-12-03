@@ -37,13 +37,48 @@ def review_stock():
 
 
 # Update Stock
-@admin_cmd_bp.route('/admin/products/<int:product_id>/stock', methods=['PUT'])
-@jwt_required()
-def change_stock(product_id):
+# @admin_cmd_bp.route('/admin/products/<int:product_id>/stock', methods=['POST'])
+# @jwt_required()
+# def change_stock(product_id):
+#     try: 
+#         claims = get_jwt()
+#         if not claims.get('is_admin', False):
+#             return jsonify({"error": "Unauthorized access, admin only"}), 403
+
+
+#         #admin_id = session['admin_id']
+
+#         db_connection = get_db_connection()
+#         cursor = db_connection.cursor(dictionary=True)
+#         data = request.get_json()   
+#         new_stock = data.get('stock')
+
+#         if new_stock is None or new_stock < 0:
+#             return jsonify({"error": "Invalid stock value"}), 400
+
+#         cursor.execute("UPDATE product SET stock = %s WHERE product_id = %s", (new_stock, product_id))
+#         db_connection.commit()
+
+#         return jsonify({"message": "Stock updated successfully"}), 200
+    
+#     except Exception as e: 
+#         if db_connection:
+#             db_connection.rollback()
+#         return jsonify({"error": "An error occurred while updating stock", "details": str(e)}), 500
+
+#     finally:
+#         if cursor: 
+#             cursor.close
+#         if db_connection:
+#             db_connection.close()
+
+@admin_cmd_bp.route('/api/admin/update-product/', methods=['PUT'])
+# @jwt_required()
+def update_product():
     try: 
-        claims = get_jwt()
-        if not claims.get('is_admin', False):
-            return jsonify({"error": "Unauthorized access, admin only"}), 403
+        # claims = get_jwt()
+        # if not claims.get('is_admin', False):
+        #     return jsonify({"error": "Unauthorized access, admin only"}), 403
 
 
         #admin_id = session['admin_id']
@@ -51,13 +86,27 @@ def change_stock(product_id):
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
         data = request.get_json()   
+        new_brand = data.get('brand')
+        new_name = data.get('name')
+        new_category = data.get('category')
+        new_price = data.get('price')
+        new_weight = data.get('weight')
         new_stock = data.get('stock')
+        new_featured = data.get('featured')
+        new_description = data.get('description')
+        product_id = data.get('product_id')
 
-        if new_stock is None or new_stock < 0:
-            return jsonify({"error": "Invalid stock value"}), 400
+        # if new_stock is None or new_stock < 0:
+        #     return jsonify({"error": "Invalid stock value"}), 400
+        print("are we here?")
 
-        cursor.execute("UPDATE product SET stock = %s WHERE product_id = %s", (new_stock, product_id))
+        cursor.execute("UPDATE product SET brand = %s, name = %s, category = %s, price = %s, weight = %s, stock = %s, featured = %s, description = %s WHERE product_id = %s", (new_brand, new_name, new_category, new_price, new_weight, new_stock, new_featured, new_description, product_id))
+
+        print("we maade it here yet?")
         db_connection.commit()
+        print("we maade it here yet?")
+
+      
 
         return jsonify({"message": "Stock updated successfully"}), 200
     
