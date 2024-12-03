@@ -3,15 +3,42 @@ import './product-form.css'
 import axios from 'axios'
 
 function ProductForm({product, onCancel}) {
-    const [productInfo, setProductInfo] = useState({
-        brand: product.brand,
-        name: product.name,
-        category: product.category,
-        price: product.price,
-        weight: product.weight,
-        stock: product.stock,
-        featured: product.featured,
-        description: product.description,
+    // const [productInfo, setProductInfo] = useState({
+    //     brand: product.brand,
+    //     name: product.name,
+    //     category: product.category,
+    //     price: product.price,
+    //     weight: product.weight,
+    //     stock: product.stock,
+    //     featured: product.featured,
+    //     description: product.description,
+    // })
+
+    const [productInfo, setProductInfo] = useState(() => {
+        if(product) {
+            return {
+                brand: product.brand,
+                name: product.name,
+                category: product.category,
+                price: product.price,
+                weight: product.weight,
+                stock: product.stock,
+                featured: product.featured,
+                description: product.description,
+            }
+        }
+        else {
+            return {
+                brand: "",
+                name: "",
+                category: "",
+                price: "",
+                weight: "",
+                stock: "",
+                featured: false,
+                description: "",
+            }
+        }
     })
 
     const [image, setImage] = useState(null)
@@ -46,42 +73,74 @@ function ProductForm({product, onCancel}) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = {
-            product_id: product.product_id,
-            brand: productInfo.brand,
-            name: productInfo.name,
-            category: productInfo.category,
-            price: productInfo.price,
-            weight: productInfo.weight,
-            stock: productInfo.stock,
-            featured: productInfo.featured,
-            description: productInfo.description,
-        };
-
-        const imageData = new FormData();
-        imageData.append("product_id", product.product_id);
-        imageData.append("image", image);
-
-        try {
-            const response = await axios.put('http://127.0.0.1:8080/api/admin/update-product/', data, {
-                headers: {
-                    'Content-Type': 'application/json', 
-                },
-            });
-            console.log('Product info updated successfully:', response.data);
-            if (image) {
-                const imageResponse = await axios.put('http://127.0.0.1:8080/api/admin/upload-image/', imageData, {
+        if (product) {
+            const data = {
+                product_id: product.product_id,
+                brand: productInfo.brand,
+                name: productInfo.name,
+                category: productInfo.category,
+                price: productInfo.price,
+                weight: productInfo.weight,
+                stock: productInfo.stock,
+                featured: productInfo.featured,
+                description: productInfo.description,
+            };
+    
+            const imageData = new FormData();
+            imageData.append("product_id", product.product_id);
+            imageData.append("image", image);
+    
+            try {
+                const response = await axios.put('http://127.0.0.1:8080/api/admin/update-product/', data, {
                     headers: {
-                       'Content-Type': 'multipart/form-data',
+                        'Content-Type': 'application/json', 
                     },
                 });
-                console.log('Product image updated successfully:', response.data);
+                console.log('Product info updated successfully:', response.data);
+                if (image) {
+                    const imageResponse = await axios.put('http://127.0.0.1:8080/api/admin/update-image/', imageData, {
+                        headers: {
+                           'Content-Type': 'multipart/form-data',
+                        },
+                    });
+                    console.log('Product image updated successfully:', response.data);
+                }
+                onCancel(); // Close the form after submission (optional)
+                window.location.reload();
+            } catch (error) {
+                console.error('Error:', error);
             }
-            onCancel(); // Close the form after submission (optional)
-            window.location.reload();
-        } catch (error) {
-            console.error('Error:', error);
         }
+        else {
+            const data = {
+                brand: productInfo.brand,
+                name: productInfo.name,
+                category: productInfo.category,
+                price: productInfo.price,
+                weight: productInfo.weight,
+                stock: productInfo.stock,
+                featured: productInfo.featured,
+                description: productInfo.description,
+            };
+    
+            const formData = new FormData();
+            formData.append("image", image);
+            formData.append("data", JSON.stringify(data));
+    
+            try {
+                const response = await axios.post('http://127.0.0.1:8080/api/admin/add-product/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log('Product added successfully:', response.data);
+                onCancel(); // Close the form after submission (optional)
+                window.location.reload();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
         
     }
 
@@ -90,7 +149,10 @@ function ProductForm({product, onCancel}) {
         <>
             <form className="product-form" action="" >
                 <div className="product-form-image-wrapper">
-                    {imagePreview ? <img src={imagePreview}></img> : <img src={`http://127.0.0.1:8080/api/image/${product.product_id}`} alt="" />
+                    {imagePreview 
+                    ? <img src={imagePreview}></img> : product 
+                    ? <img src={`http://127.0.0.1:8080/api/image/${product.product_id}`} alt="" /> 
+                    : <></>
                     }
                 </div>
                 <div className="input-wrapper-image">
@@ -127,7 +189,7 @@ function ProductForm({product, onCancel}) {
                 <input type="checkbox" id="featured" name="featured" value={productInfo.featured} checked={productInfo.featured} onChange={updateForm} />
             </div>
             <div className="buttons">
-                <button className="submit-changes" onClick={handleSubmit}>Submit Changes</button>
+                <button className="submit-changes" onClick={handleSubmit}> {product ? "Submit Changes" : "Add product"}</button>
                 <button className="cancel-product-form" onClick={handleCancel}>Cancel</button>
             </div>
           

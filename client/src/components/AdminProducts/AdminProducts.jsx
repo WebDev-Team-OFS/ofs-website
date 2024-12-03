@@ -8,6 +8,7 @@ import ProductForm from '../ProductForm/ProductForm';
 function AdminProducts() {
 
     const [products, setProducts] = useState([]);
+    const [showProductForm, setShowProductForm] = useState(false);
 
     const fetchData = async () => {
         let response = await axios.get(`http://127.0.0.1:8080/api/search?q=`);
@@ -18,13 +19,30 @@ function AdminProducts() {
         
     }
 
+    const handleCancel = (e) => {
+        setShowProductForm(false);
+       
+    };
+
+    const AddProduct = (e) => {
+        setShowProductForm(true)
+    }
+
     useEffect(() =>{
         fetchData();
     }, [])
 
     return(
         <div className="admin-page-container">
-            {/* {products.length > 0 ? <ProductForm product = {products[0]} /> : <></>} */}
+            {showProductForm ? 
+                (
+                    <>
+                        <ProductForm product={null} onCancel={handleCancel}  / > 
+                        <div className="black-cover" onClick={handleCancel}>TEST</div>
+                    </>
+                
+                
+                ): <></>}
            <header>
             <h1>OFS Admin Dashboard</h1>
             <div className="admin-page-buttons">
@@ -36,6 +54,7 @@ function AdminProducts() {
            <div className="admin-products-body">
             <h1>OFS Products</h1>
            <input type="text" className="admin-product-search" />
+           <button className="add-product-button" onClick={AddProduct}>Add Product</button>
             <div className="admin-products-container">
                 
                     {products.length > 0 ? (
