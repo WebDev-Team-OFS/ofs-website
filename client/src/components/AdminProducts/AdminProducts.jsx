@@ -11,12 +11,19 @@ function AdminProducts() {
 
     const [products, setProducts] = useState([]);
     const [showProductForm, setShowProductForm] = useState(false);
-    const [input, setInput] = useState("");
+   
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const query = queryParams.get('q');
-
+    const [input, setInput] = useState(() => {
+        if (query) {
+            return query;
+        }
+        else {
+            return "";
+        }
+    });
     const navigate = useNavigate();
 
     const checkLogin = async (e) => {
@@ -85,7 +92,7 @@ function AdminProducts() {
            </header>
            <div className="admin-products-body">
             <h1>OFS Products</h1>
-           <input type="text" className="admin-product-search" onChange={(e) => setInput(e.target.value)} onKeyDown={handleSearch}/>
+           <input type="text" className="admin-product-search" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleSearch}/>
            <button className="add-product-button" onClick={AddProduct}>Add Product</button>
             <div className="admin-products-container">
                 
