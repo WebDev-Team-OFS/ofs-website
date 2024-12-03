@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react"
 import './product-form.css'
+import axios from 'axios'
 
 function ProductForm({product, onCancel}) {
     const [productInfo, setProductInfo] = useState({
@@ -35,6 +36,34 @@ function ProductForm({product, onCancel}) {
     const handleCancel = (e) => {
         e.preventDefault();
         onCancel();
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            product_id: product.product_id,
+            brand: productInfo.brand,
+            name: productInfo.name,
+            category: productInfo.category,
+            price: productInfo.price,
+            weight: productInfo.weight,
+            stock: productInfo.stock,
+            featured: productInfo.featured,
+            description: productInfo.description,
+        };
+        try {
+            const response = await axios.put('http://127.0.0.1:8080/api/admin/update-product/', data, {
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+            });
+            console.log('Product updated successfully:', response.data);
+            onCancel(); // Close the form after submission (optional)
+            window.location.reload();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+        
     }
 
     useEffect(() => {
@@ -76,7 +105,7 @@ function ProductForm({product, onCancel}) {
                 <input type="checkbox" id="featured" name="featured" value={productInfo.featured} checked={productInfo.featured} onChange={updateForm} />
             </div>
             <div className="buttons">
-                <button className="submit-changes">Submit Changes</button>
+                <button className="submit-changes" onClick={handleSubmit}>Submit Changes</button>
                 <button className="cancel-product-form" onClick={handleCancel}>Cancel</button>
             </div>
           

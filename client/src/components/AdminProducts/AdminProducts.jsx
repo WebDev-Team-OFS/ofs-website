@@ -20,7 +20,7 @@ function AdminProducts() {
 
     useEffect(() =>{
         fetchData();
-    })
+    }, [])
 
     return(
         <div className="admin-page-container">
