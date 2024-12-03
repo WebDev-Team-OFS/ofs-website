@@ -73,6 +73,24 @@ function ProductForm({product, onCancel}) {
         
     }
 
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        checkLogin();
+        try {
+            const response = await axios.delete(`http://127.0.0.1:8080/api/admin/products/${product.product_id}`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("admin_access_token")}`
+                },
+            });
+            console.log('Product deleted successfully:', response.data);
+            onCancel(); // Close the form after submission (optional)
+            window.location.reload();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         checkLogin();
@@ -175,6 +193,10 @@ function ProductForm({product, onCancel}) {
                 <input type="text" id="name" name="name" value={productInfo.name} onChange={updateForm} />
             </div>
             <div className="input-wrapper">
+                <label htmlFor="name">Category</label>
+                <input type="text" id="category" name="category" value={productInfo.category} onChange={updateForm} />
+            </div>
+            <div className="input-wrapper">
                 <label htmlFor="price">Price ($)</label>
                 <input type="text" id="price" name="price" value={productInfo.price} onChange={updateForm} />
             </div>
@@ -194,6 +216,7 @@ function ProductForm({product, onCancel}) {
                 <label htmlFor="description">Featured</label>
                 <input type="checkbox" id="featured" name="featured" value={productInfo.featured} checked={productInfo.featured} onChange={updateForm} />
             </div>
+            {product && <button className="delete-product-button" onClick={handleDelete}>DELETE PRODUCT</button> }
             <div className="buttons">
                 <button className="submit-changes" onClick={handleSubmit}> {product ? "Submit Changes" : "Add product"}</button>
                 <button className="cancel-product-form" onClick={handleCancel}>Cancel</button>

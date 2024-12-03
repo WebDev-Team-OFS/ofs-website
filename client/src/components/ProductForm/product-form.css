@@ -34,13 +34,17 @@
 .input-wrapper textarea {
     font-family: Roboto, Arial, Helvetica, sans-serif;
     padding: 5px 5px;
+    border: 1px black solid;
+    border-radius: 5px;
 }
 .product-form .input-wrapper input {
     padding: 5px 5px;
     font-size: 1rem;
+    border: 1px black solid;
+    border-radius: 5px;
 }
 
-.product-form .buttons button {
+.product-form .buttons button, .delete-product-button {
     font-weight: bold;
     font-family: Roboto, Arial, Helvetica, sans-serif;
     font-size: 1.1rem;
@@ -57,7 +61,7 @@
     
 }
 
-.buttons .cancel-product-form {
+.buttons .cancel-product-form, .delete-product-button {
     background-color: rgb(202, 2, 2);
     cursor: pointer;
 }
@@ -92,4 +96,12 @@
     margin-bottom: 5px;
     display: flex;
     gap: 10px;
+}
+
+.delete-product-button:hover {
+    background-color: rgb(90, 1, 1);
+}
+
+.delete-product-botton {
+    margin-top: 50px;
 }
