@@ -67,7 +67,9 @@ def update_product():
         cursor.execute("UPDATE product SET brand = %s, name = %s, category = %s, price = %s, weight = %s, stock = %s, featured = %s, description = %s WHERE product_id = %s", (new_brand, new_name, new_category, new_price, new_weight, new_stock, new_featured, new_description, product_id))
         db_connection.commit()
 
-      
+
+        cursor.close()
+        db_connection.close()
 
         return jsonify({"message": "Stock updated successfully"}), 200
     
@@ -134,6 +136,9 @@ def add_product():
 
         cursor.execute("""INSERT INTO product (brand, name, category, price, weight, stock, featured, description, image) VALUES (%s,  %s, %s, %s, %s, %s, %s, %s, %s)""", (new_brand, new_name, new_category, new_price, new_weight, new_stock, new_featured, new_description, relative_image_path))
         db_connection.commit()
+
+        db_connection.close()
+        cursor.close()
 
         return jsonify({"message": "Product added successfully"}), 200
     
@@ -237,6 +242,9 @@ def remove_item(product_id):
         cursor.execute("DELETE FROM product WHERE product_id = %s", (product_id,))
         db_connection.commit()
 
+
+        cursor.close()  
+        db_connection.close()
         return jsonify({"message": "Product removed successfully"}), 200
     
     except Exception as e: 
@@ -359,6 +367,9 @@ def remove_admin(emp_id):
         cursor.execute(delete_query, (emp_id,))
         db_connection.commit()
 
+
+        cursor.close()
+        db_connection.close()
         return jsonify({"message": f"Admin '{emp_id}' removed successfully"}), 200
 
     except Exception as e:
@@ -387,6 +398,10 @@ def view_admins():
             return jsonify({"error": "Admin accounts not found"}), 404
         
         db_connection.commit()
+
+        cursor.close()
+        db_connection.close()
+
 
         return jsonify({"admins": admins}), 200
 
