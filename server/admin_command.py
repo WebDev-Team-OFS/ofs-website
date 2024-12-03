@@ -334,7 +334,7 @@ def remove_item(product_id):
 
 
 #add admin
-@admin_cmd_bp.route("/add_admin", methods = ["POST"])
+@admin_cmd_bp.route("/api/admin/add_admin", methods = ["POST"])
 @jwt_required()
 def add_admin():
     try:
@@ -342,15 +342,20 @@ def add_admin():
         if not claims.get('is_admin', False):  
             return jsonify({"error": "Unauthorized access, admin only"}), 403
         
+        
         data = request.get_json()
         username = data.get("username")
         password = data.get("password")
+        confirm_password = data.get("confirm_password")
         first_name = data.get("first_name")
         last_name = data.get("last_name")
         email = data.get("email")
 
-        if not all([username, password, first_name, last_name, email]):
+        if not all([username, password, first_name, last_name, email, confirm_password]):
             return jsonify({"error": "All fields are required"}), 400
+        
+        if password != confirm_password:
+            return jsonify({"error": "Passwords do not match"}), 400
         
         hashed_password = generate_password_hash(password)
 
@@ -366,9 +371,6 @@ def add_admin():
         db_connection.commit()
 
         return jsonify({"message": "Admin added successfully"}), 201
-        
-        
-
     except Exception as e: 
         return jsonify({"error": "An error occurred while adding the admin", "details": str(e)}), 500
     
