@@ -150,7 +150,7 @@ def add_product():
 
 
 
-
+'''new change remove if broken'''
 def validate_image(file):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
     errors =[]
@@ -185,7 +185,7 @@ def update_image():
         if not product_id:
             return jsonify({"error": "Product ID is required"}), 400
         
-        errors = validate_image(image)
+        errors = validate_image(image) #<-- new change
         if errors:
             return jsonify({"error": errors}), 400
 
@@ -248,7 +248,7 @@ def remove_item(product_id):
         if db_connection:
             db_connection.close()
 
-
+'''new change remove if broken'''
 def validate_admin_data(data):
     """Validate admin input data"""
     errors = []
@@ -290,7 +290,7 @@ def add_admin():
         
         
         data = request.get_json()
-        admin_errors = validate_admin_data(data)
+        admin_errors = validate_admin_data(data)  #<-- new change
         if admin_errors:
             return jsonify({"error": admin_errors}), 400
 
