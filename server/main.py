@@ -30,7 +30,7 @@ app.config['JWT_SECRET_KEY'] = 'super'
 app.config['JWT_TOKEN_LOCATION'] = [ 'headers']
 #app.config['JWT_COOKIE_SECURE'] = False
 #app.config['JWT_COOKIE_SAMESITE'] = 'Lax'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=5)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(minutes=30)
 jwt = JWTManager(app)
 
