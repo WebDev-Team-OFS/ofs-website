@@ -1,0 +1,63 @@
+
+.admin-page-container header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #052E16;
+    padding: 0 30px;
+    height: 85px;
+}
+
+.admin-page-container header h1 {
+    color: white;
+    font-family: monospace;
+    font-size: 40px;
+    margin: 0;
+
+}
+
+.admin-page-container .admin-page-buttons {
+    display: flex;
+    gap: 10px;
+}
+.admin-page-container header button {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    font-size: 1.1rem;
+    background-color: white;
+}
+
+.admin-products-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 80%;
+}
+
+.admin-products-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.admin-product-search {
+    width: 30%;
+    height: 50px;
+    border-radius: 100px;
+    border: 1px black solid;
+    font-size: 1.1rem;
+    text-indent: 20px;
+    margin-bottom: 30px;
+}
+
+.admin-products-body h1 {
+    font-family: Roboto, Arial;
+    font-size: 40px;
+    margin: 0;
+    margin-bottom: 25px;
+}
+

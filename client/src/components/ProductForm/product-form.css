@@ -1,0 +1,82 @@
+.product-form {
+    position: fixed;
+    width: 500px;
+    height: 700px;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    background-color:rgb(248, 242, 234);
+    z-index: 100;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px black solid;
+    font-family: Roboto, Arial, Helvetica, sans-serif
+}
+
+.product-form-image-wrapper img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-form .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 5px;
+}
+
+.input-wrapper-featured {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.input-wrapper textarea {
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    padding: 5px 5px;
+}
+.product-form .input-wrapper input {
+    padding: 5px 5px;
+    font-size: 1rem;
+}
+
+.product-form .buttons button {
+    font-weight: bold;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    font-size: 1.1rem;
+    padding: 7px 20px;
+    margin-top: 20px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+}
+
+.buttons .submit-changes {
+    background-color: rgb(1, 121, 1);
+    
+}
+
+.buttons .cancel-product-form {
+    background-color: rgb(202, 2, 2);
+    cursor: pointer;
+}
+
+.buttons .cancel-product-form:hover {
+    background-color: rgb(143, 2, 2);
+    cursor: pointer;
+}
+
+.buttons .cancel-product-form:active {
+    background-color: rgb(90, 1, 1);
+    cursor: pointer;
+}
+
+.product-form-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+
