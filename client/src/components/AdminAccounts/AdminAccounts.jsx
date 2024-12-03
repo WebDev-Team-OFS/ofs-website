@@ -25,7 +25,9 @@ function AdminProducts() {
 
     const fetchData = async () => {
         try {
-            let response = await axios.get(`http://127.0.0.1:8080/api/admin/view_admins`);
+            let response = await axios.get(`http://127.0.0.1:8080/api/admin/view_admins`, {headers: {
+                "Authorization": `Bearer ${localStorage.getItem("admin_access_token")}`
+            },});
             let admins = response.data.admins;
             console.log(admins);
             if (admins) {
