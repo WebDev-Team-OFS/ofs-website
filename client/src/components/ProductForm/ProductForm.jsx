@@ -14,11 +14,17 @@ function ProductForm({product, onCancel}) {
         description: product.description,
     })
 
-    const test = () => {
-        console.log(product.brand);
-        console.log(product.name);
-        console.log(product.featured);
+    const [image, setImage] = useState(null)
+    const [imagePreview, setImagePreview] = useState(null);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+            setImagePreview(URL.createObjectURL(file));
+        }
     }
+
 
     const updateForm = (e) => {
         const { name, type, checked, value } = e.target;
@@ -51,13 +57,26 @@ function ProductForm({product, onCancel}) {
             featured: productInfo.featured,
             description: productInfo.description,
         };
+
+        const imageData = new FormData();
+        imageData.append("product_id", product.product_id);
+        imageData.append("image", image);
+
         try {
             const response = await axios.put('http://127.0.0.1:8080/api/admin/update-product/', data, {
                 headers: {
                     'Content-Type': 'application/json', 
                 },
             });
-            console.log('Product updated successfully:', response.data);
+            console.log('Product info updated successfully:', response.data);
+            if (image) {
+                const imageResponse = await axios.put('http://127.0.0.1:8080/api/admin/upload-image/', imageData, {
+                    headers: {
+                       'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log('Product image updated successfully:', response.data);
+            }
             onCancel(); // Close the form after submission (optional)
             window.location.reload();
         } catch (error) {
@@ -66,16 +85,19 @@ function ProductForm({product, onCancel}) {
         
     }
 
-    useEffect(() => {
-        test();
-    }, [])
 
     return(
         <>
             <form className="product-form" action="" >
                 <div className="product-form-image-wrapper">
-                    <img src={`http://127.0.0.1:8080/api/image/${product.product_id}`} alt="" />
+                    {imagePreview ? <img src={imagePreview}></img> : <img src={`http://127.0.0.1:8080/api/image/${product.product_id}`} alt="" />
+                    }
                 </div>
+                <div className="input-wrapper-image">
+                    <label htmlFor="image">Upload image:</label>
+                    <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+                </div>
+               
             <div className="input-wrapper">
                 <label htmlFor="brand">Brand</label>
                 <input type="text" id="brand" name="brand" value={productInfo.brand} onChange={updateForm} />
