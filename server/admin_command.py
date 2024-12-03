@@ -2,7 +2,9 @@
 from flask import Blueprint, request, jsonify
 from db_module import get_db_connection
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+import os
 
 admin_cmd_bp = Blueprint('admin_command', __name__)
 
@@ -98,13 +100,9 @@ def update_product():
 
         # if new_stock is None or new_stock < 0:
         #     return jsonify({"error": "Invalid stock value"}), 400
-        print("are we here?")
 
         cursor.execute("UPDATE product SET brand = %s, name = %s, category = %s, price = %s, weight = %s, stock = %s, featured = %s, description = %s WHERE product_id = %s", (new_brand, new_name, new_category, new_price, new_weight, new_stock, new_featured, new_description, product_id))
-
-        print("we maade it here yet?")
         db_connection.commit()
-        print("we maade it here yet?")
 
       
 
@@ -120,6 +118,43 @@ def update_product():
             cursor.close
         if db_connection:
             db_connection.close()
+
+@admin_cmd_bp.route('/api/admin/upload-image/', methods=['PUT'])
+# @jwt_required()
+def upload_image():
+    try: 
+        image = request.files['image']
+        product_id = request.form.get('product_id')
+
+        #path to upload folder
+        upload_folder = os.path.join(os.getcwd(),'images')
+
+        if image.filename == '' or not image:
+            return jsonify({"error": "No selected file"}), 400
+        
+        #sanitozes file name i think 
+        image_filename = secure_filename(image.filename)
+
+        #image path used to upload to mySQL DB
+        relative_image_path = os.path.join('images', image_filename)
+
+        if image:
+            #saves image to uplad folder 
+            image_path = os.path.join(upload_folder, image_filename)
+            image.save(image_path)
+
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor(dictionary=True)
+
+        cursor.execute("UPDATE product SET image = %s WHERE product_id = %s", (relative_image_path, product_id))
+        db_connection.commit()
+
+        return jsonify({"message": "File uploaded successfully", "path": image_path}), 200
+    except Exception as e: 
+        return jsonify({"error": "An error occurred while uploading image", "details": str(e)}), 500
+   
+
+
 
 
 
@@ -147,7 +182,6 @@ def update_price(product_id):
         db_connection.commit()
 
         return jsonify({"message": "Price updated successfully"}), 200
-    
     except Exception as e: 
         if db_connection:
             db_connection.rollback()
