@@ -75,3 +75,24 @@
     color: white;
     margin-bottom: 20px;
 }
+
+.admin-page-buttons button {
+    cursor: pointer;
+}
+
+.admin-page-buttons button:hover {
+    background-color: gray;
+}
+
+.admin-page-buttons button:active {
+    background-color: rgb(48, 46, 46);
+}
+
+.add-product-button {
+    cursor: pointer;
+}
+
+.add-product-button:hover {
+    cursor: pointer;
+    background-color:#031d0e;
+}

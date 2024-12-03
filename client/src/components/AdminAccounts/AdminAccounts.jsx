@@ -72,11 +72,10 @@ function AdminProducts() {
                 </>
             ) : <></>}
            <header>
-            <h1>OFS Admin Dashboard</h1>
+            <h1 >OFS Admin Dashboard</h1>
             <div className="admin-page-buttons">
-                <button>Products</button>
-                <button>Statistics</button>
-                <button>Admin Accounts</button>
+                <button onClick={() => navigate("/admin/products")}>Products</button>
+                <button onClick={() => navigate("/admin/accounts")}>Admin Accounts</button>
             </div>
            </header>
            <div className="admin-accounts-body">
