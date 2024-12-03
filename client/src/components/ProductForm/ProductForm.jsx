@@ -147,7 +147,7 @@ function ProductForm({product, onCancel}) {
 
     return(
         <>
-            <form className="product-form" action="" >
+            <form className="product-form" action="POST" >
                 <div className="product-form-image-wrapper">
                     {imagePreview 
                     ? <img src={imagePreview}></img> : product 
