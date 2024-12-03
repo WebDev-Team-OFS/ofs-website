@@ -59,6 +59,12 @@ function AdminProducts() {
         setShowAdminRegister(true)
     }
 
+    const handleLogOut = () => {
+        localStorage.removeItem("admin_access_token");
+        localStorage.removeItem("admin_refresh_token");
+        navigate(`/admin/login`)
+    }
+
     useEffect(() =>{
         checkLogin();
         fetchData();
@@ -77,6 +83,7 @@ function AdminProducts() {
             <div className="admin-page-buttons">
                 <button onClick={() => navigate("/admin/products")}>Products</button>
                 <button onClick={() => navigate("/admin/accounts")}>Admin Accounts</button>
+                <button onClick={handleLogOut}>Log Out</button>
             </div>
            </header>
            <div className="admin-accounts-body">
