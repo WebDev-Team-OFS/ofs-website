@@ -5,20 +5,34 @@ import { checkLoginHelper} from '../utils'
 import axios from 'axios'
 import PopUp from '../PopUp/PopUp'
 import ProductForm from '../ProductForm/ProductForm';
+import { checkAdminLoginHelper } from '../utils';
 
 
 function AdminGroceryCard({product}) {
     
     const [showProductForm, setShowProductForm] = useState(false);
 
-    const handleEdit = () => {
+    const navigate = useNavigate()
+
+    const checkLogin = async (e) => {
+        if (await checkAdminLoginHelper() == false) {
+            navigate('/admin/login')
+            console.log("admin login expired");
+        }
+    }
+
+    const handleEdit = async () => {
+        checkLogin();
         setShowProductForm(true)
     }
 
-    const handleCancel = (e) => {
+    const handleCancel = async (e) => {
+        checkLogin();
         setShowProductForm(false);
        
     };
+
+    
 
     return(
         <>

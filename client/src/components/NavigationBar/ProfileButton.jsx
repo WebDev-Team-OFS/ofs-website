@@ -43,7 +43,8 @@ function ProfileButton() {
             const response = await axios.post('http://127.0.0.1:8080/api/logout', {
                 withCredentials: true
             });
-            localStorage.clear();
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
             setIsLoggedIn(false);
             setProfileOptions(false);
             console.log(response.data);

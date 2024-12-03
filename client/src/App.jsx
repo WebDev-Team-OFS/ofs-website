@@ -11,7 +11,7 @@ import ProductPage from './components/ProductPage/ProductPage';
 import CheckoutPage from './components/CheckoutPage/CheckoutPage';
 import MainLayout from './components/MainLayout';
 import { SearchPage } from './components/SearchPage/SearchPage';
-import AdminLogin from './components/AdminPage/AdminLogin';
+import AdminLogin from './components/AdminLogin/AdminLogin';
 import LoginPage from './components/LoginPage/LoginPage';
 import ShoppingCartPage from './components/ShoppingCartPage/ShoppingCartPage';
 import ProfilePage from './components/ProfilePage/ProfilePage';

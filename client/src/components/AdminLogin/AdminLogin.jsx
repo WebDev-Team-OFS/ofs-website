@@ -3,6 +3,7 @@ import "./admin-login.css"
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { checkAdminLoginHelper } from '../utils';
 
 
 export default function AdminLogin() {
@@ -13,25 +14,26 @@ export default function AdminLogin() {
     const navigate = useNavigate();
 
     const checkLogin = async (e) => {
-        try {
-            const response = await axios.get(`http://127.0.0.1:8080/api/admin/protected`, {withCredentials: true});
-            navigate(`/admin/dashboard`);
-
-        }
-        catch (error) {
-            console.log(error.response);
+        if (await checkAdminLoginHelper()) {
+            navigate('/admin/products')
+            console.log("admin logged in!")
         }
     }
 
     const submitLogin = async (e) => {
-
         e.preventDefault();
         try {
             const response = await axios.post(`http://127.0.0.1:8080/api/admin/login`, {
                 email,
                 password,
             }, { withCredentials: true });
-            navigate(`/admin/dashboard`);
+            if (response.data) {
+                localStorage.setItem('admin_access_token', response.data.access_token);
+                localStorage.setItem('admin_refresh_token', response.data.refresh_token);
+                console.log("login successful")
+              }
+            navigate(`/admin/products`);
+            
         }
         catch (error) {
             console.log(error.response ? error.response.data : error.message);

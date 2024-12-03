@@ -3,12 +3,23 @@ import axios from 'axios'
 import React, {useState, useEffect } from 'react';
 import AdminGroceryCard from '../AdminGroceryCard/AdminGroceryCard'
 import ProductForm from '../ProductForm/ProductForm';
+import { checkAdminLoginHelper } from '../utils';
+import { useNavigate } from 'react-router-dom';
 
 
 function AdminProducts() {
 
     const [products, setProducts] = useState([]);
     const [showProductForm, setShowProductForm] = useState(false);
+
+    const navigate = useNavigate();
+
+    const checkLogin = async (e) => {
+        if (await checkAdminLoginHelper() == false) {
+            navigate('/admin/login')
+            console.log("admin login expired")
+        }
+    }
 
     const fetchData = async () => {
         let response = await axios.get(`http://127.0.0.1:8080/api/search?q=`);
@@ -19,16 +30,19 @@ function AdminProducts() {
         
     }
 
-    const handleCancel = (e) => {
+    const handleCancel = async (e) => {
+        checkLogin();
         setShowProductForm(false);
        
     };
 
-    const AddProduct = (e) => {
+    const AddProduct = async (e) => {
+        checkLogin();
         setShowProductForm(true)
     }
 
     useEffect(() =>{
+        checkLogin();
         fetchData();
     }, [])
 

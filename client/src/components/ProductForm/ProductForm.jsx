@@ -1,18 +1,10 @@
 import React, {useEffect, useState} from "react"
 import './product-form.css'
 import axios from 'axios'
+import { checkAdminLoginHelper } from "../utils"
+import { useNavigate } from "react-router-dom"
 
 function ProductForm({product, onCancel}) {
-    // const [productInfo, setProductInfo] = useState({
-    //     brand: product.brand,
-    //     name: product.name,
-    //     category: product.category,
-    //     price: product.price,
-    //     weight: product.weight,
-    //     stock: product.stock,
-    //     featured: product.featured,
-    //     description: product.description,
-    // })
 
     const [productInfo, setProductInfo] = useState(() => {
         if(product) {
@@ -44,6 +36,15 @@ function ProductForm({product, onCancel}) {
     const [image, setImage] = useState(null)
     const [imagePreview, setImagePreview] = useState(null);
 
+    const navigate = useNavigate()
+
+    const checkLogin = async (e) => {
+        if (await checkAdminLoginHelper() == false) {
+            navigate('/admin/login')
+            console.log("admin login expired")
+        }
+    }
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -69,10 +70,12 @@ function ProductForm({product, onCancel}) {
     const handleCancel = (e) => {
         e.preventDefault();
         onCancel();
+        
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        checkLogin();
         if (product) {
             const data = {
                 product_id: product.product_id,
