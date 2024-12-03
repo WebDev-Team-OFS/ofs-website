@@ -97,6 +97,7 @@ function ProductForm({product, onCancel}) {
                 const response = await axios.put('http://127.0.0.1:8080/api/admin/update-product/', data, {
                     headers: {
                         'Content-Type': 'application/json', 
+                        "Authorization": `Bearer ${localStorage.getItem("admin_access_token")}`
                     },
                 });
                 console.log('Product info updated successfully:', response.data);
@@ -104,6 +105,7 @@ function ProductForm({product, onCancel}) {
                     const imageResponse = await axios.put('http://127.0.0.1:8080/api/admin/update-image/', imageData, {
                         headers: {
                            'Content-Type': 'multipart/form-data',
+                           "Authorization": `Bearer ${localStorage.getItem("admin_access_token")}`
                         },
                     });
                     console.log('Product image updated successfully:', response.data);
@@ -134,6 +136,7 @@ function ProductForm({product, onCancel}) {
                 const response = await axios.post('http://127.0.0.1:8080/api/admin/add-product/', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${localStorage.getItem("admin_access_token")}`
                     },
                 });
                 console.log('Product added successfully:', response.data);

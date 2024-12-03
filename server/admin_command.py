@@ -76,12 +76,12 @@ def review_stock():
 #             db_connection.close()
 
 @admin_cmd_bp.route('/api/admin/update-product/', methods=['PUT'])
-# @jwt_required()
+@jwt_required()
 def update_product():
     try: 
-        # claims = get_jwt()
-        # if not claims.get('is_admin', False):
-        #     return jsonify({"error": "Unauthorized access, admin only"}), 403
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
 
 
         #admin_id = session['admin_id']
@@ -121,12 +121,14 @@ def update_product():
             db_connection.close()
 
 @admin_cmd_bp.route('/api/admin/add-product/', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def add_product():
+    cursor = None;
+    db_connection = None;
     try: 
-        # claims = get_jwt()
-        # if not claims.get('is_admin', False):
-        #     return jsonify({"error": "Unauthorized access, admin only"}), 403
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
 
 
 
@@ -184,9 +186,12 @@ def add_product():
             db_connection.close()
 
 @admin_cmd_bp.route('/api/admin/update-image/', methods=['PUT'])
-# @jwt_required()
+@jwt_required()
 def update_image():
     try: 
+        claims = get_jwt()
+        if not claims.get('is_admin', False):
+            return jsonify({"error": "Unauthorized access, admin only"}), 403
         image = request.files['image']
         product_id = request.form.get('product_id')
 
@@ -334,7 +339,6 @@ def remove_item(product_id):
 @jwt_required()
 def add_admin():
     try:
-
         claims  = get_jwt()
         if not claims.get('is_admin', False):  
             return jsonify({"error": "Unauthorized access, admin only"}), 403
