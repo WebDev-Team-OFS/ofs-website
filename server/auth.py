@@ -77,6 +77,38 @@ def login():
 
 
 
+#validate the user input
+def validate_user_pass(data):
+    """Validate admin input data"""
+    errors = []
+    
+    required_fields = ['username', 'password', 'confirm_password', 'email', 'first_name', 'last_name']
+    for field in required_fields:
+        if not data.get(field):
+            errors.append(f"Missing required field: {field}")
+
+    if data.get('email') and '@' not in data['email'] or "." not in data['email']:
+        errors.append("Invalid email format")
+
+    if data.get('password'):
+        if len(data['password']) < 8:
+            errors.append("Password must be at least 8 characters")
+        if not any(c.isupper() for c in data['password']):
+            errors.append("Password must contain at least one uppercase letter")
+        if not any(c.isdigit() for c in data['password']):
+            errors.append("Password must contain at least one number")
+
+    if data.get('username'):
+        if len(data['username']) < 3:
+            errors.append("Username must be at least 3 characters")
+        if not data['username'].isalnum():
+            errors.append("Username must contain only letters and numbers")
+        if len(data['username']) > 50:
+            errors.append("Username must be less than 50 characters")
+            
+    return errors
+
+
 #registration api end point
 @auth_bp.route("/api/register", methods=['POST'])
 def register():
@@ -84,6 +116,12 @@ def register():
     db_connection = None
     try:
         data = request.get_json()
+
+        user_errors = validate_user_pass(data)
+        if user_errors:
+            return jsonify({"error": user_errors}), 400
+
+
         username = data.get('username')
         password = data.get('password')
         confirm_password = data.get('confirm_password')
