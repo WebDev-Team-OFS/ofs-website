@@ -290,6 +290,8 @@ def validate_admin_data(data):
 @admin_cmd_bp.route("/api/admin/add_admin", methods = ["POST"])
 @jwt_required()
 def add_admin():
+    cursor = None
+    db_connection = None
     try:
         claims  = get_jwt()
         if not claims.get('is_admin', False):  
