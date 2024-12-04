@@ -32,6 +32,8 @@ function ProductForm({product, onCancel}) {
             }
         }
     })
+    const [showError, setShowError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [image, setImage] = useState(null)
     const [imagePreview, setImagePreview] = useState(null);
@@ -43,6 +45,54 @@ function ProductForm({product, onCancel}) {
             navigate('/admin/login')
             console.log("admin login expired")
         }
+    }
+
+    const validateNumber = (number) => {
+        if (number < 0) {
+            return false;
+        }
+        const newNumber = number.toString().replace(/[^0-9.]/g, ""); 
+        if (number != newNumber) {
+            return false; //this means there are characters other than 0-9
+        }
+        const numSplit = newNumber.split("."); {
+            if (numSplit.length > 2) {
+                return false; //this means there are multiple decimal
+            }
+        }
+        return true;
+    }
+
+
+    const validationInputs = () => {
+        if (Object.values(productInfo).some((input) => input === "")) {
+            setErrorMessage("Please fill out all input fields")
+            setShowError(true)
+            return false;
+        }
+        if (!product && !image) {
+            setErrorMessage("Please upload an image")
+            setShowError(true)
+            return false;
+        }
+        if (!validateNumber(productInfo.stock)) {
+            setErrorMessage("Please enter a valid number for the stock")
+            setShowError(true)
+            return false;
+        }
+        if (!validateNumber(productInfo.price)) {
+            setErrorMessage("Please enter a valid number for the price")
+            setShowError(true)
+            return false;
+        }
+        if (!validateNumber(productInfo.weight)) {
+            setErrorMessage("Please enter a valid number for the weight")
+            setShowError(true)
+            return false;
+        }
+        setShowError(false);
+        return true;
+        
     }
 
     const handleImageChange = (e) => {
@@ -74,6 +124,7 @@ function ProductForm({product, onCancel}) {
     }
 
     const handleDelete = async (e) => {
+        console.log("DELETING")
         e.preventDefault();
         checkLogin();
         try {
@@ -86,7 +137,14 @@ function ProductForm({product, onCancel}) {
             onCancel(); // Close the form after submission (optional)
             window.location.reload();
         } catch (error) {
-            console.error('Error:', error);
+            if (error.response.data.error) {
+                setErrorMessage(error.response.data.error)
+                setShowError(true)
+            }
+            else {
+                setErrorMessage("There was an error")
+                setShowError(true)
+            }
         }
 
     }
@@ -94,6 +152,9 @@ function ProductForm({product, onCancel}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         checkLogin();
+        if (!validationInputs()) {
+            return;
+        }
         if (product) {
             const data = {
                 product_id: product.product_id,
@@ -131,7 +192,14 @@ function ProductForm({product, onCancel}) {
                 onCancel(); // Close the form after submission (optional)
                 window.location.reload();
             } catch (error) {
-                console.error('Error:', error);
+                if (error.response.data.error) {
+                    setErrorMessage(error.response.data.error)
+                    setShowError(true)
+                }
+                else {
+                    setErrorMessage("There was an error")
+                    setShowError(true)
+                }
             }
         }
         else {
@@ -161,7 +229,15 @@ function ProductForm({product, onCancel}) {
                 onCancel(); // Close the form after submission (optional)
                 window.location.reload();
             } catch (error) {
-                console.error('Error:', error);
+                console.log(error.response.data.error)
+                if (error.response.data.error) {
+                    setErrorMessage(error.response.data.error)
+                    setShowError(true)
+                }
+                else {
+                    setErrorMessage("There was an error")
+                    setShowError(true)
+                }
             }
         }
         
@@ -171,7 +247,7 @@ function ProductForm({product, onCancel}) {
 
     return(
         <>
-            <form className="product-form" action="POST" >
+            <form className="product-form" action="POST" onSubmit={handleSubmit} >
                 <div className="product-form-image-wrapper">
                     {imagePreview 
                     ? <img src={imagePreview}></img> : product 
@@ -186,41 +262,56 @@ function ProductForm({product, onCancel}) {
                
             <div className="input-wrapper">
                 <label htmlFor="brand">Brand</label>
-                <input type="text" id="brand" name="brand" value={productInfo.brand} onChange={updateForm} />
+                <input type="text" id="brand" name="brand" value={productInfo.brand} onChange={updateForm} required />
             </div>
             <div className="input-wrapper">
                 <label htmlFor="name">Name</label>
-                <input type="text" id="name" name="name" value={productInfo.name} onChange={updateForm} />
+                <input type="text" id="name" name="name" value={productInfo.name} onChange={updateForm} required />
             </div>
             <div className="input-wrapper">
                 <label htmlFor="name">Category</label>
-                <input type="text" id="category" name="category" value={productInfo.category} onChange={updateForm} />
+                <select id="category" name="category" value={productInfo.category} onChange={updateForm} required>
+                    <option value="" disabled>
+                    Select a category
+                    </option>
+                    <option value="Meats">Meats</option>
+                    <option value="Produce">Produce</option>
+                    <option value="Canned Foods">Canned Foods</option>
+                    <option value="Frozen Foods">Frozen Foods</option>
+                    <option value="Snacks">Snacks</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Grains">Grains</option>
+                    <option value="Ingredients">Ingredients</option>
+                    <option value="Baked">Baked</option>
+                    <option value="Dairy">Dairy</option>
+                </select>
             </div>
             <div className="input-wrapper">
                 <label htmlFor="price">Price ($)</label>
-                <input type="text" id="price" name="price" value={productInfo.price} onChange={updateForm} />
+                <input type="number" id="price" name="price" value={productInfo.price} onChange={updateForm} required/>
             </div>
             <div className="input-wrapper">
                 <label htmlFor="weight">Weight (lbs)</label>
-                <input type="text" id="weight" name="weight" value={productInfo.weight} onChange={updateForm} />
+                <input type="number" id="weight" name="weight" value={productInfo.weight} onChange={updateForm} required/>
             </div>
             <div className="input-wrapper">
                 <label htmlFor="stock">Stock</label>
-                <input type="text" id="stock" name="stock" value={productInfo.stock} onChange={updateForm} />
+                <input type="number" id="stock" name="stock" value={productInfo.stock} onChange={updateForm} required/>
             </div>
             <div className="input-wrapper">
                 <label htmlFor="description">Description</label>
-                <textarea id="description" name="description" rows="6" value={productInfo.description} onChange={updateForm} />
+                <textarea id="description" name="description" rows="6" value={productInfo.description} onChange={updateForm} required/>
             </div>
             <div className="input-wrapper-featured">
                 <label htmlFor="description">Featured</label>
-                <input type="checkbox" id="featured" name="featured" value={productInfo.featured} checked={productInfo.featured} onChange={updateForm} />
+                <input type="checkbox" id="featured" name="featured" value={productInfo.featured} checked={productInfo.featured} onChange={updateForm}/>
             </div>
-            {product && <button className="delete-product-button" onClick={handleDelete}>DELETE PRODUCT</button> }
             <div className="buttons">
-                <button className="submit-changes" onClick={handleSubmit}> {product ? "Submit Changes" : "Add product"}</button>
+                <button type="submit" className="submit-changes" onClick={handleSubmit}> {product ? "Submit Changes" : "Add product"}</button>
                 <button className="cancel-product-form" onClick={handleCancel}>Cancel</button>
             </div>
+            {product && <button className="delete-product-button" onClick={handleDelete}>DELETE PRODUCT</button> }
+            {showError && <div className="product-form-error-message">{errorMessage}</div>}
           
         </form>
         </>

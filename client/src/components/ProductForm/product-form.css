@@ -37,7 +37,7 @@
     border: 1px black solid;
     border-radius: 5px;
 }
-.product-form .input-wrapper input {
+.product-form .input-wrapper input, .product-form .input-wrapper select {
     padding: 5px 5px;
     font-size: 1rem;
     border: 1px black solid;
@@ -104,4 +104,13 @@
 
 .delete-product-botton {
     margin-top: 50px;
+}
+
+.product-form-error-message {
+  background-color: #fcc2bc;
+  color: #d32f2f;
+  padding: 0.75rem;
+  margin-top: 10px;
+  border-radius: 4px;
+  font-size: 1rem;
 }
