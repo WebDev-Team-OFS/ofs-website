@@ -22,6 +22,7 @@ function Categories() {
         featuredItems.addEventListener("wheel", (e) => {
             e.preventDefault();
             featuredItems.scrollLeft += e.deltaX;
+            featuredItems.scrollLeft += e.deltaY;
             featuredItems.style.scrollBehavior = "auto";
 
 

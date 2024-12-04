@@ -24,6 +24,7 @@ function FeaturedItems() {
         featuredItems.addEventListener("wheel", (e) => {
             e.preventDefault();
             featuredItems.scrollLeft += e.deltaX;
+            featuredItems.scrollLeft += e.deltaY;
             featuredItems.style.scrollBehavior = "auto";
 
         });
@@ -56,6 +57,7 @@ function FeaturedItems() {
                     {featuredItems.length > 0 ? (
                         featuredItems.map(grocery => (
                             <GroceryCard 
+                                key = {grocery.product_id}
                                 product ={grocery}
                             />   
                         ))
