@@ -87,7 +87,6 @@ def update_product():
 @admin_cmd_bp.route('/api/admin/add-product/', methods=['POST'])
 @jwt_required()
 def add_product():
-    print("DELETING")
     cursor = None;
     db_connection = None;
     try: 
