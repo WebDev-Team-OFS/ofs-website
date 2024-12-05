@@ -45,12 +45,13 @@ function Categories() {
         { categoryName: "Meat", imageName: "meats-category.jpg" },
         { categoryName: "Produce", imageName: "produce-category.jpg" },
         { categoryName: "Canned Foods", imageName: "canned-foods-category.jpg" },
-        { categoryName: "Frozen Foods", imageName: "meats-category.jpg" }, //TODO
+        { categoryName: "Frozen Foods", imageName: "frozen-foods-category.jpg" }, 
         { categoryName: "Snacks", imageName: "snacks-category.jpg" },
         { categoryName: "Drinks", imageName: "drinks-category.jpg" },
-        { categoryName: "Grains", imageName: "meats-category.jpg" }, //TODO
-        { categoryName: "Ingredients", imageName: "meats-category.jpg" }, //TODO
-        { categoryName: "Baked", imageName: "meats-category.jpg" }, //TODO
+        { categoryName: "Grains", imageName: "grains-category.jpg" }, 
+        { categoryName: "Ingredients", imageName: "ingredients-category.jpg" }, 
+        { categoryName: "Baked", imageName: "baked-category.jpg" },
+        { categoryName: "Dairy", imageName: "dairy-category.jpg" }, //TODO
     ]
 
     useEffect(() => {
