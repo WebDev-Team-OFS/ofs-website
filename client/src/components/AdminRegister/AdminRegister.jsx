@@ -27,7 +27,6 @@ function AdminRegister({onCancel}) {
     const checkLogin = async (e) => {
         if (await checkAdminLoginHelper() == false) {
             navigate('/admin/login')
-            console.log("admin login expired")
         }
     }
 
@@ -38,14 +37,12 @@ function AdminRegister({onCancel}) {
         const validEmail = /^[^@]+@[^@]+$/;
         
         if (!formData.email.includes("@") || !validEmail.test(formData.email) || formData.email.length < 3) {
-            console.log(formData.email.split("@").length)
             setErrorMessage("Please enter a valid email")
             setShowError(true)
             return false;
         }
         if (Object.values(formData).some((input) => input === "")) {
             setErrorMessage("Please fill out all input fields")
-            console.log(errorMessage)
             setShowError(true)
             return false;
         }
@@ -96,14 +93,12 @@ function AdminRegister({onCancel}) {
             return false;
         }
         try {
-            console.log(formData);
             const response = await axios.post('http://127.0.0.1:8080/api/admin/add_admin', JSON.stringify(formData), {
                 headers: {
                     'Content-Type': 'application/json', 
                     "Authorization": `Bearer ${localStorage.getItem("admin_access_token")}`
                 },
             });
-            console.log("admin added");
             setErrorMessage("");
             setShowError(false);
             onCancel();

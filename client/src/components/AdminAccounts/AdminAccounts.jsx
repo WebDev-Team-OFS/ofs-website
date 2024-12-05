@@ -17,7 +17,6 @@ function AdminProducts() {
     const checkLogin = async (e) => {
         if (await checkAdminLoginHelper() == false) {
             navigate('/admin/login')
-            console.log("admin login expired")
         }
     }
 
@@ -27,13 +26,12 @@ function AdminProducts() {
                 "Authorization": `Bearer ${localStorage.getItem("admin_access_token")}`
             },});
             let admins = response.data.admins;
-            console.log(admins);
             if (admins) {
                 setAdminAccounts(admins);
             }
         }
-        catch {
-            console.log("ERROR")
+        catch (e) {
+            console.log(e)
         }
         
     }

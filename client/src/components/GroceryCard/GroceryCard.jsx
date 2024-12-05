@@ -37,11 +37,9 @@ function GroceryCard({product}) {
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("access_token")}`
                     }  
-                });
-                console.log("ADD TO DB CART");
+                })
             }
-            catch {
-                console.log("DID NOT ADD TO DB CART")
+            catch (e) {
             }
         }
         else {

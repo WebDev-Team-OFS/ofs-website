@@ -27,12 +27,9 @@ function CheckoutPage() {
                     "Authorization": `Bearer ${localStorage.getItem("access_token")}`
                 }  
             });
-            console.log("GET DB CART");
-            console.log(response.data.cart)
             tempCart = response.data.cart;
         }
-        catch {
-            console.log("DID NOT GET THE DB CART")
+        catch (e) {
         }
 
     }
@@ -40,7 +37,6 @@ function CheckoutPage() {
       navigate('/')
     }
     for (let i = 0; i < tempCart.length; i++) {
-        console.log(tempCart[i].product_id)
         try{
             let response = await axios.get(`http://127.0.0.1:8080/api/product/${tempCart[i].product_id}`);
                 
@@ -48,7 +44,6 @@ function CheckoutPage() {
             cart.push(response.data.product);
         }
         catch (error) {
-            console.log(error);
         }        
     }
     setCartItems(cart);
@@ -87,7 +82,6 @@ function CheckoutPage() {
       setShowError(true)
       return false;
     }
-    console.log(deliveryDetails.state.toLowerCase());
     if (!validStates.includes(deliveryDetails.state.toLowerCase())) {
       setError("Please enter a valid state");
       setShowError(true)
@@ -151,8 +145,6 @@ function CheckoutPage() {
     event.preventDefault();
     setError("");
     setShowError(false)
-    console.log(deliveryDetails);
-    console.log(paymentDetails);
     if (!validateInputs()) {
       return;
     }
@@ -197,18 +189,14 @@ function CheckoutPage() {
         }
         return;
       }
-      console.log("CREDIT CARD HAS BEEN VALIDATED")
       try {
           const response = await axios.post('http://127.0.0.1:8080/api/checkout', {}, {
               headers: {
                   "Authorization": `Bearer ${localStorage.getItem("access_token")}`
               }  
           });
-          console.log("CHECKOUT CART");
       }
       catch (e) {
-        console.log("CHECKOUT ERROR")
-        console.log(e.response.data.error)
         if (e.response?.data?.error) {
           setError(e.response.data.error);
         }

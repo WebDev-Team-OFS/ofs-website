@@ -12,14 +12,9 @@ function ProfileButton() {
 
         if (await checkLoginHelper() == true) {
             setIsLoggedIn(true)
-            console.log('TRUE!!! DUBS')
         }
         else if (await checkLoginHelper() == false) {
-            console.log("HI!!")
             setIsLoggedIn(false)
-        }
-        else {
-            console.log("WHT AM I HERE?")
         }
    }
 
@@ -46,10 +41,8 @@ function ProfileButton() {
             localStorage.removeItem("refresh_token");
             setIsLoggedIn(false);
             setProfileOptions(false);
-            console.log(response.data);
         }
         catch (error) {
-            console.log(error.response);
         }
         finally {
             setProfileOptions(false);
@@ -64,7 +57,6 @@ function ProfileButton() {
             navigate('/profile')
         }
         else {
-            console.log("no logged in")
         }
         setProfileOptions(false);
     }

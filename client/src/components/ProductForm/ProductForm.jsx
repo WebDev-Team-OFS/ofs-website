@@ -43,7 +43,6 @@ function ProductForm({product, onCancel}) {
     const checkLogin = async (e) => {
         if (await checkAdminLoginHelper() == false) {
             navigate('/admin/login')
-            console.log("admin login expired")
         }
     }
 
@@ -114,7 +113,6 @@ function ProductForm({product, onCancel}) {
           ...prev,
           [name]: newValue,
         }));
-        console.log(productInfo.featured)
     }
 
     const handleCancel = (e) => {
@@ -124,7 +122,6 @@ function ProductForm({product, onCancel}) {
     }
 
     const handleDelete = async (e) => {
-        console.log("DELETING")
         e.preventDefault();
         checkLogin();
         try {
@@ -133,7 +130,6 @@ function ProductForm({product, onCancel}) {
                     "Authorization": `Bearer ${localStorage.getItem("admin_access_token")}`
                 },
             });
-            console.log('Product deleted successfully:', response.data);
             onCancel(); 
             window.location.reload();
         } catch (error) {
@@ -179,7 +175,6 @@ function ProductForm({product, onCancel}) {
                         "Authorization": `Bearer ${localStorage.getItem("admin_access_token")}`
                     },
                 });
-                console.log('Product info updated successfully:', response.data);
                 if (image) {
                     const imageResponse = await axios.put('http://127.0.0.1:8080/api/admin/update-image/', imageData, {
                         headers: {
@@ -187,7 +182,6 @@ function ProductForm({product, onCancel}) {
                            "Authorization": `Bearer ${localStorage.getItem("admin_access_token")}`
                         },
                     });
-                    console.log('Product image updated successfully:', response.data);
                 }
                 onCancel(); 
                 window.location.reload();
@@ -225,11 +219,9 @@ function ProductForm({product, onCancel}) {
                         'Authorization': `Bearer ${localStorage.getItem("admin_access_token")}`
                     },
                 });
-                console.log('Product added successfully:', response.data);
                 onCancel(); // Close the form after submission (optional)
                 window.location.reload();
             } catch (error) {
-                console.log(error.response.data.error)
                 if (error.response.data.error) {
                     setErrorMessage(error.response.data.error)
                     setShowError(true)

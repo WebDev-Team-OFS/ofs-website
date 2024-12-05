@@ -50,7 +50,6 @@ export default function AdminLogin() {
             if (response.data) {
                 localStorage.setItem('admin_access_token', response.data.access_token);
                 localStorage.setItem('admin_refresh_token', response.data.refresh_token);
-                console.log("login successful")
               }
             setErrorMessage("")
             setShowError(false)
@@ -58,7 +57,6 @@ export default function AdminLogin() {
             
         }
         catch (error) {
-            console.log(error.response ? error.response.data : error.message);
             setErrorMessage("The email or password is incorrect")
             setShowError(true)
         }

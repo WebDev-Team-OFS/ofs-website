@@ -19,17 +19,14 @@ const ProfilePage = () => {
                         "Authorization": `Bearer ${localStorage.getItem("access_token")}`
                     }  
                 });
-                console.log("Past transactions retrieved");
-                console.log(response.data.transactions);
                 setPastTransactions(response.data.transactions)
-                console.log(pastTransactions[0].order_date)
             }
             catch {
-                console.log("Past transactions not recieved")
+                
             }
         }
         else {
-            console.log("user is not logged in")
+            
         }
     }
     const getUserInfo = async () => {
@@ -40,18 +37,12 @@ const ProfilePage = () => {
                         "Authorization": `Bearer ${localStorage.getItem("access_token")}`
                     }  
                 });
-                console.log("User info retrieved");
-                console.log(response.data.profile);
-                console.log("hello")
                 setUserInfo(response.data.profile)
-                console.log(userInfo);
             }
             catch {
-                console.log("User info not retrieved")
             }
         }
         else {
-            console.log("User is not logged in")
         }
     }
 

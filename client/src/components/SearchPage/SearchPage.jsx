@@ -22,10 +22,8 @@ export const SearchPage = () => {
     const [filter, setFilter] = useState("");
 
     const fetchData = async () => {
-        console.log("fetch data");
         let response = await axios.get(`http://127.0.0.1:8080/api/search?q=${query}`);
         let products = response.data.products;
-        console.log(categoryQuery);
         if (categoryQuery) {
             products = products.filter(product => product.category === categoryQuery);
             setCategoryIndex(categories.indexOf(categoryQuery));
@@ -48,7 +46,6 @@ export const SearchPage = () => {
                 setFilter(filterQuery);
             }
         }
-        console.log(response.data.products);
         setGroceries(products);
     }
 
@@ -78,7 +75,6 @@ export const SearchPage = () => {
 
     const selectFilter = (event) => {
         setFilter(event.target.value);
-        console.log(event.target.value);
         if (categoryQuery) {
             navigate(`/search?q=${query}&category=${categoryQuery}&filter=${event.target.value}`);
         }

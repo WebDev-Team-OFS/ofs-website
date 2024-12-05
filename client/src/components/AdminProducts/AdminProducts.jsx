@@ -29,7 +29,6 @@ function AdminProducts() {
     const checkLogin = async (e) => {
         if (await checkAdminLoginHelper() == false) {
             navigate('/admin/login')
-            console.log("admin login expired")
         }
     }
 
@@ -42,7 +41,6 @@ function AdminProducts() {
             response = await axios.get(`http://127.0.0.1:8080/api/search?q=`);
         }
        
-        console.log(query);
         let products = response.data.products;
         if (products) {
             setProducts(products);

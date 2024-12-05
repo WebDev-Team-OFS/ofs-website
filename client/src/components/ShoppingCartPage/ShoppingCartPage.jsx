@@ -25,29 +25,22 @@ function ShoppingCartPage() {
                         "Authorization": `Bearer ${localStorage.getItem("access_token")}`
                     }  
                 });
-                console.log("GET DB CART");
-                console.log(response.data.cart)
                 tempCart = response.data.cart;
             }
             catch {
-                console.log("DID NOT GET THE DB CART")
             }
 
         }
         for (let i = 0; i < tempCart.length; i++) {
-            console.log(tempCart[i].product_id)
             try{
                 let response = await axios.get(`http://127.0.0.1:8080/api/product/${tempCart[i].product_id}`);
                     
                 response.data.product.quantity = tempCart[i].quantity;
-                console.log(response.data.product);
                 cart.push(response.data.product);
             }
             catch (error) {
-                console.log(error);
             }        
         }
-        console.log(cart);
         setCartItems(cart);
     }
 
@@ -83,10 +76,8 @@ function ShoppingCartPage() {
                 setCartItems(cartItems.map(item => 
                     item.product_id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item
                 ));
-                console.log("REMOVE FROM DB CART");
             }
             catch {
-                console.log("DID NOT REMOVE FROM THE DB CART")
             }
 
         }
@@ -105,10 +96,8 @@ function ShoppingCartPage() {
                     }  
                 });
                 setCartItems(cartItems.filter(item => item.product_id !== id));
-                console.log("REMOVE FROM DB CART");
             }
             catch {
-                console.log("DID NOT REMOVE FROM THE DB CART")
             }
         }
         else {

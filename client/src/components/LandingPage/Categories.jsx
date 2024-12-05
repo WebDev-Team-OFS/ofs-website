@@ -8,7 +8,6 @@ function Categories() {
     const navigate = useNavigate();
 
     const searchCategory = (categoryName) => {
-        console.log("hello");
         navigate(`/search?q=&category=${categoryName}`);
     }
 
@@ -16,7 +15,7 @@ function Categories() {
         const featuredItems = document.querySelector(".categories");
         const leftArrow = document.querySelector(".category-leftArrow");
         const rightArrow = document.querySelector(".category-rightArrow");
-        console.log("hello");
+
 
 
         featuredItems.addEventListener("wheel", (e) => {
@@ -32,7 +31,6 @@ function Categories() {
             featuredItems.style.scrollBehavior = "smooth";
 
             featuredItems.scrollLeft -= 270;
-            console.log("arr0w");
         })
 
         rightArrow.addEventListener("click", () => {

@@ -32,7 +32,6 @@ const AuthPages = () => {
     const validEmail = /^[^@]+@[^@]+$/;
     
     if (!formData.email.includes("@") || !validEmail.test(formData.email) || formData.email.length < 3) {
-        console.log(formData.email.split("@").length)
         setError("Please enter a valid email")
         setIsLoading(false);
         return false;
@@ -86,12 +85,10 @@ const AuthPages = () => {
           localStorage.setItem('access_token', response.data.access_token);
           localStorage.setItem('refresh_token', response.data.refresh_token);
           setSuccessMessage('Login successful!');
-          console.log("login successful")
           setTimeout(() => navigate('/'), 1500);
         }
        
     } catch (err) {
-      console.log(err.response ? err.response.data : err.message);
       setError(err.response?.data?.error || 'An error occurred during login');
     } finally {
       setIsLoading(false);
@@ -105,7 +102,6 @@ const AuthPages = () => {
     if (!validateInputs()) {
       return false;
     }
-    console.log(formData.email);
     try {
       const response = await axios.post('http://127.0.0.1:8080/api/register', formData, {
          withCredentials: true, // Include for session-based auth
@@ -127,7 +123,6 @@ const AuthPages = () => {
         }, 1500);
       }
     } catch (err) {
-      console.log(err.response ? err.response.data : err.message);
       setError(err.response?.data?.error || 'An error occurred during registration');
     } finally {
       setIsLoading(false);

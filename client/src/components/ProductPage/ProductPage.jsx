@@ -19,9 +19,7 @@ function ProductPage() {
     const id = param.id;
 
     const fetchData = async () => {
-        console.log("fetch data");
         let response = await axios.get(`http://127.0.0.1:8080/api/product/${id}`); 
-        console.log(response.data.product);
         setProduct(response.data.product);
     }
 
@@ -34,11 +32,9 @@ function ProductPage() {
                         "Authorization": `Bearer ${localStorage.getItem("access_token")}`
                     }  
                 });
-                console.log("ADD TO DB CART");
                 setIsSuccess(true);
             }
             catch {
-                console.log("DID NOT ADD TO DB CART")
             }
         }
         else {

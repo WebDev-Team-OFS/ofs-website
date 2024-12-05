@@ -14,7 +14,6 @@ function AdminGroceryCard({product}) {
     const checkLogin = async (e) => {
         if (await checkAdminLoginHelper() == false) {
             navigate('/admin/login')
-            console.log("admin login expired");
         }
     }
 

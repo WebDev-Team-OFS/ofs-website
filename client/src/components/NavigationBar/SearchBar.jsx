@@ -37,7 +37,7 @@ const SearchBar = () => {
   return (
     <div className="search-bar">
         <input type="text" className="search-input" placeholder="Search Groceries" onChange={(e) => setInput(e.target.value)} onKeyDown={handleEnter} value={input} />
-        <img src="./src/img/search-icon.png" alt="" className="search-icon" value={input} onClick={() => {search(input); console.log("hello")}}/>
+        <img src="./src/img/search-icon.png" alt="" className="search-icon" value={input} onClick={() => {search(input);}}/>
     </div>
   )
 }
