@@ -51,4 +51,7 @@ Install MySQL Workbench too if it doesn't come with the default installation.
  1. Open the create_database.py file and update the password in the connector to whatever your MySQL password is.
  2. Run the file.
  3. If it works correctly, it should print out some usernames and passwords. If you go on MySQL workbench and refresh the SCHEMAS, you should see the new database. 
- 
+
+## 5. Finalize 
+ 1. The default test data from create_database.py should generate user of "john@example.com" with password of "pass123" and generate admin of "admin@example.com" with password of "adminpass"
+ 2. This will allow you to test the data and have access to the functionality of the admin control panel
