@@ -42,16 +42,16 @@ function Categories() {
     }
 
     const categoriesList = [
-        { categoryName: "Meat", imageName: "meats-category.jpg" },
-        { categoryName: "Produce", imageName: "produce-category.jpg" },
-        { categoryName: "Canned Foods", imageName: "canned-foods-category.jpg" },
-        { categoryName: "Frozen Foods", imageName: "frozen-foods-category.jpg" }, 
-        { categoryName: "Snacks", imageName: "snacks-category.jpg" },
-        { categoryName: "Drinks", imageName: "drinks-category.jpg" },
-        { categoryName: "Grains", imageName: "grains-category.jpg" }, 
-        { categoryName: "Ingredients", imageName: "ingredients-category.jpg" }, 
-        { categoryName: "Baked", imageName: "baked-category.jpg" },
-        { categoryName: "Dairy", imageName: "dairy-category.jpg" }, //TODO
+        { categoryName: "Meat", imageName: "meats-category.jpg", key: "0" },
+        { categoryName: "Produce", imageName: "produce-category.jpg", key: "1"},
+        { categoryName: "Canned Foods", imageName: "canned-foods-category.jpg", key: "2"},
+        { categoryName: "Frozen Foods", imageName: "frozen-foods-category.jpg", key: "3" }, 
+        { categoryName: "Snacks", imageName: "snacks-category.jpg", key: "4" },
+        { categoryName: "Drinks", imageName: "drinks-category.jpg", key: "5" },
+        { categoryName: "Grains", imageName: "grains-category.jpg", key: "6"}, 
+        { categoryName: "Ingredients", imageName: "ingredients-category.jpg", key: "7" }, 
+        { categoryName: "Baked", imageName: "baked-category.jpg", key: "8" },
+        { categoryName: "Dairy", imageName: "dairy-category.jpg", key: "9"}, 
     ]
 
     useEffect(() => {
@@ -70,7 +70,7 @@ function Categories() {
                     <div className="categories">
                     {
                     categoriesList.map(category => (
-                        <div className="image-container">
+                        <div key = {category.key} className="image-container">
                             <img src={`./src/img/categories/${category.imageName}`}alt="" onClick={() => searchCategory(category.categoryName)} />
                             <p>{category.categoryName}</p>
                         </div>
