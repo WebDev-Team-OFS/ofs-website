@@ -16,6 +16,8 @@ function CheckoutPage() {
   const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
 
+  const [isSuccess, setIsSuccess] = useState(false);
+
   
 
   const getCart = async () => {
@@ -221,7 +223,10 @@ function CheckoutPage() {
       }
       setError("");
       setShowError(false)
-      navigate('/')
+      setIsSuccess(true);
+      setTimeout(() => {
+        navigate('/');  
+      }, 2500);
    }
    else {
       setError("You are not logged in");
@@ -317,6 +322,7 @@ function CheckoutPage() {
           <button type="submit">Place Order</button>
         </form>
         {showError && <div className="product-form-error-message">{error}</div>}
+        {isSuccess && <div className="checkout-success">Thank you for shopping with OFS!</div>}
       </section>
     </main>
   );
