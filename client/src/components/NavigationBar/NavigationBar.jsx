@@ -17,7 +17,10 @@ function NavigationBar() {
 
     return (
         <header className="navigation-bar">
-            <h1 className="logo" onClick={goToHome}>OFS</h1>
+            <div className="logo">
+                <h1 onClick={goToHome}>OFS</h1>
+            </div>
+            
             <SearchBar />
             <div className="profile-container">
                 <img className="shopping-cart-icon" src="./src/img/shopping-cart-icon.png" alt="" onClick={goToCart}/>

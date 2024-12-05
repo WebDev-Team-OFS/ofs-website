@@ -9,11 +9,15 @@
 }
 
 .logo {
-    color: white;
+    flex: 1;
+}
+
+.logo > h1 {
     font-family: monospace;
     font-size: 70px;
-    flex: 1;
     cursor: pointer;
+    color: white;
+    width: 110px;
 }
 
 .search-bar {
