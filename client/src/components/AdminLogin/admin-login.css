@@ -55,8 +55,12 @@
     font-size: 1.1rem;
     padding: 15px;
     margin-top: 40px;
+    cursor: pointer;
 }
 
+.admin-login button:hover {
+    background-color: #031d0e;
+}
 .admin-login-wrapper .error {
     color: red;
     font-weight: light;

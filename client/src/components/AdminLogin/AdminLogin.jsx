@@ -9,7 +9,8 @@ import { checkAdminLoginHelper } from '../utils';
 export default function AdminLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [errorMessage, setErrorMessage] = useState("");
+    const [showError, setShowError] = useState(false);
 
     const navigate = useNavigate();
 
@@ -20,8 +21,28 @@ export default function AdminLogin() {
         }
     }
 
+    const validateInputs = () => {
+        if (email == "") {
+            setErrorMessage("Please enter your email")
+            setShowError(true)
+            return false
+        }
+        if (password == "") {
+            setErrorMessage("Please enter your password")
+            setShowError(true)
+            return false
+        }
+        setErrorMessage("")
+        setShowError(false)
+        return true
+        
+    }
+
     const submitLogin = async (e) => {
         e.preventDefault();
+        if (!validateInputs()) {
+            return false
+        }
         try {
             const response = await axios.post(`http://127.0.0.1:8080/api/admin/login`, {
                 email,
@@ -32,12 +53,15 @@ export default function AdminLogin() {
                 localStorage.setItem('admin_refresh_token', response.data.refresh_token);
                 console.log("login successful")
               }
+            setErrorMessage("")
+            setShowError(false)
             navigate(`/admin/products`);
             
         }
         catch (error) {
             console.log(error.response ? error.response.data : error.message);
-            setError("The email or password is incorrect")
+            setErrorMessage("The email or password is incorrect")
+            setShowError(true)
         }
       
 
@@ -58,9 +82,9 @@ export default function AdminLogin() {
             <div className="input-wrapper">
                 <label htmlFor="password">Password</label>
                 <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)} />
-                <label className="error" htmlFor="error">{error}</label>
             </div>
             <button type="submit">Log in</button>
+            {showError && <div className="product-form-error-message">{errorMessage}</div>}
         </form>
     </div>
     
