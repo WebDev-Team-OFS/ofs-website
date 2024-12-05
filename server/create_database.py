@@ -264,15 +264,6 @@ mydb.commit()
 #make sure data is consistent 
 
 
-# Insert test data into orders
-# test_orders = [
-#     (1, 2, 5.98, "2024-10-01 10:30:00", 1),
-#     (2, 1, 6.98, "2024-10-02 12:45:00", 2)
-# ]
-
-# cursor.executemany("INSERT INTO orders (user_id, amount, cost, order_date, product_id) VALUES (%s, %s, %s, %s, %s)", test_orders)
-# mydb.commit()
-
 # Retrieve and display user data
 cursor.execute("SELECT * FROM user_info")
 for user in cursor.fetchall():

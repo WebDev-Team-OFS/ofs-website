@@ -14,7 +14,6 @@ def view_cart():
     if not user_id:
         return jsonify({"error": "User is not logged in"}), 401
 
-    # user_id = session['user_id']
     db_connection = get_db_connection()
     cursor = db_connection.cursor(dictionary=True)
 
@@ -43,7 +42,6 @@ def add_to_cart():
     if not user_id:
         return jsonify({"error": "User is not logged in"}), 401
     
-    # user_id = session['user_id']
     data = request.get_json()
     product_id = data.get('product_id')
     quantity = data.get('quantity')
@@ -96,7 +94,6 @@ def remove_from_cart(product_id):
     if not user_id:
         return jsonify({"error": "User is not logged in"}), 401
 
-    # user_id = session['user_id']
     db_connection = get_db_connection()
     cursor = db_connection.cursor(dictionary=True)
 
@@ -128,7 +125,6 @@ def update_cart_item():
     if not user_id: 
         return jsonify({"error": "User is not logged in"}), 401 
 
-    # user_id = session['user_id']
     data = request.get_json()
     product_id = data.get('product_id')
     new_quantity = data.get('quantity')
@@ -169,22 +165,20 @@ def update_cart_item():
 @cart_bp.route('/api/checkout', methods=['POST'])
 @jwt_required()
 def checkout():
-    print("STARTING--------------------------------------------------------------")
     cursor = None
     db_connection = None
     try:
         user_id = get_jwt_identity()
         if not user_id: 
             return jsonify({"error": "User is not logged in"}), 401 
-        print("EHH??")
             
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
-        print("HI!!")# tf is this
+        
         
         # Start transaction
         db_connection.start_transaction() 
-        print("ARE WE THERE YET?")
+        
         
         # Get cart items
         cursor.execute("""
@@ -194,8 +188,7 @@ def checkout():
             WHERE c.user_id = %s
         """, (user_id,))
         cart_items = cursor.fetchall()
-        print("WE GOT THE CART")
-        print(cart_items)
+      
         
         if not cart_items:
             return jsonify({"error": "Cart is empty. Please add items before checking out."}), 400
@@ -217,7 +210,7 @@ def checkout():
 
             total_price += cart_qty * price
             total_weight += cart_qty * weight
-        print("DID WE GET TOTAL PRICE?")
+        
 
 
             
@@ -232,23 +225,21 @@ def checkout():
                 return jsonify({
                     "error": f"Not enough stock for product {product_id}"
                 }), 400
-            print("almost?")
+            
             # Update product inventory
             cursor.execute("""
                 UPDATE product 
                 SET stock = stock - %s
                 WHERE product_id = %s
             """, (cart_qty, product_id))
-        print("ALMOST!!")
+        
         # Create order record
        
         for item in cart_items:
             item['price'] = float(item['price'])
             item['weight'] = float(item['weight'])
 
-        print(cart_items)
         cart_json = json.dumps(cart_items)
-        print("DID THIS WORK?")
 
         if total_weight > 20:
             total_price +=5
@@ -258,14 +249,8 @@ def checkout():
             INSERT INTO orders (user_id, total_price, total_weight, order_date, order_items)
             VALUES (%s, %s, %s, NOW(), %s)
         """, (user_id, total_price, total_weight, json.dumps(cart_items)))
-        print("LOL")
         
-        # Move cart items to order_items
-        # cursor.execute("""
-        #     INSERT INTO order_items (order_id, product_id, quantity)
-        #     SELECT %s, product_id, quantity 
-        #     FROM cart WHERE user_id = %s
-        # """, (order_id, user_id))
+
         
         # Clear user's cart
         cursor.execute("DELETE FROM cart WHERE user_id = %s", (user_id,))

@@ -46,7 +46,6 @@ def update_product():
             return jsonify({"error": "Unauthorized access, admin only"}), 403
 
 
-        #admin_id = session['admin_id']
 
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
@@ -61,8 +60,6 @@ def update_product():
         new_description = data.get('description')
         product_id = data.get('product_id')
 
-        # if new_stock is None or new_stock < 0:
-        #     return jsonify({"error": "Invalid stock value"}), 400
 
         cursor.execute("UPDATE product SET brand = %s, name = %s, category = %s, price = %s, weight = %s, stock = %s, featured = %s, description = %s WHERE product_id = %s", (new_brand, new_name, new_category, new_price, new_weight, new_stock, new_featured, new_description, product_id))
         db_connection.commit()
@@ -415,5 +412,3 @@ def view_admins():
         if db_connection:
             db_connection.close()
 
-#more admin commands
-#add view all admins or something
