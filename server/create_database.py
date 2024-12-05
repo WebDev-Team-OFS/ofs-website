@@ -7,7 +7,7 @@ import os
 for _ in range(10):
     try:
         mydb = mysql.connector.connect(
-            host=os.getenv('DB_HOST', 'localhost'),
+            host=os.getenv('DB_HOST', 'db'),
             user=os.getenv('DB_USER', 'root'),
             password=os.getenv('DB_PASSWORD', 'adminpass'),
             auth_plugin='mysql_native_password'
@@ -24,12 +24,12 @@ else:
 #lastest db update 11/25/2024
 
 #update password to whatever you set your msql password to
-mydb = mysql.connector.connect(
-    host = "localhost",
-    user = "root",
-    password = "adminpass",   #change if you set password   
-    auth_plugin = 'mysql_native_password'
-)
+# mydb = mysql.connector.connect(
+#     host = "localhost",
+#     user = "root",
+#     password = "adminpass",   #change if you set password   
+#     auth_plugin = 'mysql_native_password'
+# )
 
 cursor = mydb.cursor()
 
