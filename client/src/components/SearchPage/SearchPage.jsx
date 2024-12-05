@@ -15,7 +15,7 @@ export const SearchPage = () => {
     const categoryQuery = queryParams.get('category');
     const filterQuery = queryParams.get('filter');
     
-    const categories = ["Meats", "Produce", "Canned Foods", "Frozen Foods", "Snacks", "Drinks", "Grains", "Ingredients", "Baked", "Dairy"]
+    const categories = ["Meats", "Produce", "Canned Foods","Snacks", "Drinks", "Grains", "Ingredients", "Dairy"]
 
     const [groceries, setGroceries] = useState([]);
     const [categoryIndex, setCategoryIndex] = useState(-1);

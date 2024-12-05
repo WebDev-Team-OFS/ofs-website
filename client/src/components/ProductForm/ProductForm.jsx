@@ -277,12 +277,10 @@ function ProductForm({product, onCancel}) {
                     <option value="Meats">Meats</option>
                     <option value="Produce">Produce</option>
                     <option value="Canned Foods">Canned Foods</option>
-                    <option value="Frozen Foods">Frozen Foods</option>
                     <option value="Snacks">Snacks</option>
                     <option value="Drinks">Drinks</option>
                     <option value="Grains">Grains</option>
                     <option value="Ingredients">Ingredients</option>
-                    <option value="Baked">Baked</option>
                     <option value="Dairy">Dairy</option>
                 </select>
             </div>
