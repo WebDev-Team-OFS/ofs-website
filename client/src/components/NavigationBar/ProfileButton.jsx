@@ -55,7 +55,7 @@ function ProfileButton() {
         finally {
             setProfileOptions(false);
             navigate(`/`);
-            console.log("final");
+            window.location.reload();
         }
          
     }
