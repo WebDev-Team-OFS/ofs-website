@@ -235,6 +235,7 @@ def remove_item(product_id):
         db_connection = get_db_connection()
         cursor = db_connection.cursor(dictionary=True)
 
+        cursor.execute("DELETE FROM cart WHERE product_id = %s", (product_id,))
         cursor.execute("DELETE FROM product WHERE product_id = %s", (product_id,))
         db_connection.commit()
 
