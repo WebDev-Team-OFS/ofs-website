@@ -15,7 +15,6 @@ import AdminLogin from './components/AdminLogin/AdminLogin';
 import LoginPage from './components/LoginPage/LoginPage';
 import ShoppingCartPage from './components/ShoppingCartPage/ShoppingCartPage';
 import ProfilePage from './components/ProfilePage/ProfilePage';
-import EditProfile from './components/EditProfilePage/EditProfilePage';
 import AdminProducts from './components/AdminProducts/AdminProducts';
 import AdminAccounts from './components/AdminAccounts/AdminAccounts';
 
@@ -36,7 +35,6 @@ function App() {
             <Route path ="/cart" element = {<ShoppingCartPage />} />
             <Route path ="/search" element = {<SearchPage />} />
             <Route path ="/profile" element = {<ProfilePage />} />
-            <Route path ="/edit-profile" element = {<EditProfile />} />
             {/* <Route path ="/search?q=*" element = {<SearchPage />} /> */}
           </Route>
         </Routes>

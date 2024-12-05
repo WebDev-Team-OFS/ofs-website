@@ -92,9 +92,6 @@ const ProfilePage = () => {
           <p>
             <strong>Email:</strong> {userInfo.email}
           </p>
-          <button className="edit-btn" onClick={handleEdit}>
-            Edit Profile
-          </button>
         </section>
       </div>
       <div className="profile-content">
