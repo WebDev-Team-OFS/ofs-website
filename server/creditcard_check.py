@@ -28,7 +28,8 @@ def date_check(exp_date):
         # Get the current month and year
         current_month = datetime.now().month
         current_year = datetime.now().year % 100  # Get last two digits of the 
-        
+        if exp_month <= 0 or exp_month > 12:
+            return False
         if exp_year > current_year or (exp_year == current_year and exp_month >= current_month):
             return True
         else:
@@ -40,7 +41,7 @@ def date_check(exp_date):
 @credit_card_bp.route('/api/validate-expiration', methods=['POST'])
 def validate_expiration():
     data = request.get_json()
-    exp_date = data.get('exp_date')
+    exp_date = data.get('expiry_date')
 
     # Validate expiration date format (MM/YY)
     if not exp_date or len(exp_date) != 5 or exp_date[2] != "/":
@@ -55,12 +56,13 @@ def validate_expiration():
 
 @credit_card_bp.route('/api/validate-card', methods=['POST'])
 def validate_card():
+    print("STARTING")
     data = request.get_json()
     card_number = data.get('card_number')
-
+    print("HERE")
     # Validate input
-    if not card_number or len(card_number) != 16 or not card_number.isdigit():
-        return jsonify({"error": "Invalid card number format! Must be 16 digits."}), 400
+    if not card_number or len(card_number) < 13 or len(card_number) > 19 or not card_number.isdigit():
+        return jsonify({"error": "Invalid card number format! Must be at least 13 digits."}), 400
 
     # Luhn check
     if luhn_check(card_number):
