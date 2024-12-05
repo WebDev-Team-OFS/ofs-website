@@ -25,11 +25,56 @@ const AuthPages = () => {
     });
   };
 
+  const validateInputs = () => {
+    const includesNumber = /\d/; 
+    const includesUppercase = /[A-Z]/; 
+    const validUsername = /^[a-zA-Z0-9]+$/;
+    const validEmail = /^[^@]+@[^@]+$/;
+    
+    if (!formData.email.includes("@") || !validEmail.test(formData.email) || formData.email.length < 3) {
+        console.log(formData.email.split("@").length)
+        setError("Please enter a valid email")
+        setIsLoading(false);
+        return false;
+    }
+    if (Object.values(formData).some((input) => input === "")) {
+        setError("Please fill out all input fields")
+        setIsLoading(false);
+        return false;
+    }
+    if (formData.password != formData.confirm_password) {
+        setError("Passwords do not match")
+        setIsLoading(false);
+        return false;
+    }
+    if (formData.password.length < 8) {
+        setError("Password must be at least 8 characters long");
+        setIsLoading(false);
+        return false;
+    }
+    if (!includesNumber.test(formData.password) || !includesUppercase.test(formData.password)) {
+        setError("Password must include at least one number and one uppercase letter");
+        setIsLoading(false);
+        return false;
+    }
+    if (formData.username.length < 3) {
+        setError("Username must be at least 3 characters long");
+        setIsLoading(false);
+        return false;
+    }
+    if (!validUsername.test(formData.username)) {
+        setError("Username can only include letters and numbers");
+        setIsLoading(false);
+        return false;
+    }
+    setError("");
+    return true;
+  }
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-
     try {
       const response = await axios.post('http://127.0.0.1:8080/api/login', {
         email: formData.email,
@@ -57,13 +102,16 @@ const AuthPages = () => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-
-    if (formData.password !== formData.confirm_password) {
-      setError('Passwords do not match');
-      setIsLoading(false);
-      return;
+    if (!validateInputs()) {
+      return false;
     }
 
+    // if (formData.password !== formData.confirm_password) {
+    //   setError('Passwords do not match');
+    //   setIsLoading(false);
+    //   return;
+    // }
+    console.log(formData.email);
     try {
       const response = await axios.post('http://127.0.0.1:8080/api/register', formData, {
          withCredentials: true, // Include for session-based auth
@@ -193,7 +241,7 @@ const AuthPages = () => {
         </form>
 
         <div className="auth-toggle">
-          <button onClick={() => setIsLogin(!isLogin)} className="auth-link">
+          <button onClick={() => {setIsLogin(!isLogin); setError("")}} className="auth-link">
             {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
           </button>
         </div>

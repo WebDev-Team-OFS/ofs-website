@@ -45,8 +45,12 @@
     cursor: pointer;
 }
 
+.delete-account-button:disabled {
+    opacity: 0.5
+}
 
-.delete-account-button:hover {
+
+.delete-account-button:not(:disabled):hover {
     background-color: rgb(148, 2, 2);
 }
 
