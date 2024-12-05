@@ -9,7 +9,7 @@ for _ in range(10):
         mydb = mysql.connector.connect(
             host=os.getenv('DB_HOST', 'localhost'),
             user=os.getenv('DB_USER', 'root'),
-            password=os.getenv('DB_PASSWORD', 'adminpass'),
+            password=os.getenv('DB_PASSWORD', 'adminpass'),#change password here
             auth_plugin='mysql_native_password'
         )
         break
