@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AuthPages.css';
@@ -105,12 +105,6 @@ const AuthPages = () => {
     if (!validateInputs()) {
       return false;
     }
-
-    // if (formData.password !== formData.confirm_password) {
-    //   setError('Passwords do not match');
-    //   setIsLoading(false);
-    //   return;
-    // }
     console.log(formData.email);
     try {
       const response = await axios.post('http://127.0.0.1:8080/api/register', formData, {

@@ -1,9 +1,7 @@
 
 import './admin-register.css'
 import axios from 'axios'
-import React, {useState, useEffect } from 'react';
-import AdminGroceryCard from '../AdminGroceryCard/AdminGroceryCard'
-import ProductForm from '../ProductForm/ProductForm';
+import {useState} from 'react';
 import { checkAdminLoginHelper } from '../utils';
 import { useNavigate } from 'react-router-dom';
 

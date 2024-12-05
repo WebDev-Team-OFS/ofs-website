@@ -9,17 +9,10 @@ import PopUp from '../PopUp/PopUp';
 function ShoppingCartPage() {
     const navigate = useNavigate();
 
-    // Define initial cart items
-    //For Pictures to show up it, needs to have same name as png ex. Almond Milk almond-milk.png, Lunchly lunchly.png, Heavy Cream heavy-cream.png
-    const initialCartItems = [
-        { id: 1, name: 'Signature Farms Whole Turkey', price: 19.14, weight: 12, quantity: 1 },
-        { id: 2, name: 'Eggs', price: 6.99, weight: 1.5, quantity: 2 },
-        { id: 3, name: 'Almond Milk', price: 6.99, weight: 1.5, quantity: 2 }
-    ];
+    
 
     // State for cart items
     const [cartItems, setCartItems] = useState([]);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showPopUp, setShowPopUp] = useState(false);
 
     const getCart = async () => {

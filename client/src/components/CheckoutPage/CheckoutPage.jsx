@@ -1,6 +1,5 @@
-import NavigationBar from '../NavigationBar/NavigationBar';
-import React, { useState, useEffect } from 'react';
-import './checkout-page.css'; // Link to your CSS file for styling
+import { useState, useEffect } from 'react';
+import './checkout-page.css'; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { checkLoginHelper } from '../utils';
@@ -10,8 +9,6 @@ function CheckoutPage() {
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([])
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);

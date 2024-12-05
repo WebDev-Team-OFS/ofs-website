@@ -1,9 +1,6 @@
 import './admin-grocery-card.css'
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { checkLoginHelper} from '../utils'
-import axios from 'axios'
-import PopUp from '../PopUp/PopUp'
+import { useState } from 'react';
 import ProductForm from '../ProductForm/ProductForm';
 import { checkAdminLoginHelper } from '../utils';
 

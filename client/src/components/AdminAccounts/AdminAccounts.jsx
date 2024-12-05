@@ -2,8 +2,6 @@ import '../AdminProducts/admin-products.css'
 import './admin-accounts.css'
 import axios from 'axios'
 import React, {useState, useEffect } from 'react';
-import AdminGroceryCard from '../AdminGroceryCard/AdminGroceryCard'
-import ProductForm from '../ProductForm/ProductForm';
 import { checkAdminLoginHelper } from '../utils';
 import { useNavigate } from 'react-router-dom';
 import AdminRegister from '../AdminRegister/AdminRegister';

@@ -1,5 +1,5 @@
 import './product-page.css'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 import { checkLoginHelper } from '../utils'
@@ -14,7 +14,6 @@ function ProductPage() {
     const [itemQuantity, setItemQuantity] = useState(1);
     const [isSuccess, setIsSuccess] = useState(false);
     const [showPopUp, setShowPopUp] = useState(false);
-    // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const param = useParams();
     const id = param.id;
@@ -85,8 +84,6 @@ function ProductPage() {
         </>
     )
 }
-
-{/* <GroceryCard price ="7.99" title="Pavesi Gocciole Chocolate Chip Cookies" weight="1.00" imageURL="./src/img/food/cookies.png" /> */}
 
 
 export default ProductPage

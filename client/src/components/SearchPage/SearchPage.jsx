@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import GroceryCard from '../GroceryCard/GroceryCard'
 import './search-page.css'
 import { useLocation } from 'react-router-dom'

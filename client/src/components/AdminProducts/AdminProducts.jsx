@@ -1,6 +1,6 @@
 import './admin-products.css'
 import axios from 'axios'
-import React, {useState, useEffect } from 'react';
+import {useState, useEffect } from 'react';
 import AdminGroceryCard from '../AdminGroceryCard/AdminGroceryCard'
 import ProductForm from '../ProductForm/ProductForm';
 import { checkAdminLoginHelper } from '../utils';

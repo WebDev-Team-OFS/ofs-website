@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import {useState} from "react"
 import './product-form.css'
 import axios from 'axios'
 import { checkAdminLoginHelper } from "../utils"
@@ -134,7 +134,7 @@ function ProductForm({product, onCancel}) {
                 },
             });
             console.log('Product deleted successfully:', response.data);
-            onCancel(); // Close the form after submission (optional)
+            onCancel(); 
             window.location.reload();
         } catch (error) {
             if (error.response.data.error) {
@@ -189,7 +189,7 @@ function ProductForm({product, onCancel}) {
                     });
                     console.log('Product image updated successfully:', response.data);
                 }
-                onCancel(); // Close the form after submission (optional)
+                onCancel(); 
                 window.location.reload();
             } catch (error) {
                 if (error.response.data.error) {

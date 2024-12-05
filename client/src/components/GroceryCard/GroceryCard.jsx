@@ -45,20 +45,6 @@ function GroceryCard({product}) {
             }
         }
         else {
-            // console.log("CART!!")
-            // let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            
-            // let cartProduct = cart.find(grocery => grocery.product_id === product.product_id);
-    
-            // if (cartProduct) {
-            //     cartProduct.quantity++;
-            // }
-            // else {
-            //     cart.push({ product_id: product.product_id, quantity: 1 });
-            // }
-            // console.log(cart);
-            
-            // localStorage.setItem("cart", JSON.stringify(cart));
             setShowPopUp(true);
         }
         
