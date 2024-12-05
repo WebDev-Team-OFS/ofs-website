@@ -37,12 +37,12 @@ function AdminRegister({onCancel}) {
         const includesNumber = /\d/; 
         const includesUppercase = /[A-Z]/; 
         const validUsername = /^[a-zA-Z0-9]+$/;
+        const validEmail = /^[^@]+@[^@]+$/;
         
-        if (!formData.email.includes("@") || formData.email.length < 2) {
+        if (!formData.email.includes("@") || !validEmail.test(formData.email) || formData.email.length < 3) {
+            console.log(formData.email.split("@").length)
             setErrorMessage("Please enter a valid email")
-            console.log(errorMessage)
             setShowError(true)
-            console.log(errorMessage)
             return false;
         }
         if (Object.values(formData).some((input) => input === "")) {
@@ -121,7 +121,7 @@ function AdminRegister({onCancel}) {
 
     return(
         <div className="admin-register-container">
-            <form className="admin-register-form">
+            <form className="admin-register-form" onSubmit={handleSubmit} method="POST">
                 <h1>Create new admin</h1>
                 <div className="input-wrapper">
                     <label className="email">Email address</label>
