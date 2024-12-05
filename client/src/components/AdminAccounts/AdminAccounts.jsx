@@ -109,7 +109,7 @@ function AdminProducts() {
                         <p>
                             <strong> Account created on </strong> {Date(admin.date_created)}
                         </p>
-                        <button className="delete-account-button" onClick={() => deleteAdmin(admin.emp_id)}>DELETE ACCOUNT</button>
+                        <button className="delete-account-button" onClick={() => deleteAdmin(admin.emp_id)} disabled={adminAccounts.length <=1}>DELETE ACCOUNT</button>
                     </div>
                 ))
                 }
