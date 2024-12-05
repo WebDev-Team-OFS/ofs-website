@@ -42,15 +42,13 @@ function Categories() {
     }
 
     const categoriesList = [
-        { categoryName: "Meat", imageName: "meats-category.jpg", key: "0" },
+        { categoryName: "Meats", imageName: "meats-category.jpg", key: "0" },
         { categoryName: "Produce", imageName: "produce-category.jpg", key: "1"},
         { categoryName: "Canned Foods", imageName: "canned-foods-category.jpg", key: "2"},
-        { categoryName: "Frozen Foods", imageName: "frozen-foods-category.jpg", key: "3" }, 
         { categoryName: "Snacks", imageName: "snacks-category.jpg", key: "4" },
         { categoryName: "Drinks", imageName: "drinks-category.jpg", key: "5" },
         { categoryName: "Grains", imageName: "grains-category.jpg", key: "6"}, 
         { categoryName: "Ingredients", imageName: "ingredients-category.jpg", key: "7" }, 
-        { categoryName: "Baked", imageName: "baked-category.jpg", key: "8" },
         { categoryName: "Dairy", imageName: "dairy-category.jpg", key: "9"}, 
     ]
 
