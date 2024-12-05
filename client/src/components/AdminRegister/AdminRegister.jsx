@@ -21,6 +21,9 @@ function AdminRegister({onCancel}) {
         confirm_password: "",
     })
 
+    const [errorMessage, setErrorMessage] = useState("");
+    const [showError, setShowError] = useState(false);
+
     const navigate = useNavigate();
 
     const checkLogin = async (e) => {
@@ -28,6 +31,56 @@ function AdminRegister({onCancel}) {
             navigate('/admin/login')
             console.log("admin login expired")
         }
+    }
+
+    const validateInputs = () => {
+        const includesNumber = /\d/; 
+        const includesUppercase = /[A-Z]/; 
+        const validUsername = /^[a-zA-Z0-9]+$/;
+        
+        if (!formData.email.includes("@") || formData.email.length < 2) {
+            setErrorMessage("Please enter a valid email")
+            console.log(errorMessage)
+            setShowError(true)
+            console.log(errorMessage)
+            return false;
+        }
+        if (Object.values(formData).some((input) => input === "")) {
+            setErrorMessage("Please fill out all input fields")
+            console.log(errorMessage)
+            setShowError(true)
+            return false;
+        }
+        if (formData.password != formData.confirm_password) {
+            setErrorMessage("Passwords do not match")
+            setShowError(true)
+            return false;
+        }
+        if (formData.password.length < 8) {
+            setErrorMessage("Password must be at least 8 characters long");
+            setShowError(true)
+            return false;
+        }
+        if (!includesNumber.test(formData.password) || !includesUppercase.test(formData.password)) {
+            setErrorMessage("Password must include at least one number and one uppercase letter");
+            setShowError(true)
+            return false;
+        }
+      
+        if (formData.username.length < 3) {
+            setErrorMessage("Username must be at least 3 characters long");
+            setShowError(true)
+            return false;
+        }
+        if (!validUsername.test(formData.username)) {
+            setErrorMessage("Username can only include letters and numbers");
+            setShowError(true)
+            return false;
+        }
+        setErrorMessage("");
+        setShowError(false);
+        return true;
+
     }
 
     const handleInputChange = (e) => {
@@ -41,6 +94,9 @@ function AdminRegister({onCancel}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         checkLogin();
+        if (!validateInputs()) {
+            return false;
+        }
         try {
             console.log(formData);
             const response = await axios.post('http://127.0.0.1:8080/api/admin/add_admin', JSON.stringify(formData), {
@@ -50,11 +106,15 @@ function AdminRegister({onCancel}) {
                 },
             });
             console.log("admin added");
+            setErrorMessage("");
+            setShowError(false);
             onCancel();
             window.location.reload();
         }
-        catch (e) {
-            console.log(e)
+        catch (e) {    
+            setErrorMessage("There was an error");
+            setShowError(true)
+            
         }
        
     }
@@ -132,6 +192,7 @@ function AdminRegister({onCancel}) {
                     />
                 </div>
                 <button className="create-admin-button" onClick={handleSubmit}>Create Admin</button>
+                {showError && <div className="product-form-error-message">{errorMessage}</div>}
             </form>
         </div>
           
