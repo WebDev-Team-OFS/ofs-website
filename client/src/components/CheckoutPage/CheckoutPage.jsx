@@ -4,7 +4,7 @@ import './checkout-page.css'; // Link to your CSS file for styling
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { checkLoginHelper } from '../utils';
-import PopUp from '../PopUp/PopUp';
+
 
 function CheckoutPage() {
   const navigate = useNavigate();
@@ -13,7 +13,10 @@ function CheckoutPage() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [showPopUp, setShowPopUp] = useState(false);
+  const [error, setError] = useState("");
+  const [showError, setShowError] = useState(false);
+
+  
 
   const getCart = async () => {
     let cart = []
@@ -43,14 +46,12 @@ function CheckoutPage() {
             let response = await axios.get(`http://127.0.0.1:8080/api/product/${tempCart[i].product_id}`);
                 
             response.data.product.quantity = tempCart[i].quantity;
-            console.log(response.data.product);
             cart.push(response.data.product);
         }
         catch (error) {
             console.log(error);
         }        
     }
-    console.log(cart);
     setCartItems(cart);
   }
 
@@ -63,15 +64,59 @@ function CheckoutPage() {
   const [deliveryDetails, setDeliveryDetails] = useState({
     address: '',
     city: '',
+    state: '',
     zip: ''
   });
 
+  const validateInputs = () => {
+    const validZip = /^\d{5}(-\d{4})?$/;
+    const validCVV = /^\d{3,4}$/;
+    const validStates = [
+      'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 
+      'florida', 'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 
+      'louisiana', 'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi', 
+      'missouri', 'montana', 'nebraska', 'nevada', 'new hampshire', 'new jersey', 'new mexico', 
+      'new york', 'north carolina', 'north dakota', 'ohio', 'oklahoma', 'oregon', 'pennsylvania', 
+      'rhode island', 'south carolina', 'south dakota', 'tennessee', 'texas', 'utah', 'vermont', 
+      'virginia', 'washington', 'west virginia', 'wisconsin', 'wyoming'
+    ];
+
+  
+
+    if (deliveryDetails.address == "" || deliveryDetails.city == "" || deliveryDetails.zip == "" ) {
+      setError("Enter all your delivery information");
+      setShowError(true)
+      return false;
+    }
+    console.log(deliveryDetails.state.toLowerCase());
+    if (!validStates.includes(deliveryDetails.state.toLowerCase())) {
+      setError("Please enter a valid state");
+      setShowError(true)
+      return false;
+    }
+    if (!validZip.test(deliveryDetails.zip)) {
+      setError("Please enter a valid zip code");
+      setShowError(true)
+      return false;
+    }
+    if (!validCVV.test(paymentDetails.cvv)) {
+      setError("Please enter a valid CVV");
+      setShowError(true)
+      return false;
+    }
+    setError("");
+    setShowError(false)
+    return true;
+  }
+
   const [paymentDetails, setPaymentDetails] = useState({
-    cardName: '',
-    cardNumber: '',
-    expiryDate: '',
+    card_name: '',
+    card_number: '',
+    expiry_date: '',
     cvv: ''
   });
+
+  const [expiryDate, setExpiryDate] = useState('');
 
   // Total Price Calculation
   let totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -87,10 +132,73 @@ function CheckoutPage() {
     }
   };
 
+  const handleExpiryInputChange = (e) => {
+    let input = e.target.value;
+
+    input = input.replace(/\D/g, '');
+    
+    if (input.length > 2) {
+      input = input.substring(0, 2) + '/' + input.substring(2, 4);
+    }
+
+    if (input.length > 5) {
+      input = input.substring(0, 5);
+    }
+    setExpiryDate(input);
+  }
+
   // Form submission handler
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError("");
+    setShowError(false)
+    console.log(deliveryDetails);
+    console.log(paymentDetails);
+    if (!validateInputs()) {
+      return;
+    }
+
     if (await checkLoginHelper()) {
+      //check if credit card number is valid
+      try {
+        const response = await axios.post('http://127.0.0.1:8080/api/validate-card', paymentDetails, {
+          headers: {
+              'Content-Type': 'application/json', 
+          }  
+      });
+      }
+      catch (e) {
+        if (e.response?.data?.error) {
+          setError(e.response.data?.error);
+          setShowError(true)
+        }
+        else {
+          setError("There was an error while checking out");
+          setShowError(true)
+        }
+        return;
+      }
+
+      //check if expiration date is valid
+      try {
+        const response = await axios.post('http://127.0.0.1:8080/api/validate-expiration', {"expiry_date":expiryDate}, {
+          headers: {
+              'Content-Type': 'application/json', 
+          }  
+      });
+      }
+      catch (e) {
+        if (e.response?.data?.error) {
+          setError(e.response.data?.error);
+          setShowError(true)
+        }
+        else {
+          setError("Expiration date is invalid");
+          setShowError(true)
+        }
+        return;
+      }
+      console.log("CREDIT CARD HAS BEEN VALIDATED")
       try {
           const response = await axios.post('http://127.0.0.1:8080/api/checkout', {}, {
               headers: {
@@ -98,20 +206,31 @@ function CheckoutPage() {
               }  
           });
           console.log("CHECKOUT CART");
-          navigate(`/`)
       }
-      catch {
-        setShowPopUp(true)
+      catch (e) {
+        console.log("CHECKOUT ERROR")
+        console.log(e.response.data.error)
+        if (e.response?.data?.error) {
+          setError(e.response.data.error);
+        }
+        else {
+          setError("There was an error while checking out")
+        }
+        setShowError(true)
+        return;
       }
+      setError("");
+      setShowError(false)
+      navigate('/')
    }
    else {
-    setShowPopUp(true)
+      setError("You are not logged in");
+      setShowError(true)
    }
   };
 
   return (
     <main className="checkout-container">
-      {showPopUp ? <PopUp text="Your login has expired. Refresh" closePopUp={() => setShowPopUp(false)} /> : <></>}
       <h1>Checkout</h1>
 
       {/* Cart Items Section */}
@@ -128,7 +247,7 @@ function CheckoutPage() {
 
         {/* Cart Items */}
         {cartItems.map((item) => (
-          <div key={item.id} className="cart-item">
+          <div key={item.product_id} className="cart-item">
             <p>{item.brand + " " + item.name}</p>
             <p>{(item.weight * item.quantity).toFixed(2)} lbs</p>
             <p>{item.quantity}</p>
@@ -155,7 +274,7 @@ function CheckoutPage() {
       {/* Delivery Information Form */}
       <section className="delivery-info">
         <h2>Delivery Information</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <label>
             Address:
             <input type="text" name="address" value={deliveryDetails.address} onChange={(e) => handleInputChange(e, "delivery")} required />
@@ -163,6 +282,10 @@ function CheckoutPage() {
           <label>
             City:
             <input type="text" name="city" value={deliveryDetails.city} onChange={(e) => handleInputChange(e, "delivery")} required />
+          </label>
+          <label>
+            State:
+            <input type="text" name="state" value={deliveryDetails.state} onChange={(e) => handleInputChange(e, "delivery")} required />
           </label>
           <label>
             ZIP Code:
@@ -177,15 +300,15 @@ function CheckoutPage() {
         <form onSubmit={handleSubmit}>
           <label>
             Name on Card:
-            <input type="text" name="cardName" value={paymentDetails.cardName} onChange={(e) => handleInputChange(e, "payment")} required />
+            <input type="text" name="card_name" value={paymentDetails.card_name} onChange={(e) => handleInputChange(e, "payment")} required />
           </label>
           <label>
             Card Number:
-            <input type="text" name="cardNumber" value={paymentDetails.cardNumber} onChange={(e) => handleInputChange(e, "payment")} required />
+            <input type="text" name="card_number" value={paymentDetails.card_number} onChange={(e) => handleInputChange(e, "payment")} required />
           </label>
           <label>
             Expiry Date:
-            <input type="text" name="expiryDate" value={paymentDetails.expiryDate} onChange={(e) => handleInputChange(e, "payment")} required />
+            <input type="text" name="expiry_date" value={expiryDate} onChange={handleExpiryInputChange} required  placeholder="MM/YY"/>
           </label>
           <label>
             CVV:
@@ -193,6 +316,7 @@ function CheckoutPage() {
           </label>
           <button type="submit">Place Order</button>
         </form>
+        {showError && <div className="product-form-error-message">{error}</div>}
       </section>
     </main>
   );
