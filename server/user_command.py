@@ -53,7 +53,7 @@ def view_profile():
         if db_connection:
             db_connection.close()
 
-
+#unused api point
 @user_cmd_bp.route("/api/profile", methods = ['PUT'])
 @jwt_required()
 def edit_profile():
